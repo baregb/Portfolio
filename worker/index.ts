@@ -16,10 +16,15 @@ const API_SECURITY_HEADERS: Record<string, string> = {
   "Cache-Control": "no-store",
 };
 
+const isApiPath = (url: string): boolean => new URL(url).pathname.startsWith("/api/");
+
 const app = new Hono<{ Bindings: Env }>();
 
 app.use("*", async (c, next) => {
   await next();
+  // Pages handed back to Static Assets keep their own headers from
+  // `public/_headers`; the API policy would block their scripts and styles.
+  if (!isApiPath(c.req.url)) return;
   for (const [name, value] of Object.entries(API_SECURITY_HEADERS)) {
     c.res.headers.set(name, value);
   }
@@ -31,7 +36,7 @@ app.get("/api/health", (c) => c.json({ ok: true, environment: c.env.ENVIRONMENT 
 app.notFound((c) => {
   // Only `/api/*` reaches this Worker. If anything else ever does, hand it to
   // Static Assets so pages keep working.
-  if (!new URL(c.req.url).pathname.startsWith("/api/")) {
+  if (!isApiPath(c.req.url)) {
     return c.env.ASSETS.fetch(c.req.raw);
   }
   return c.json({ error: "not_found" }, 404);
