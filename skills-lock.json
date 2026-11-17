@@ -15,6 +15,13 @@
       "skillPath": "skills/cloudflare-email-service/SKILL.md",
       "computedHash": "7c3d2a100a0cf9ff344c915ed32a8e335d3157db6943b130db104b6411f496bd"
     },
+    "content-collections": {
+      "source": "jackspace/claudeskillz",
+      "commit": "aef4e299d1ae508f75ad9ba62df438bb5dcb3204",
+      "sourceType": "github",
+      "skillPath": "skills/content-collections/SKILL.md",
+      "computedHash": "435e3b126a61f76986d95542cea276e7c13eb9b0c363aebb4585b774a75dd6ca"
+    },
     "hono": {
       "source": "honojs/skills",
       "commit": "e54ce51f6effaeb574ebd2629e89e086e14a2db3",
@@ -105,6 +112,13 @@
       "sourceType": "github",
       "skillPath": "skills/wrangler/SKILL.md",
       "computedHash": "182e370d8c26e6bcb896a57a63e6cab006b253b9278cc3515f7b9db2c4d07661"
+    },
+    "zod": {
+      "source": "pproenca/dot-skills",
+      "commit": "cf93c57cac89d6fc3e4194686000411567f5caf3",
+      "sourceType": "github",
+      "skillPath": "skills/.curated/zod/SKILL.md",
+      "computedHash": "0dda8a9c32affa99f4981924798d7399f0f5bd3ecc37910cfc4b05f260f442cd"
     }
   }
 }
