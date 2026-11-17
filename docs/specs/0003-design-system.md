@@ -5,7 +5,7 @@
 
 ## Summary
 
-The site uses an "engineering blueprint" look: IBM Plex Sans for reading, IBM Plex Mono for labels and numbers, hairline boxes, a faint grid in header bands, and one deep green accent. Every colour, size, and timing lives as a token (a named value) in `app/globals.css`, with light and dark values, and a three way switch (System, Light, Dark) picks the theme with no flash. The base components (buttons, tags, stat tiles, spec sheets, form fields, modal, toast, header, footer) are built by hand on native HTML, so the site ships almost no JavaScript, and a hidden `/styleguide` page shows every one of them in both themes for checking.
+The site uses a mixed direction built from four samples: a blueprint base (hairline square boxes, a spec sheet, mono labels, a faint grid in the hero band), big Bricolage Grotesque headlines, a full width deep green block for the featured case study with big numbers, and soft floating pieces for anything you touch (a frosted pill nav, pill buttons, rounded toasts). Body text is Geist and labels are Geist Mono. Every colour, size, and timing lives as a token (a named value) in `app/globals.css`, with light and dark values, and a three way switch (System, Light, Dark) picks the theme with no flash. The base components (buttons, tags, stat tiles, spec sheets, form fields, modal, toast, header, footer) are built by hand on native HTML, so the site ships almost no JavaScript, and a hidden `/styleguide` page shows every one of them in both themes for checking.
 
 ## Context
 
@@ -13,7 +13,7 @@ Every page in Journeys 1 and 2 needs the same type, colour, spacing, motion, and
 
 The site is a static export (spec 0001): no server, theme set by a class on `<html>` from a small inline script, no cookies. Most pages are read only, so client JavaScript should stay small. Tailwind v4 is installed and reads its theme from CSS. Content comes from the typed read layer (spec 0002), which already supplies stat tile values (`results[]`), stack tags, and the profile.
 
-You compared four directions on a samples page with real content (editorial technical, engineering blueprint, bold expressive, minimal soft) and picked the blueprint direction with a deep green accent, a three way theme switch that follows the system, subtle motion, and components built on native HTML.
+You compared four directions on a samples page with real content (A editorial technical, B engineering blueprint, C bold expressive, D minimal soft), first picked B, then asked for a mix of all four. On a mixed sample you chose: B's palette and structure as the base, C's scale and colour block with Bricolage Grotesque headlines, A's calm reading text, and D's soft floating chrome. You also chose a deep green accent, a three way theme switch that follows the system, subtle motion, and components built on native HTML.
 
 ## Requirements
 
@@ -25,18 +25,18 @@ You compared four directions on a samples page with real content (editorial tech
 **Acceptance criteria**:
 - **AC-1**: `docs/design.md` documents the direction, type scale, colour tokens (light and dark values), spacing, rules and radius, grid usage, motion tokens and rules, and every component with its variants, states, and when to use it.
 - **AC-2**: All colours, fonts, durations, and easings are tokens in `app/globals.css` (Tailwind v4 `@theme`), each colour with a light and a dark value, and Tailwind utilities map to them (for example `bg-bg`, `text-fg`, `text-muted`, `border-line`, `text-accent`). No file under `components/` or `app/` contains a literal colour (hex, `rgb(`, `hsl(`, `oklch(`); a Vitest test fails if one does.
-- **AC-3**: IBM Plex Sans (400, 500, 600) and IBM Plex Mono (400, 500) load through `next/font/google`, self hosted at build with `display: swap` and a metric matched fallback, exposed as `--font-sans` and `--font-mono`. A production page makes no request to Google.
+- **AC-3**: Bricolage Grotesque (700, 800, optical size axis), Geist (400, 500, 600), and Geist Mono (400, 500) load through `next/font/google`, self hosted at build with `display: swap` and a metric matched fallback, exposed as `--font-display`, `--font-sans`, and `--font-mono`. A production page makes no request to Google.
 - **AC-4**: The theme setting is `system`, `light`, or `dark`, default `system`. An inline script in `<head>` runs before first paint, reads `localStorage.theme`, resolves `system` with `matchMedia('(prefers-color-scheme: dark)')`, and sets the `dark` class and `color-scheme` on `<html>`, so no page ever flashes the wrong theme. While the setting is `system`, an OS theme change applies live. The theme switcher offers all three choices, works by keyboard (a radio group: arrow keys move, the current choice is announced), and saves the choice. If storage throws, the switch still works for the visit.
 - **AC-5**: In both themes, every text and background pair meets WCAG 2.2 AA (4.5:1 normal text, 3:1 large text), and every UI boundary that carries meaning (input borders, focus ring, toggles) meets 3:1 against its neighbours. A Vitest test reads the token values from `app/globals.css` and checks every listed pair.
 - **AC-6**: Every interactive element shows a 2px accent focus ring on `:focus-visible`, offset 2px. No rule removes focus outlines without replacing them.
 - **AC-7**: Motion uses only the duration and easing tokens. Sections fade in with an 8px rise as they enter the viewport, using CSS scroll driven animation where supported and nothing otherwise, so content is fully visible with no JavaScript. Route changes crossfade through React `<ViewTransition>`. Buttons and links give hover and press feedback. Under `prefers-reduced-motion: reduce`, every animation and view transition is turned off.
-- **AC-8**: These components exist in `components/ui/` (primitives) and `components/site/` (shell), typed, named exports, each usable by keyboard and correct in both themes: `Button` (primary, secondary, ghost; sizes sm and md; `pending` and disabled states; renders a link when given `href`), `TextLink` (internal and external, external marked for screen readers), `Container`, `Section` (plain or `grid` band), `Card` (hairline box), `Tag`, `StatTile`, `SpecSheet`, `Icon` (Lucide wrapper), `Spinner`, `Skeleton`, `VisuallyHidden`, `TextField`, `TextArea`, `Modal`, `Toaster` with `useToast`, `ThemeSwitcher`, `SkipLink`, `SiteHeader`, `SiteFooter`.
+- **AC-8**: These components exist in `components/ui/` (primitives) and `components/site/` (shell), typed, named exports, each usable by keyboard and correct in both themes: `Button` (pill shaped primary, secondary, ghost, and on accent; a square mono `line` variant; sizes sm and md; `pending` and disabled states; renders a link when given `href`), `TextLink` (internal and external, external marked for screen readers), `Container`, `Section` (`plain`, `grid` band, or `accent` green block), `Card` (hairline box), `Tag`, `Badge` (dashed hairline, for "Available on request"), `StatTile` (`standard`, or `large` for the accent block), `SpecSheet`, `Icon` (Lucide wrapper), `Spinner`, `Skeleton`, `VisuallyHidden`, `TextField`, `TextArea`, `Modal`, `Toaster` with `useToast`, `ThemeSwitcher`, `SkipLink`, `SiteHeader`, `SiteFooter`.
 - **AC-9**: `Modal` is built on `<dialog>` with `showModal()`: focus moves into it, Tab stays inside, Escape closes it, focus returns to the control that opened it, the page behind does not scroll, and it is labelled by its title. Closing on a backdrop click is an option. The ESLint `no-alert` rule is on, so `alert`, `confirm`, and `prompt` fail lint.
 - **AC-10**: Toasts appear in a fixed region: success and info toasts in a polite live region, error toasts in an assertive one. Each shows an icon and text (never colour alone) and a dismiss button. Success and info toasts close after 5 seconds, pausing while hovered or focused; error toasts stay until dismissed. At most 3 show at once; older ones leave first.
 - **AC-11**: Loading states: `Button` shows a spinner and sets `aria-busy` while `pending`, and ignores clicks then. `Skeleton` blocks hold layout while content loads (a gentle pulse, static under reduced motion). `app/loading.tsx` renders a page skeleton during client navigation. Images sit in fixed aspect ratio boxes on the surface colour, so nothing shifts as they load.
-- **AC-12**: The root layout renders, in order, a skip link to `#main`, `SiteHeader` (name from the profile, nav from one constant, `ThemeSwitcher`), `<main id="main">`, and `SiteFooter`. Below the `md` breakpoint the nav folds into a menu button that opens a panel (`aria-expanded`, Escape closes it, focus returns to the button). The nav constant lists only routes that exist; later pages add their own entries.
+- **AC-12**: The root layout renders, in order, a skip link to `#main`, `SiteHeader` (a floating frosted pill bar with the name from the profile, nav from one constant, and `ThemeSwitcher`), `<main id="main">`, and `SiteFooter`. Below the `md` breakpoint the nav folds into a menu button that opens a panel (`aria-expanded`, Escape closes it, focus returns to the button). The nav constant lists only routes that exist; later pages add their own entries.
 - **AC-13**: `/styleguide` shows the type scale, every colour token as a swatch with its contrast ratio against the background in the current theme, and every component in every variant and state (including pending, disabled, error, empty, and loading), with a theme switcher and buttons that open the modal and each toast. It sets `robots: noindex`, is not in the nav, and is left out of the sitemap.
-- **AC-14**: The blueprint grid appears only on `Section variant="grid"` bands (hero and page headers), never behind running text. Body text columns stay under 70 characters wide.
+- **AC-14**: The blueprint grid appears only on `Section variant="grid"` bands (hero and page headers), never behind running text. The green block appears only as `Section variant="accent"` (a featured item), at most once per page. Content boxes (cards, spec sheets, tags, badges, inputs) have square corners; controls you touch (buttons, nav, theme switcher, toasts, profile photo) are round. Soft shadows appear only on floating pieces (the nav, toasts, the modal, secondary buttons). Body text columns stay under 70 characters wide.
 - **AC-15**: `pnpm lint`, `pnpm typecheck`, `pnpm test`, and `pnpm build` pass. The only new runtime dependency is `lucide-react`.
 
 ## Options considered
@@ -48,14 +48,14 @@ Tokens in CSS through `@theme`; components written by hand on `<dialog>`, `<butt
 **Pros**:
 - The least client JavaScript of any option, which suits a mostly static site.
 - Native `<dialog>` gives a focus trap, Escape, and a top layer for free.
-- Full control of the blueprint look with nothing to restyle or fight.
+- Full control of the mixed look with nothing to restyle or fight.
 
 **Cons**:
 - You own the accessibility details of the toast, the menu, and the switcher, so they need tests.
 
 ### Option 2: shadcn/ui (Radix plus Tailwind), restyled
 
-Copy in shadcn components and restyle them to the blueprint look.
+Copy in shadcn components and restyle them to the mixed look.
 
 **Pros**:
 - Fast start with proven accessible behaviour.
@@ -78,7 +78,7 @@ Use Radix Dialog, Toast, and Radio Group, styled by hand.
 
 **Chosen option**: Option 1: Tokens in Tailwind v4 plus your own components on native HTML.
 
-Build the blueprint design system as CSS tokens in `app/globals.css` and hand built components in `components/ui/` and `components/site/`, with Lucide for icons and nothing else added.
+Build the mixed design system as CSS tokens in `app/globals.css` and hand built components in `components/ui/` and `components/site/`, with Lucide for icons and nothing else added.
 
 **Implementation skills**: `tailwind-4-docs` (`lombiq/tailwind-agent-skills`, `.agents/skills/tailwind-4-docs/`) · `web-perf` (`cloudflare/skills`, `.agents/skills/web-perf/`)
 
@@ -86,21 +86,22 @@ Build the blueprint design system as CSS tokens in `app/globals.css` and hand bu
 
 The site is read far more than it is used, so every kilobyte of client code is a cost a recruiter on a phone pays for no benefit. The platform now covers the hard parts: `<dialog>` handles focus and Escape, CSS handles scroll animation and theming, and React 19.3 ships `<ViewTransition>` with no setup in Next 16. That leaves only a toast region, a menu, and a radio group to build by hand, all small and testable.
 
-The blueprint look is distinctive, so a component kit's default style would have to be stripped out anyway. Square hairline boxes and mono labels are cheaper to build directly than to restyle. Tokens in CSS keep Tailwind v4 as the single source, and a contrast test on those tokens turns WCAG AA from a promise into a check that runs on every commit.
+The mixed look is distinctive, so a component kit's default style would have to be stripped out anyway. Square hairline boxes, mono labels, and a frosted pill nav are cheaper to build directly than to restyle. Tokens in CSS keep Tailwind v4 as the single source, and a contrast test on those tokens turns WCAG AA from a promise into a check that runs on every commit.
 
 Settled calls, each with the runner up:
 - **Where `design.md` lives**: `docs/design.md`, next to the specs and scope (runner up: the repo root, which clutters it).
 - **Theme mechanism**: a `dark` class on `<html>` plus a Tailwind `@custom-variant dark`, as spec 0001 set (runner up: a `data-theme` attribute, equivalent but would diverge from spec 0001).
 - **Theme switcher shape**: a three choice segmented radio group with icons and text labels (runner up: a dropdown menu, one more click).
 - **Section entry animation**: CSS `animation-timeline: view()` inside `@supports` (runner up: an IntersectionObserver script, which needs JavaScript and risks hidden content).
-- **Corners**: square (0) for boxes and cards, 2px for buttons and inputs, to keep the drawing feel (runner up: 6px everywhere, softer but generic).
-- **Shadows**: none; hairline borders separate surfaces. Only the modal gets a soft shadow to lift it off the page.
+- **Corners**: square for content (cards, spec sheets, tags, badges), 2px for inputs, fully round for controls (buttons, nav, switcher) and 14px for toasts and the modal, so what you read looks drawn and what you touch looks touchable (runner up: one radius everywhere, simpler but loses the split).
+- **Shadows**: only on floating pieces (nav, toasts, modal, secondary button); hairline borders separate everything else (runner up: no shadows at all, which flattens the floating nav).
+- **Numbers**: Bricolage Grotesque inside the green block, Geist Mono everywhere else (runner up: mono everywhere, which loses C's punch).
 - **Form fields now**: `TextField` and `TextArea` are built here so the forms feature only wires behaviour (runner up: leave them to the forms spec, which would split the visual system).
 - **Agent skill search for Lucide**: skipped; it is an icon set with no setup worth a skill.
 
 ## Feature design
 
-**Direction**: engineering blueprint. Hairline 1px rules, square boxes, mono labels in small caps style (uppercase, 0.06em tracking), spec sheet key and value lists, and a 24px grid pattern only in header bands. The deep green accent marks links, primary actions, focus, and key numbers. Reference: direction B on the samples page.
+**Direction**: the mix. Blueprint base (B): hairline 1px rules, square content boxes, mono labels (uppercase, 0.08em tracking), spec sheet key and value lists, and a 24px grid pattern only in the hero band. Bold voice (C): Bricolage Grotesque headlines at large scale with a highlighted phrase, and one full width deep green block for the featured case study with big numbers. Calm reading (A): generous whitespace and short measured text columns. Soft chrome (D): a floating frosted pill nav, pill buttons, a round profile photo, and rounded toasts with a soft shadow. The deep green accent marks links, primary actions, focus, and key numbers. Reference: the mixed sample (https://claude.ai/artifact/JfuX4oYJQb6aafUq7dMW9R) with the Bricolage headline face.
 
 **Tokens (starting values; the contrast test must pass, adjust a value if it fails)**:
 
@@ -118,22 +119,29 @@ Settled calls, each with the runner up:
 | `--color-accent-soft` | `#e3efe8` | `#13261c` | success toast and selected states |
 | `--color-danger` | `#b42318` | `#f97066` | errors |
 | `--color-danger-soft` | `#fdecea` | `#2a1311` | error toast background |
+| `--color-block` | `#1d6b48` | `#123d2a` | accent block background |
+| `--color-block-ink` | `#f1faf5` | `#e6f7ee` | text and big numbers on the block |
+| `--color-block-muted` | `#c4e3d2` | `#9fd3b8` | secondary text on the block |
+| `--color-block-line` | `rgb(241 250 245 / 0.22)` | `rgb(230 247 238 / 0.16)` | rules and tag borders on the block |
+| `--color-nav` | `rgb(251 252 251 / 0.74)` | `rgb(15 26 22 / 0.72)` | frosted nav (with backdrop blur) |
+| `--shadow-soft` | light shadow | dark shadow | floating pieces only (values as on the mixed sample) |
 
-Pairs the contrast test checks (both themes): fg, muted, accent, and danger on bg and on surface; accent ink on accent; fg on accent soft and on danger soft; line strong and accent on bg (3:1).
+Pairs the contrast test checks (both themes): fg, muted, accent, and danger on bg and on surface; accent ink on accent; accent on accent soft (the highlighted hero phrase); block ink and block muted on block; fg on accent soft and on danger soft; line strong and accent on bg (3:1).
 
-**Type scale** (Plex Sans unless noted; display sizes use `clamp`):
+**Type scale** (display and headings in Bricolage Grotesque, body in Geist, labels in Geist Mono; display sizes use `clamp`):
 
-| Role | Size | Weight | Notes |
-|---|---|---|---|
-| display | `clamp(2.25rem, 5vw, 3.25rem)` | 600 | line height 1.06, tracking -0.02em, `text-wrap: balance` |
-| h1 | 2.25rem | 600 | line height 1.1 |
-| h2 | 1.625rem | 600 | |
-| h3 | 1.25rem | 600 | |
-| body | 1rem | 400 | line height 1.6, max 68ch |
-| lead | 1.125rem | 400 | muted |
-| small | 0.875rem | 400 | |
-| label | 0.75rem, Plex Mono | 500 | uppercase, tracking 0.06em |
-| number | Plex Mono | 500 | `tabular-nums`, accent in stat tiles |
+| Role | Face | Size | Weight | Notes |
+|---|---|---|---|---|
+| display | Bricolage | `clamp(2.75rem, 8vw, 6rem)` | 800 | line height 0.92, tracking -0.045em, `text-wrap: balance`; one phrase may be highlighted on accent soft |
+| h1 | Bricolage | `clamp(2.25rem, 5vw, 3.5rem)` | 800 | line height 1, tracking -0.035em |
+| h2 | Bricolage | 1.75rem | 700 | tracking -0.02em |
+| h3 | Bricolage | 1.25rem | 700 | |
+| body | Geist | 1rem | 400 | line height 1.6, max 68ch |
+| lead | Geist | 1.125rem | 400 | muted |
+| small | Geist | 0.875rem | 400 | |
+| label | Geist Mono | 0.75rem | 500 | uppercase, tracking 0.08em |
+| number (block) | Bricolage | `clamp(2.25rem, 4.6vw, 3.5rem)` | 800 | `tabular-nums`, block ink |
+| number (elsewhere) | Geist Mono | 1.5rem | 500 | `tabular-nums`, accent |
 
 **Spacing and layout**: Tailwind's 4px scale. `Container` max width 72rem with a side gutter of 1rem (1.5rem from `md`). Sections pad 4rem vertically (6rem from `md`). Breakpoints are Tailwind defaults.
 
@@ -152,7 +160,7 @@ Pairs the contrast test checks (both themes): fg, muted, accent, and danger on b
 
 | Component | Key props | Behaviour | Errors and edge cases |
 |---|---|---|---|
-| `Button` | `variant`, `size`, `pending?`, `disabled?`, `href?`, `iconStart?` | `<a>` when `href`, else `<button type="button">` unless `type` given | pending ignores clicks and sets `aria-busy`; disabled link renders as text, not a dead link |
+| `Button` | `variant` (`primary`, `secondary`, `ghost`, `line` for square mono actions, `onAccent` for the green block), `size`, `pending?`, `disabled?`, `href?`, `iconStart?` | `<a>` when `href`, else `<button type="button">` unless `type` given | pending ignores clicks and sets `aria-busy`; disabled link renders as text, not a dead link |
 | `TextLink` | `href`, `external?` | external adds `rel="noopener"`, an icon, and "opens in a new tab" for screen readers | |
 | `Section` | `variant: "plain" \| "grid"`, `labelledBy?` | grid band draws the pattern behind its own content only | |
 | `StatTile` | `value: string`, `label: string`, `context?` | value in mono accent | long labels wrap, tiles keep equal height in a row |
@@ -196,7 +204,7 @@ Pairs the contrast test checks (both themes): fg, muted, accent, and danger on b
 ## Build plan
 
 1. Add tokens to `app/globals.css` (`@theme` colours, fonts, motion; light values on `:root`, dark values on `.dark`; `@custom-variant dark`; base body styles; focus ring; reduced motion rule; grid band utility), satisfies **AC-2**, **AC-6**, **AC-7**, **AC-14**
-2. Load IBM Plex Sans and Mono with `next/font/google` in `app/layout.tsx`, mapped to `--font-sans` and `--font-mono`, satisfies **AC-3**
+2. Load Bricolage Grotesque, Geist, and Geist Mono with `next/font/google` in `app/layout.tsx`, mapped to `--font-display`, `--font-sans`, and `--font-mono`, satisfies **AC-3**
 3. Add the inline theme script to `<head>` (with `suppressHydrationWarning` on `<html>`) and build `ThemeSwitcher`, satisfies **AC-4**
 4. Write a pure contrast function and token parser in `features/design/`, with Vitest tests for the AA pairs and for no literal colours under `components/` and `app/`; turn on ESLint `no-alert`, satisfies **AC-2**, **AC-5**, **AC-9**
 5. Build the primitives: `Button`, `TextLink`, `Container`, `Section`, `Card`, `Tag`, `StatTile`, `SpecSheet`, `Icon`, `Spinner`, `Skeleton`, `VisuallyHidden`, `TextField`, `TextArea` (add `lucide-react`), satisfies **AC-6**, **AC-8**, **AC-11**
@@ -215,7 +223,8 @@ Pairs the contrast test checks (both themes): fg, muted, accent, and danger on b
 
 **Negative / tradeoffs**:
 - You own the accessible behaviour of the toast, menu, and switcher, so `/check verify` must exercise them by keyboard.
-- The blueprint look can feel technical to a non technical client; warm copy and real photos on the about page offset it.
+- Three typefaces cost more to load than one or two; subsetting to Latin and only the listed weights keeps it small, and `/check verify` should confirm the fonts do not hurt LCP.
+- The mix has more rules to keep straight (square content, round controls, one green block per page); `docs/design.md` must state them plainly so later pages hold the line.
 - View transitions do not animate in older browsers (the site still works; it just cuts).
 
 **Neutral**:

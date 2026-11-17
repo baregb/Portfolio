@@ -79,7 +79,7 @@ Visual identity and base components, held to your premium app standard: light an
 **Done when:** `design.md` covers type, colour, spacing, motion, and components; base components work by keyboard and in both themes.
 - [x] Design it (spec): `/architect design system & UI foundation`
 - [ ] Build it: `/develop design system & UI foundation`
-  - [ ] Tokens, fonts, and theme: colour, type, and motion tokens, IBM Plex, the no flash theme script and switcher, contrast and no literal colour tests, `no-alert` (AC-2, AC-3, AC-4, AC-5, AC-6, AC-9, AC-14)
+  - [ ] Tokens, fonts, and theme: colour, type, and motion tokens, Bricolage Grotesque with Geist and Geist Mono, the no flash theme script and switcher, contrast and no literal colour tests, `no-alert` (AC-2, AC-3, AC-4, AC-5, AC-6, AC-9, AC-14)
   - [ ] Components: primitives, form fields, `Modal`, `Toaster` (AC-6, AC-8, AC-9, AC-10, AC-11)
   - [ ] Shell, motion, and styleguide: skip link, header with mobile menu, footer, loading skeleton, view transitions, section entry, `/styleguide` (AC-7, AC-11, AC-12, AC-13)
   - [ ] `docs/design.md` and a green check run (AC-1, AC-15)
