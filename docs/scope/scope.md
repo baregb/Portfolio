@@ -24,7 +24,7 @@ Journeys 3 to 5 (#16 to #18) come after launch and are unchanged.
 | 1 | Stack & architecture | Foundation | done |
 | 2 | Coding standards & tooling | Foundation | done |
 | 3 | Content model | Foundation | done |
-| 4 | Design system & UI foundation (A) | Foundation | planned |
+| 4 | Design system & UI foundation (A) | Foundation | in-progress |
 | 5 | Home page (B) | Journey 1 | planned |
 | 6 | Role lenses (B) | Journey 1 | planned |
 | 7 | Case study page (B) | Journey 1 | planned |
@@ -74,10 +74,17 @@ The shape of everything the site shows: a project (problem, constraints, decisio
 - [x] Test it: skipped, the build already shipped 143 Vitest tests covering every rule, and verify passed
 Spec [0002](../specs/0002-content-model/index.md) · code in `features/content/`, `content-collections.ts`, `scripts/check-content.ts`, `content/`
 
-### 4. Design system & UI foundation · planned · needs a decision
+### 4. Design system & UI foundation · in-progress
 Visual identity and base components, held to your premium app standard: light and dark theme switcher, purposeful motion that respects reduced motion, loading states everywhere, themed toasts and modals (no native dialogs), and WCAG 2.2 AA.
 **Done when:** `design.md` covers type, colour, spacing, motion, and components; base components work by keyboard and in both themes.
-- [ ] Design it (spec): `/architect design system & UI foundation`
+- [x] Design it (spec): `/architect design system & UI foundation`
+- [ ] Build it: `/develop design system & UI foundation`
+  - [ ] Tokens, fonts, and theme: colour, type, and motion tokens, IBM Plex, the no flash theme script and switcher, contrast and no literal colour tests, `no-alert` (AC-2, AC-3, AC-4, AC-5, AC-6, AC-9, AC-14)
+  - [ ] Components: primitives, form fields, `Modal`, `Toaster` (AC-6, AC-8, AC-9, AC-10, AC-11)
+  - [ ] Shell, motion, and styleguide: skip link, header with mobile menu, footer, loading skeleton, view transitions, section entry, `/styleguide` (AC-7, AC-11, AC-12, AC-13)
+  - [ ] `docs/design.md` and a green check run (AC-1, AC-15)
+- [ ] Verify it: `/check verify design system & UI foundation`
+Spec [0003](../specs/0003-design-system.md)
 
 ## Journey 1: The recruiter path
 
