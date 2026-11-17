@@ -1,0 +1,6 @@
+# Lint and format the staged files, then typecheck the site and the Worker.
+# Falls back to Corepack when pnpm is not on PATH (common in editor git panels).
+if command -v pnpm >/dev/null 2>&1; then PNPM="pnpm"; else PNPM="corepack pnpm"; fi
+
+$PNPM exec lint-staged
+$PNPM typecheck

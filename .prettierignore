@@ -1,0 +1,19 @@
+# Build output and caches
+.next/
+out/
+build/
+.wrangler/
+coverage/
+
+# Generated
+pnpm-lock.yaml
+next-env.d.ts
+worker/worker-configuration.d.ts
+
+# Third party agent skills
+.agents/
+.claude/
+skills-lock.json
+
+# Markdown is hand written prose (specs, scope, AGENTS.md); keep it as written.
+*.md
