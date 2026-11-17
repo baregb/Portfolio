@@ -1,0 +1,26 @@
+name: Omogbolahan Ajibare
+roleLine: Web solutions architect and software developer
+headline: I design and build web systems end to end, from the data model to the checkout, using AI tools to ship faster without cutting corners.
+location: Remote (worldwide)
+photo:
+  src: profile/photo.jpg
+  alt: Omogbolahan Ajibare in a purple kaftan, green fila cap, and round glasses, standing in front of a colourful mural.
+availability:
+  status: selective
+links:
+  - kind: github
+    url: https://github.com/baregb
+featured:
+  - beccahs-kitchen
+  - membership-charity-data-migration
+flagshipOrder:
+  - beccahs-kitchen
+  - membership-charity-data-migration
+lensOrder:
+  - solutions-architect
+  - software-developer
+  - ai-assisted-builder
+skillGroups:
+  - Architecture
+  - Engineering
+  - AI assisted delivery

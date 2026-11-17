@@ -1,0 +1,3 @@
+name: Solution architecture
+group: Architecture
+description: Choosing the stack, hosting, and boundaries for a system, and writing the decision down with its tradeoffs.

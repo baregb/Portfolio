@@ -1,0 +1,13 @@
+name: Software developer
+headline: I build web apps end to end, from the database to the checkout.
+intro: >-
+  For roles where you need someone to ship working software. These projects show full stack
+  work in TypeScript, Next.js, and PostgreSQL: real payments, admin tools, data migrations,
+  and the tests that keep them honest.
+projects:
+  - beccahs-kitchen
+  - membership-charity-data-migration
+skills:
+  - full-stack-development
+  - payments-integration
+  - data-migration

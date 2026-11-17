@@ -1,0 +1,10 @@
+name: AI assisted builder
+headline: I ship faster with AI coding agents, and check every change they make.
+intro: >-
+  For roles that want AI in the workflow without losing quality. These projects show a spec
+  driven way of working with Claude Code: decisions written first, code built to the spec,
+  then verified, tested, and reviewed by a separate model.
+projects:
+  - beccahs-kitchen
+skills:
+  - ai-assisted-development

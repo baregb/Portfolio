@@ -1,0 +1,3 @@
+name: Payments integration
+group: Engineering
+description: Card and bank transfer payments, webhooks, and server side totals that can be trusted.

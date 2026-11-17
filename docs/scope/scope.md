@@ -15,7 +15,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 |---|---------|-------|--------|
 | 1 | Stack & architecture | Foundation | done |
 | 2 | Coding standards & tooling | Foundation | done |
-| 3 | Content model | Foundation | planned |
+| 3 | Content model | Foundation | in-progress |
 | 4 | Design system & UI foundation | Foundation | planned |
 | 5 | Home page | Journey 1 | planned |
 | 6 | Role lenses | Journey 1 | planned |
@@ -53,10 +53,18 @@ Capture conventions and tooling from the real scaffolded project, then install l
   - [x] GitHub Actions CI: lint, format check, typecheck, test, build
 Code in `eslint.config.mjs`, `prettier.config.mjs`, `.husky/`, `.github/workflows/ci.yml`
 
-### 3. Content model · planned · needs a decision
+### 3. Content model · in-progress · Beta
 The shape of everything the site shows: a project (problem, constraints, decision and tradeoffs, what was built, result, stack, a "how AI was used" note), its visibility (public or available on request), problem categories, role lens tags, and featured order. Every page reads from this.
 **Done when:** one project can be described fully in the model, tagged for any role lens, and marked public or on request, with no page needing a field the model lacks.
-- [ ] Design it (spec): `/architect content model`
+- [x] Design it (spec): `/architect content model`
+- [x] Build it: `/develop content model`
+  - [x] Tooling and schemas: packages, scripts, lint-staged and CI wiring, strict collection schemas, a proven failing check (AC-2, AC-4, AC-7, AC-10, AC-12)
+  - [x] Build rules: section splitter, `checkContent` and the check script, rule test suites (AC-2, AC-3, AC-5, AC-7, AC-8, AC-10, AC-12)
+  - [x] Read layer: typed read functions, ordering, drafts, derived values (AC-1, AC-6, AC-8, AC-9, AC-11)
+  - [x] Proof content: profile, about, three lenses, Beccah's Kitchen, membership charity data migration (AC-13)
+- [ ] Verify it: `/check verify content model`
+- [ ] Test it: `/test content model`
+Spec [0002](../specs/0002-content-model/index.md) · code in `features/content/`, `content-collections.ts`, `scripts/check-content.ts`, `content/`
 
 ### 4. Design system & UI foundation · planned · needs a decision
 Visual identity and base components, held to your premium app standard: light and dark theme switcher, purposeful motion that respects reduced motion, loading states everywhere, themed toasts and modals (no native dialogs), and WCAG 2.2 AA.

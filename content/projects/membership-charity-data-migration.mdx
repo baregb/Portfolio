@@ -1,0 +1,50 @@
+---
+title: Membership charity data migration
+summary: Moving a charity's member, attendance, and progress records from a legacy system into a new database app, in staged and repeatable runs.
+status: published
+depth: flagship
+visibility: onRequest
+client:
+  descriptor: a membership charity
+role: Developer
+period:
+  start: 2026-06
+  end: null
+sector: charity
+categories:
+  - data-migration
+stack:
+  - nextjs
+  - typescript
+  - supabase
+  - postgres
+  - vitest
+aiTools:
+  - claude-code
+skills:
+  - data-migration
+  - data-modelling
+  - ai-assisted-development
+results:
+  - value: "174,097"
+    label: attendance records migrated
+  - value: "1,848"
+    label: member records migrated
+brief:
+  problem: >-
+    The charity kept its member records, attendance, and progress history in a legacy system
+    that was hard to query and easy to get wrong. It needed all of it moved into a new database
+    app without losing any history.
+  approach: >-
+    A staged migration: separate extraction steps for people, for attendance and progress, and
+    for groups, then one assembled SQL load. Bad values were cleaned and logged during the load
+    (duplicate or invalid emails cleared, names merged), row counts were checked, and the whole
+    migration was run again from scratch as a clean remigration.
+  outcome: >-
+    The migration was applied and verified in production. The new app holds the full member
+    history, and a nightly refresh groups members by how recently they last attended, so staff
+    can see who has drifted away.
+  ai: >-
+    I built the new database app with Claude Code, in a spec driven workflow, with agent skills
+    for Supabase and PostgreSQL practice.
+---

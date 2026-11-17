@@ -1,0 +1,98 @@
+---
+title: "Beccah's Kitchen: ordering and operations for a Lagos caterer"
+summary: A storefront and admin app for a home catering business, with online ordering, card and bank transfer payments, order tracking, and catering quotes.
+status: published
+depth: flagship
+visibility: public
+updated: 2026-11-17
+client:
+  name: Beccah's Kitchen
+  descriptor: a home catering business in Lagos, Nigeria
+role: Sole developer and architect
+period:
+  start: 2026-09
+  end: null
+sector: food-and-hospitality
+categories:
+  - commerce-and-payments
+  - operations-tooling
+stack:
+  - nextjs
+  - typescript
+  - tailwind-css
+  - supabase
+  - postgres
+  - netlify
+  - paystack
+  - resend
+  - sentry
+  - vitest
+aiTools:
+  - claude-code
+skills:
+  - solution-architecture
+  - data-modelling
+  - full-stack-development
+  - payments-integration
+  - ai-assisted-development
+results:
+  - value: "1,277"
+    label: automated tests passing
+    context: At the payment rework milestone in October 2026.
+    source: "beccahs-kitchen docs/scope/scope.md, feature 10, stranded card orders row (2026-10-17): all 1277 tests pass."
+  - value: "14 of 14"
+    label: tables with row level security forced
+    context: Every policy checks the caller against a specific admin account.
+    source: "beccahs-kitchen CHANGELOG.md, 0.1.0 (2026-09-16), Security: RLS enabled and forced on all 14 tables."
+  - value: "111"
+    label: database migrations
+    context: Every schema change is versioned SQL.
+    source: "beccahs-kitchen supabase/migrations: 111 .sql files, counted 2026-11-17."
+  - value: "95"
+    label: pages and API routes
+    context: 73 pages and 22 route handlers across the storefront and the admin.
+    source: "beccahs-kitchen app/: 73 page.tsx and 22 route.ts files, counted 2026-11-17."
+cover:
+  src: beccahs-kitchen/cover.jpg
+  alt: The Beccah's Kitchen storefront on a phone, showing a Meaty Jollof platter, a dish search box, and menu category filters.
+---
+
+## Problem
+
+Beccah's Kitchen is a home catering business in Lagos. It needed a storefront where customers could browse the menu, request catering, pay, and follow their order, and an admin side where the owner could run nearly everything without a developer.
+
+The app handles real payments and customer details (names, phone numbers, and addresses), so mistakes cost money and trust.
+
+## Constraints
+
+- **One developer.** Whatever I chose, I had to run, debug, and extend it alone.
+- **No revenue yet.** Hosting had to start on free tiers that are allowed for commercial use, with a clear path to paid plans.
+- **A launch date.** The first landing pages had to be live by 1 November 2026 so they could be indexed before the December rush.
+- **No WhatsApp Business API access yet**, even though WhatsApp is how the business talks to customers.
+
+## Decision and tradeoffs
+
+- **Netlify, not Vercel.** Vercel's free tier forbids commercial use. Netlify's free tier allows it, at the cost of no African function region.
+- **One Next.js app, Supabase with no ORM.** A monorepo and an ORM would add overhead with no team to justify it. Row level security is the authorization boundary instead of app code.
+- **Money is computed on the server.** The cart lives in the browser, but every total is worked out again from the database, and amounts are stored as whole kobo, never decimals.
+- **Guest orders go through one database function.** Anonymous visitors never insert rows directly; a server action calls a single checked function.
+- **Notifications go to an outbox.** Messages are written to a provider agnostic outbox, so WhatsApp can be plugged in later without rewriting the order flow.
+
+## What I built
+
+- **Storefront:** menu with search and category filters, catering requests with minimum order rules, a cart with promo codes, checkout by Paystack card payment or bank transfer with a receipt upload, delivery priced by area, and an order tracking page.
+- **Admin:** a live order queue, order status changes, manual orders, menu and settings editing, invoices and receipts as PDFs, expenses and profit reports, and CSV exports.
+- **Growth:** a referral programme with partner links, a newsletter, dish pages and landing pages for search, and campaign QR links.
+- **Background jobs:** scheduled functions for balance notices, newsletter sending, payment receipt checks, and keeping the database awake on the free tier.
+
+## Results
+
+The schema was locked down from the first release: row level security is forced on every table, and two admin roles keep the developer account read only for business data. The test suite grew with the product, from 70 data model tests at the first release to 1,277 passing tests by the payment rework in October 2026.
+
+The build followed one complete customer journey at a time, with every empty, error, and edge state handled before the next journey started.
+
+## How AI was used
+
+I built the app with Claude Code, inside a spec driven workflow. Each feature started as a written spec (`/architect`), was built to that spec (`/develop`), then checked in the running app (`/check verify`), tested (`/test`), and reviewed by a separate model before it was marked done.
+
+Installed agent skills kept the AI on current practice for Supabase, Sentry, Vitest, and the UI kit, and every decision it built on is recorded in the repo.

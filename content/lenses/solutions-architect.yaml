@@ -1,0 +1,12 @@
+name: Solutions architect
+headline: I choose the stack, the hosting, and the data model, and write down why.
+intro: >-
+  For roles where the hard part is the shape of the system. These projects show how I weigh
+  cost, risk, and the size of the team before I pick a stack, how I model data so the database
+  keeps it correct, and how I record each decision so the next person can follow it.
+projects:
+  - beccahs-kitchen
+  - membership-charity-data-migration
+skills:
+  - solution-architecture
+  - data-modelling
