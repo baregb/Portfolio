@@ -9,25 +9,33 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 
 **Target:** first launch (Journey 1 and Journey 2) within about a month of 2026-11-16.
 
+**Fast track (2026-11-17):** to reach launch sooner, related features share one spec and one build pass instead of running `/architect` → `/develop` → `/check verify` each on their own. That takes the launch path from 13 design-and-build cycles to 5:
+- **A. Design system** (#4): its own spec, since every page depends on it.
+- **B. Journey 1 pages** (#5, #6, #7, #9, #10, #11): one spec, one build, one verify. They all read the content model and share the design system.
+- **C. Flagship content** (#8): no spec. Draft each case study straight from its repo into `content/projects/`; `pnpm content` already enforces the rules. Runs alongside B.
+- **D. Forms** (#12, #14): one spec, since contact and request access share the same Worker pipeline (Origin, Turnstile, honeypot, rate limit, D1, email). Stays Beta.
+- **E. SEO, analytics & launch** (#13, #15): no spec. The choices follow from spec 0001 (Cloudflare), so go straight to `/develop`.
+Journeys 3 to 5 (#16 to #18) come after launch and are unchanged.
+
 ## At a glance
 
 | # | Feature | Phase | Status |
 |---|---------|-------|--------|
 | 1 | Stack & architecture | Foundation | done |
 | 2 | Coding standards & tooling | Foundation | done |
-| 3 | Content model | Foundation | in-progress |
-| 4 | Design system & UI foundation | Foundation | planned |
-| 5 | Home page | Journey 1 | planned |
-| 6 | Role lenses | Journey 1 | planned |
-| 7 | Case study page | Journey 1 | planned |
-| 8 | Flagship case studies | Journey 1 | planned |
-| 9 | Project library | Journey 1 | planned |
-| 10 | About & skills | Journey 1 | planned |
-| 11 | CV download | Journey 1 | planned |
-| 12 | Contact | Journey 1 | planned |
-| 13 | SEO, social cards & analytics | Journey 1 | planned |
-| 14 | Request access | Journey 2 | planned |
-| 15 | Launch | Launch | planned |
+| 3 | Content model | Foundation | done |
+| 4 | Design system & UI foundation (A) | Foundation | planned |
+| 5 | Home page (B) | Journey 1 | planned |
+| 6 | Role lenses (B) | Journey 1 | planned |
+| 7 | Case study page (B) | Journey 1 | planned |
+| 8 | Flagship case studies (C) | Journey 1 | planned |
+| 9 | Project library (B) | Journey 1 | planned |
+| 10 | About & skills (B) | Journey 1 | planned |
+| 11 | CV download (B) | Journey 1 | planned |
+| 12 | Contact (D) | Journey 1 | planned |
+| 13 | SEO, social cards & analytics (E) | Journey 1 | planned |
+| 14 | Request access (D) | Journey 2 | planned |
+| 15 | Launch (E) | Launch | planned |
 | 16 | Ask AI about my work | Journey 3 | planned |
 | 17 | Writing | Journey 4 | planned |
 | 18 | Content admin | Journey 5 | planned |
@@ -53,7 +61,7 @@ Capture conventions and tooling from the real scaffolded project, then install l
   - [x] GitHub Actions CI: lint, format check, typecheck, test, build
 Code in `eslint.config.mjs`, `prettier.config.mjs`, `.husky/`, `.github/workflows/ci.yml`
 
-### 3. Content model · in-progress · Beta
+### 3. Content model · done · Beta
 The shape of everything the site shows: a project (problem, constraints, decision and tradeoffs, what was built, result, stack, a "how AI was used" note), its visibility (public or available on request), problem categories, role lens tags, and featured order. Every page reads from this.
 **Done when:** one project can be described fully in the model, tagged for any role lens, and marked public or on request, with no page needing a field the model lacks.
 - [x] Design it (spec): `/architect content model`
@@ -62,8 +70,8 @@ The shape of everything the site shows: a project (problem, constraints, decisio
   - [x] Build rules: section splitter, `checkContent` and the check script, rule test suites (AC-2, AC-3, AC-5, AC-7, AC-8, AC-10, AC-12)
   - [x] Read layer: typed read functions, ordering, drafts, derived values (AC-1, AC-6, AC-8, AC-9, AC-11)
   - [x] Proof content: profile, about, three lenses, Beccah's Kitchen, membership charity data migration (AC-13)
-- [ ] Verify it: `/check verify content model`
-- [ ] Test it: `/test content model`
+- [x] Verify it: `/check verify content model`
+- [x] Test it: skipped, the build already shipped 143 Vitest tests covering every rule, and verify passed
 Spec [0002](../specs/0002-content-model/index.md) · code in `features/content/`, `content-collections.ts`, `scripts/check-content.ts`, `content/`
 
 ### 4. Design system & UI foundation · planned · needs a decision
@@ -78,47 +86,58 @@ A hiring manager opens the link you sent with an application, sees quickly that 
 ### 5. Home page · planned · needs a decision
 Your positioning in one look: who you are, the problems you solve, the strongest proof, and clear paths into the role lenses, case studies, CV, and contact.
 **Done when:** a first time visitor can tell within one screen what you do and reach a case study, the CV, or contact in one click, on phone and desktop.
-- [ ] Design it (spec): `/architect home page`
+**Fast track B:** designed and built with the other Journey 1 pages: `/architect journey 1 pages`, then `/develop journey 1 pages`.
+- [ ] Design it (spec): `/architect journey 1 pages` (shared with #5, #6, #7, #9, #10, #11)
 
 ### 6. Role lenses · planned · needs a decision
 A tailored view per role (solutions architect, software developer, AI assisted builder and prompt engineering, plus any others you add) with its own headline, ordered projects, and skills, at a link you can send with each application.
 **Done when:** each lens has a shareable address, shows a headline and project order for that role, and a visitor can switch lenses or see everything.
-- [ ] Design it (spec): `/architect role lenses`
+**Fast track B:** designed and built with the other Journey 1 pages: `/architect journey 1 pages`, then `/develop journey 1 pages`.
+- [ ] Design it (spec): `/architect journey 1 pages` (shared with #5, #6, #7, #9, #10, #11)
 
 ### 7. Case study page · planned · needs a decision
 The template every case study uses: problem, constraints, decision and tradeoffs, a simple architecture diagram, what was built, results, stack, and how AI was used. On request projects show the summary and a request button instead of links and screenshots.
 **Done when:** a public and an on request case study both render fully, with next and previous navigation and a clear way to contact or request details.
-- [ ] Design it (spec): `/architect case study page`
+**Fast track B:** designed and built with the other Journey 1 pages: `/architect journey 1 pages`, then `/develop journey 1 pages`.
+- [ ] Design it (spec): `/architect journey 1 pages` (shared with #5, #6, #7, #9, #10, #11)
 
-### 8. Flagship case studies · planned · needs a decision
+### 8. Flagship case studies · planned
 Write the 6 to 8 deep case studies, drafted from each project's repo and docs and approved by you. Suggested picks (swap any): LVSC data migration and membership app, Ledger Engine, Webstore with two currency payments, LoveSeal messages modernisation, VerdantDevCore WordPress rescue, Beccah's Kitchen, and your spec driven AI workflow as its own story. The decision is the final picks, the angle of each, and which are public or on request.
 **Done when:** every flagship is written, approved by you, marked public or on request, and has real numbers or facts in its results (no invented outcomes).
-- [ ] Design it (spec): `/architect flagship case studies`
+**Fast track C:** no spec. The picks above are the starting list; draft each from its repo, you approve it, and `pnpm content` enforces the rules.
+- [x] Design it (spec): skipped, fast track
+- [ ] Draft them: `/develop flagship case studies` (can run alongside B)
 
 ### 9. Project library · planned · needs a decision
 Every other project from the folder as a short card, filterable by problem, role, and stack, with clear "available on request" badges.
 **Done when:** all chosen projects appear, filters work and are reflected in the address, and empty filter results show a helpful state.
-- [ ] Design it (spec): `/architect project library`
+**Fast track B:** designed and built with the other Journey 1 pages: `/architect journey 1 pages`, then `/develop journey 1 pages`.
+- [ ] Design it (spec): `/architect journey 1 pages` (shared with #5, #6, #7, #9, #10, #11)
 
 ### 10. About & skills · planned · needs a decision
 Your story, how you work (including your AI assisted workflow), and a skills section grouped by what you can do, not a wall of logos.
 **Done when:** the page reads well on phone and desktop and links back to the case studies that prove each skill.
-- [ ] Design it (spec): `/architect about & skills`
+**Fast track B:** designed and built with the other Journey 1 pages: `/architect journey 1 pages`, then `/develop journey 1 pages`.
+- [ ] Design it (spec): `/architect journey 1 pages` (shared with #5, #6, #7, #9, #10, #11)
 
 ### 11. CV download · planned · needs a decision
 A downloadable CV that matches the site. The decision is one general CV or one per role lens, and whether it is written by hand or generated from site content.
 **Done when:** a visitor can download a current CV from the home page, each role lens, and the about page, and the download is counted.
-- [ ] Design it (spec): `/architect CV download`
+**Fast track B:** designed and built with the other Journey 1 pages: `/architect journey 1 pages`, then `/develop journey 1 pages`.
+- [ ] Design it (spec): `/architect journey 1 pages` (shared with #5, #6, #7, #9, #10, #11)
 
 ### 12. Contact · planned · needs a decision · Beta
 A contact form for job and project enquiries, with spam protection and a notification to you.
 **Done when:** a visitor can send a message and sees a themed confirmation, invalid input shows clear errors, a failed send says so, and you are notified.
-- [ ] Design it (spec): `/architect contact`
+**Fast track D:** one spec for both forms, which share the Worker pipeline.
+- [ ] Design it (spec): `/architect forms` (shared with #12 and #14)
 
-### 13. SEO, social cards & analytics · planned · needs a decision
+### 13. SEO, social cards & analytics · planned
 Metadata, sitemap, structured data, and good looking link previews for LinkedIn and messaging apps, plus privacy friendly analytics with no cookies (page views, lens visits, case study reads, CV downloads) and error monitoring.
 **Done when:** every public page has a title, description, and social card; the sitemap lists them; analytics records those events without a cookie banner.
-- [ ] Design it (spec): `/architect SEO, social cards & analytics`
+**Fast track E:** no spec; Cloudflare Web Analytics (no cookies) and Next metadata follow from spec 0001.
+- [x] Design it (spec): skipped, fast track
+- [ ] Build it: `/develop SEO, social cards & analytics`
 
 ## Journey 2: The available on request path
 
@@ -127,7 +146,8 @@ A visitor sees a project marked available on request, asks for details, and gets
 ### 14. Request access · planned · needs a decision · Beta
 A short request form tied to a named project, with spam protection, a confirmation to the visitor, and a notification to you.
 **Done when:** a request from any on request project reaches you with the project name, the visitor sees a themed confirmation, and errors are handled clearly.
-- [ ] Design it (spec): `/architect request access`
+**Fast track D:** one spec for both forms, which share the Worker pipeline.
+- [ ] Design it (spec): `/architect forms` (shared with #12 and #14)
 
 ## Launch
 
