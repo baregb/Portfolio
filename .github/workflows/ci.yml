@@ -29,6 +29,9 @@ jobs:
           cache: pnpm
 
       - run: pnpm install --frozen-lockfile
+      # Spec 0002: build and check content first. It catches what a commit
+      # made without the pre-commit hook let through.
+      - run: pnpm content
       - run: pnpm lint
       - run: pnpm format:check
       - run: pnpm typecheck
