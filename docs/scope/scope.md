@@ -14,7 +14,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | # | Feature | Phase | Status |
 |---|---------|-------|--------|
 | 1 | Stack & architecture | Foundation | in-progress |
-| 2 | Coding standards & tooling | Foundation | in-progress |
+| 2 | Coding standards & tooling | Foundation | done |
 | 3 | Content model | Foundation | planned |
 | 4 | Design system & UI foundation | Foundation | planned |
 | 5 | Home page | Journey 1 | planned |
@@ -43,7 +43,7 @@ Decide how the site is built, where content lives, where it is hosted, the domai
 - [ ] Test it: `/test stack & architecture`
 Spec [0001](../specs/0001-stack-architecture/index.md) · code in `app/`, `worker/`, `wrangler.jsonc`
 
-### 2. Coding standards & tooling · in-progress
+### 2. Coding standards & tooling · done
 Capture conventions and tooling from the real scaffolded project, then install lint, format, and checks.
 **Done when:** root `AGENTS.md` reflects the real stack, and lint, format, and typecheck run clean.
 - [x] Capture conventions + tooling choices: `/audit`
