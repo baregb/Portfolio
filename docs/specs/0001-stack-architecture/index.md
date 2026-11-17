@@ -1,7 +1,7 @@
 # 0001. Build the portfolio as a static Next.js export with one small API Worker on Cloudflare
 
 **Date**: 2026-11-16
-**Status**: In Progress
+**Status**: Accepted
 
 ## Summary
 

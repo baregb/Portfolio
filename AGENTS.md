@@ -30,7 +30,9 @@ pnpm dev               # site at http://localhost:3000
 pnpm build             # static export to out/
 pnpm serve             # build, then site + Worker at http://localhost:8787 (full check before pushing)
 pnpm typecheck         # site and Worker
-pnpm exec vitest run   # tests
+pnpm lint              # ESLint
+pnpm format            # Prettier (format:check only checks)
+pnpm test              # Vitest, run once
 ```
 
 ## Specs
@@ -52,10 +54,10 @@ Stored in `docs/specs/NNNN-title/` (`index.md`, `rationale.md`, `verify.md`). Th
 
 ## Tooling
 
-Chosen here, installed by `/develop tooling`:
-- Lint: ESLint flat config with `eslint-config-next` and `typescript-eslint`. Format: Prettier with `prettier-plugin-tailwindcss`.
-- Pre-commit: lint and format staged files, then `pnpm typecheck`.
-- CI: GitHub Actions on push and PR (install, lint, typecheck, test, build). Workers Builds still does the deploys.
+Installed and enforced:
+- Lint: ESLint flat config (`eslint.config.mjs`) with `eslint-config-next` (core web vitals + TypeScript) and the full `jsx-a11y` recommended set. Unused names are errors unless prefixed `_`. Format: Prettier (`prettier.config.mjs`) with `prettier-plugin-tailwindcss`; Markdown is not formatted.
+- Pre-commit: husky + lint-staged (`.husky/pre-commit`) lints and formats staged files, then runs `pnpm typecheck`.
+- CI: GitHub Actions (`.github/workflows/ci.yml`) on push and PR: lint, format check, typecheck, test, build. Workers Builds still does the deploys.
 - Tests: Vitest, `*.test.ts` beside the source (`test-preferences.json`). Every feature gets typecheck + `/check verify`; Beta features and all Worker code also get a Vitest suite.
 
 ## Git
@@ -83,7 +85,7 @@ Installed in `.agents/skills/` (mirrored in `.claude/skills/`):
 - [sentry-debug-issue](.agents/skills/sentry-debug-issue/): `getsentry/sentry-for-ai`, working a Sentry issue to a fix
 - [nextjs-on-cloudflare](.agents/skills/nextjs-on-cloudflare/): `cloudflare/skills`, does NOT apply (it runs Next on a server); do not follow it
 
-Declined: D1 + Drizzle schema skill, pnpm skill, Next.js App Router patterns skill, community OpenNext skill, Umami MCP
+Declined: D1 + Drizzle schema skill, pnpm skill, Next.js App Router patterns skill, community OpenNext skill, Umami MCP, husky / lint-staged / jsx-a11y skill search
 MCP servers: Cloudflare bindings and observability (recommended), Next.js DevTools (recommended), Sentry (recommended), ESLint `@eslint/mcp` (recommended, after ESLint is installed)
 
 ## Context files

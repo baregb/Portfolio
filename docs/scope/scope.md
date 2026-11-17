@@ -13,7 +13,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 
 | # | Feature | Phase | Status |
 |---|---------|-------|--------|
-| 1 | Stack & architecture | Foundation | in-progress |
+| 1 | Stack & architecture | Foundation | done |
 | 2 | Coding standards & tooling | Foundation | done |
 | 3 | Content model | Foundation | planned |
 | 4 | Design system & UI foundation | Foundation | planned |
@@ -34,13 +34,13 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 
 ## Foundations
 
-### 1. Stack & architecture · in-progress · Beta
+### 1. Stack & architecture · done · Beta
 Decide how the site is built, where content lives, where it is hosted, the domain, and git hosting, then scaffold a runnable project. It is a personal project, so it uses your personal identity, not VerdantDevCore. The choice should leave room for the later AI chat and content admin without a rebuild.
 **Done when:** the decision is recorded in a spec, and the empty scaffold boots locally and passes a production build.
 - [x] Decide the stack (spec): `/architect stack & architecture`
 - [x] Scaffold from the decision: `/develop stack & architecture`
 - [x] Verify it: `/check verify stack & architecture`
-- [ ] Test it: `/test stack & architecture`
+- [x] Test it: `/test stack & architecture`
 Spec [0001](../specs/0001-stack-architecture/index.md) · code in `app/`, `worker/`, `wrangler.jsonc`
 
 ### 2. Coding standards & tooling · done
