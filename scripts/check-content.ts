@@ -17,6 +17,15 @@ import {
   allStacks,
 } from "../.content-collections/generated/index.js";
 import { checkContent, type ContentIssue } from "../features/content/check.ts";
+import { parseContentDrafts } from "../features/content/env.ts";
+
+// Fail loudly on a mistyped CONTENT_DRAFTS before anything else, so every
+// `pnpm content` (commit, typecheck, test, CI, build) enforces it (AC-7).
+const drafts = parseContentDrafts(process.env.CONTENT_DRAFTS);
+if (!drafts.ok) {
+  console.error(drafts.error);
+  process.exit(1);
+}
 
 const root = join(import.meta.dirname, "..", "content");
 
