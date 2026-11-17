@@ -1,0 +1,45 @@
+// Spec 0001. Top level is production; `env.preview` overrides it.
+// Bindings for D1, email, and rate limiting are added by the features that
+// need them (contact, request access). See docs/specs/0001-stack-architecture.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "portfolio",
+  "main": "worker/index.ts",
+  "compatibility_date": "2026-11-16",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Static export from `next build`. Only `/api/*` invokes the Worker;
+  // every other request is a free static asset request.
+  "assets": {
+    "directory": "./out",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+
+  // Production is reached only through the custom domain (added once the
+  // domain is bought), never through workers.dev.
+  "workers_dev": false,
+
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+    "traces": {
+      "enabled": true
+    }
+  },
+
+  "vars": {
+    "ENVIRONMENT": "production"
+  },
+
+  "env": {
+    "preview": {
+      "name": "portfolio-preview",
+      "workers_dev": true,
+      "vars": {
+        "ENVIRONMENT": "preview"
+      }
+    }
+  }
+}
