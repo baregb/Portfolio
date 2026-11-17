@@ -14,7 +14,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | # | Feature | Phase | Status |
 |---|---------|-------|--------|
 | 1 | Stack & architecture | Foundation | in-progress |
-| 2 | Coding standards & tooling | Foundation | planned |
+| 2 | Coding standards & tooling | Foundation | in-progress |
 | 3 | Content model | Foundation | planned |
 | 4 | Design system & UI foundation | Foundation | planned |
 | 5 | Home page | Journey 1 | planned |
@@ -43,10 +43,15 @@ Decide how the site is built, where content lives, where it is hosted, the domai
 - [ ] Test it: `/test stack & architecture`
 Spec [0001](../specs/0001-stack-architecture/index.md) · code in `app/`, `worker/`, `wrangler.jsonc`
 
-### 2. Coding standards & tooling · planned
+### 2. Coding standards & tooling · in-progress
 Capture conventions and tooling from the real scaffolded project, then install lint, format, and checks.
 **Done when:** root `AGENTS.md` reflects the real stack, and lint, format, and typecheck run clean.
-- [ ] Capture conventions + tooling choices: `/audit`
+- [x] Capture conventions + tooling choices: `/audit`
+- [x] Build it: `/develop tooling`
+  - [x] ESLint (Next, TypeScript, jsx-a11y) and Prettier (Tailwind plugin)
+  - [x] Pre-commit hook: husky + lint-staged, then typecheck
+  - [x] GitHub Actions CI: lint, format check, typecheck, test, build
+Code in `eslint.config.mjs`, `prettier.config.mjs`, `.husky/`, `.github/workflows/ci.yml`
 
 ### 3. Content model · planned · needs a decision
 The shape of everything the site shows: a project (problem, constraints, decision and tradeoffs, what was built, result, stack, a "how AI was used" note), its visibility (public or available on request), problem categories, role lens tags, and featured order. Every page reads from this.
