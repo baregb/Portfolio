@@ -19,6 +19,8 @@ const eslintConfig = defineConfig([
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
       "prefer-const": "error",
+      // Spec 0003: themed modals and toasts only, never native dialogs.
+      "no-alert": "error",
     },
   },
   // Turns off style rules that Prettier owns. Keep it last.
