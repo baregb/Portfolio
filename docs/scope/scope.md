@@ -97,7 +97,7 @@ Your positioning in one look: who you are, the problems you solve, the strongest
 - [x] Design it (spec): `/architect journey 1 pages` (shared with #5, #6, #7, #9, #10, #11)
 - [ ] Build it: `/develop journey 1 pages` (builds #5, #6, #7, #9, #10, #11 together)
   - [x] Content additions, image and CV asset step, hero pieces, and home (AC-1, AC-2, AC-10, AC-12, AC-13, AC-15, AC-16, AC-17)
-  - [ ] Case studies, contact, and request pages (AC-4, AC-5, AC-6, AC-11, AC-13)
+  - [x] Case studies, contact, and request pages (AC-4, AC-5, AC-6, AC-11, AC-13)
   - [ ] Role lenses and the project library with filters (AC-3, AC-7, AC-8, AC-13)
   - [ ] About and skills, design.md, and a green check run (AC-9, AC-2, AC-14)
 - [ ] Verify it: `/check verify journey 1 pages`
