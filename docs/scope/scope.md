@@ -95,13 +95,13 @@ Your positioning in one look: who you are, the problems you solve, the strongest
 **Done when:** a first time visitor can tell within one screen what you do and reach a case study, the CV, or contact in one click, on phone and desktop.
 **Fast track B:** designed and built with the other Journey 1 pages: `/architect journey 1 pages`, then `/develop journey 1 pages`.
 - [x] Design it (spec): `/architect journey 1 pages` (shared with #5, #6, #7, #9, #10, #11)
-- [ ] Build it: `/develop journey 1 pages` (builds #5, #6, #7, #9, #10, #11 together)
+- [x] Build it: `/develop journey 1 pages` (builds #5, #6, #7, #9, #10, #11 together)
   - [x] Content additions, image and CV asset step, hero pieces, and home (AC-1, AC-2, AC-10, AC-12, AC-13, AC-15, AC-16, AC-17)
   - [x] Case studies, contact, and request pages (AC-4, AC-5, AC-6, AC-11, AC-13)
   - [x] Role lenses and the project library with filters (AC-3, AC-7, AC-8, AC-13)
-  - [ ] About and skills, design.md, and a green check run (AC-9, AC-2, AC-14)
+  - [x] About and skills, design.md, and a green check run (AC-9, AC-2, AC-14)
 - [ ] Verify it: `/check verify journey 1 pages`
-Spec [0004](../specs/0004-journey-1-pages/index.md)
+Spec [0004](../specs/0004-journey-1-pages/index.md) · code in `app/`, `components/portfolio/`, `features/home/`, `features/lenses/`, `features/case-study/`, `features/library/`, `features/about/`, `features/contact/`, `features/media/`, `scripts/build-assets.ts`
 
 ### 6. Role lenses · in-progress
 A tailored view per role (solutions architect, software developer, AI assisted builder and prompt engineering, plus any others you add) with its own headline, ordered projects, and skills, at a link you can send with each application.

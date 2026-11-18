@@ -34,7 +34,7 @@ The mix takes the best of four directions:
 - **Blueprint base (B).** Hairline 1px rules, square content boxes, mono labels, spec sheets of keys and values, and a faint 24px grid in the hero band. It reads as an architect's site before anyone reads a word.
 - **Bold voice (C).** Bricolage Grotesque headlines at large scale and heavy weight, one highlighted phrase in the hero, and one full width deep green block for the featured case study with big numbers.
 - **Calm reading (A).** Generous whitespace, short text columns, a quiet body face. Long case studies stay easy to read.
-- **Soft chrome (D).** Anything you touch floats: a frosted pill nav, pill buttons, the round profile photo, rounded toasts with a soft shadow.
+- **Soft chrome (D).** Anything you touch floats: a frosted pill nav, pill buttons, rounded toasts with a soft shadow.
 
 The one rule that holds it together: **content is square, controls are round.**
 
@@ -97,9 +97,9 @@ Headings use `text-wrap: balance` automatically. Heading levels follow the page 
 
 ## Rules, radius, and depth
 
-- **Square** (no radius): cards, spec sheets, tags, badges, the green block, image frames for content.
+- **Square** (no radius): cards, spec sheets, tags, badges, the green block, image frames for content, and the profile photo (with a hairline border; spec 0004 changed it from round).
 - **2px** (`rounded-input`): text inputs and the square `line` button.
-- **Round** (`rounded-full`): buttons, the nav bar, nav links, the theme switcher, icon buttons, the profile photo.
+- **Round** (`rounded-full`): buttons, the nav bar, nav links, the lens switcher, the theme switcher, icon buttons.
 - **14px** (`rounded-panel`): toasts, the modal, the mobile menu panel.
 - **Shadow** (`shadow-soft`) only on floating pieces: the nav, toasts, the modal, the mobile menu, secondary buttons. Everything else separates with a hairline.
 
@@ -128,26 +128,55 @@ All in `components/ui/` (primitives) and `components/site/` (shell). Named expor
 
 | Component | Variants and states | Use it for |
 |---|---|---|
-| `Button` | `primary`, `secondary`, `ghost`, `line`, `onAccent`; sizes `sm`, `md`; `pending` (spinner, `aria-busy`, ignores clicks, keeps focus), `disabled`; a link when given `href` (`external` opens a new tab; a disabled link renders as text) | every action. One `primary` per view. `line` for quiet actions inside content boxes ("Request details") |
+| `Button` | `primary`, `secondary`, `ghost`, `line`, `onAccent`; sizes `sm`, `md`; `pending` (spinner, `aria-busy`, ignores clicks, keeps focus), `disabled`; a link when given `href` (`external` opens a new tab; a disabled link renders as text); a download when given `file` (a plain `<a download>`, never `next/link`, passes `data-*` through) | every action. One `primary` per view. `line` for quiet actions inside content boxes ("Request details") |
 | `TextLink` | internal, `external` (icon and a screen reader note) | links inside running text |
 | `Container` | none | the page width and gutter |
-| `Section` | `plain`, `grid`, `accent`; `reveal` | full width bands |
-| `Card` | `as` div, article, aside, li | square hairline content boxes |
+| `Section` | `plain`, `grid`, `accent`; `reveal`; `spacing` `normal`, `hero` (tighter on phones), `compact` (a slim strip); `id` | full width bands |
+| `Card` | `as` div, article, aside, li; `id` | square hairline content boxes |
 | `Tag` | `default`, `onAccent`; a link when given `href` | stack entries and other short mono labels |
-| `Badge` | none | a status such as "Available on request" |
+| `Badge` | `default`, `onAccent` | a status such as "Available on request" |
 | `StatTile` | `standard`, `large` | one sourced number with its label; place tiles inside a `<dl>` |
 | `SpecSheet` | none (renders nothing when empty) | key and value facts, the blueprint signature |
 | `Icon` | decorative (default) or with `label` | every Lucide icon |
 | `Spinner` | none | inside a busy control |
 | `Skeleton` | sized by class | holding layout for parts that load in the browser |
 | `VisuallyHidden` | none | text for screen readers only |
-| `TextField`, `TextArea` | `hint`, `error` (sets `aria-invalid`, read with the field), `required`, `disabled` | every form input; the label always shows |
+| `TextField`, `TextArea`, `SelectField` | `hint`, `error` (sets `aria-invalid`, read with the field), `required`, `disabled`; `SelectField` takes `options` | every form input and native select; the label always shows |
 | `Modal` | `closeOnBackdrop`, `description` | focused tasks that need the page to wait; native `<dialog>` |
 | `Toaster` and `useToast` | `success`, `info` (polite, close after 5s, pause on hover or focus), `error` (assertive, stays until dismissed); at most 3 | short confirmations and failures after an action |
 | `ThemeSwitcher` | none | System, Light, Dark; already in the header |
 | `SkipLink`, `SiteHeader`, `SiteFooter` | header `items`, `position` | the shell; already in `app/layout.tsx` |
 
-Add a nav entry by appending to `navItems` in `components/site/nav.ts` when its route ships.
+Add a nav entry by appending to `navItems` in `components/site/nav.ts` when its route ships. The nav lists Work, About, and Contact.
+
+### Portfolio components
+
+Content aware composites in `components/portfolio/` (spec 0004). They take content values and compose the primitives above; they hold no new look of their own beyond layout.
+
+| Component | Use it for |
+|---|---|
+| `PageHero` | every page header band: label, the one `h1`, the lead with an optional highlighted phrase, actions, and an optional photo (right column from `md`, above or below the text on phones) |
+| `HighlightedText` | the one highlighted phrase in a hero lead (`bg-accent-soft`) |
+| `ProfilePhoto` | `square` (112px on phones, 192px from `md`) in heroes, `portrait` (2:3) on about; crop centres on `photo.focus` |
+| `Availability` | the status mark and fixed label; the words carry the status, never colour alone |
+| `LensSwitcher` | Everything plus every role lens, as wrapping pill links with `aria-current` |
+| `FeaturedProject` | the green block on home and lenses: one flagship with up to four large stat tiles |
+| `ProjectCard` | one project from a `LibraryItem`; safe in client components; `id="project-<slug>"` |
+| `CtaBand` | the closing "Want to talk about a role or a project?" box with contact and the CV |
+| `CvButton` | the CV download with its size, or a disabled "CV coming soon" with no file |
+| `ExternalLinks` | `inline` text links, or a `list` of boxes with the address shown |
+| `Picture` | every content image from the asset step: AVIF and WebP, real width and height, lazy unless `priority` |
+| `Prose` | compiled MDX (case study sections, the about body) styled with tokens, `max-w-prose` |
+
+## Page composition
+
+- Route files in `app/` stay thin: metadata, static params, and one page component from `features/<page>/`.
+- Pages compose only: components from `components/ui/`, `components/site/`, and `components/portfolio/`, plus layout utilities (grid, gap, padding) and token classes. No literal colours (the test scans `features/**/*.tsx` too) and no one off visual treatments.
+- Every page opens with a grid band (`PageHero`, or the case study hero) and has exactly one `h1`. Section headings follow in order.
+- At most one green block per page: home, a lens with a flagship, and a case study with results have exactly one; library, about, contact, and request pages have none.
+- Grids of hairline boxes draw borders on each cell (`border-s border-t` on the grid, `border-e border-b` on each cell), so a short last row leaves the page background, not a filled gap.
+- Parts that only work with JavaScript (the library filters) hide under the `noscript:` variant (`@media (scripting: none)`), and the page still shows all its content without them.
+- Anchor targets clear the sticky nav through a global `scroll-margin-top` on `[id]`.
 
 ## Loading, empty, and error states
 
@@ -158,8 +187,9 @@ Add a nav entry by appending to `navItems` in `components/site/nav.ts` when its 
 
 ## Images
 
-- Image frames are fixed aspect ratio boxes on `bg-surface`, so nothing shifts while they load. Real images come from `content/images/` through the spec 0001 image script (AVIF and WebP at 640, 960, 1280, 1920).
-- The profile photo goes in at a size where the face reads: a head and shoulders crop about 160 to 200px wide in the home hero, and the full portrait large on the about page (spec 0003 follow-up).
+- Image frames are boxes on `bg-surface` with the image's real width and height, so nothing shifts while they load. Real images come from `content/images/` through the asset step (`pnpm assets`, spec 0004): AVIF and WebP at 640, 960, 1280, and 1920, never wider than the source, drawn with `Picture`.
+- Covers, screenshots, and diagrams show whole (`fit="contain"`), never cropped. Only the profile photo crops (`fit="cover"`, centred on `photo.focus`).
+- The profile photo is square with a hairline border: about 112px on phones and 192px from `md` in heroes, and a large 2:3 portrait on the about page.
 
 ## Do's and don'ts
 

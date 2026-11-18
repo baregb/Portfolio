@@ -64,10 +64,13 @@ describe("no literal colours outside the token file", () => {
       const path = join(dir, name);
       return statSync(path).isDirectory() ? listFiles(path) : [path];
     });
-  const files = ["components", "app"]
-    .flatMap((dir) => listFiles(join(root, dir)))
-    .filter((path) => /\.(tsx?|css)$/.test(path))
-    .filter((path) => relative(root, path) !== join("app", "globals.css"));
+  // Spec 0004, AC-14: feature components are scanned too, since pages live there.
+  const files = [
+    ...["components", "app"]
+      .flatMap((dir) => listFiles(join(root, dir)))
+      .filter((path) => /\.(tsx?|css)$/.test(path)),
+    ...listFiles(join(root, "features")).filter((path) => path.endsWith(".tsx")),
+  ].filter((path) => relative(root, path) !== join("app", "globals.css"));
 
   it.each(files.map((path) => relative(root, path)))("%s has no literal colour", (path) => {
     const lines = readFileSync(join(root, path), "utf8").split("\n");

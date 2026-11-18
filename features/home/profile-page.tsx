@@ -156,11 +156,11 @@ export function ProfilePage({
             <h2 id={PROBLEMS_TITLE} className="text-heading font-bold">
               Problems I solve
             </h2>
-            <ul className="grid gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
+            <ul className="grid border-s border-t border-line sm:grid-cols-2 lg:grid-cols-3">
               {categories.map((category) => (
                 <li
                   key={category.slug}
-                  className="relative grid content-start gap-3 bg-surface p-5 transition-colors duration-(--duration-fast) hover:bg-accent-soft md:p-6"
+                  className="relative grid content-start gap-3 border-e border-b border-line bg-surface p-5 transition-colors duration-(--duration-fast) hover:bg-accent-soft md:p-6"
                 >
                   <h3 className="text-subheading font-bold">
                     <Link
@@ -212,9 +212,12 @@ export function ProfilePage({
             <h2 id={SKILLS_TITLE} className="text-heading font-bold">
               Skills
             </h2>
-            <ul className="grid gap-px border border-line bg-line md:grid-cols-2">
+            <ul className="grid border-s border-t border-line md:grid-cols-2">
               {lensSkills.map((skill) => (
-                <li key={skill.slug} className="grid content-start gap-2 bg-surface p-5 md:p-6">
+                <li
+                  key={skill.slug}
+                  className="grid content-start gap-2 border-e border-b border-line bg-surface p-5 md:p-6"
+                >
                   <h3 className="text-subheading font-bold">
                     {skill.href ? <TextLink href={skill.href}>{skill.name}</TextLink> : skill.name}
                   </h3>
