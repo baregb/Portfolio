@@ -77,3 +77,30 @@ describe("no literal colours outside the token file", () => {
     expect(hits.map(({ number, line }) => `${path}:${number}: ${line.trim()}`)).toEqual([]);
   });
 });
+
+// AC-1: docs/design.md mirrors the colour tokens, so a direction change that
+// edits app/globals.css fails here until the design doc is updated too.
+describe("docs/design.md colour table", () => {
+  const parsed = parseThemeTokens(css);
+  if (!parsed.ok) throw new Error(parsed.error);
+  const doc = readFileSync(join(root, "docs", "design.md"), "utf8");
+  const rows = Object.fromEntries(
+    [...doc.matchAll(/^\| `--color-([\w-]+)` \| `([^`]+)` \| `([^`]+)` \|/gm)].map(
+      ([, name, light, dark]) => [name, { light, dark }],
+    ),
+  );
+  const names = Object.keys(parsed.tokens.light).filter(
+    (name) => !["transparent", "current"].includes(name),
+  );
+
+  it("lists exactly the tokens in app/globals.css", () => {
+    expect(Object.keys(rows).sort()).toEqual([...names].sort());
+  });
+
+  it.each(names)("--color-%s matches in both themes", (name) => {
+    expect(rows[name]).toEqual({
+      light: parsed.tokens.light[name],
+      dark: parsed.tokens.dark[name],
+    });
+  });
+});

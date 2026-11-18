@@ -78,13 +78,13 @@ Spec [0002](../specs/0002-content-model/index.md) · code in `features/content/`
 Visual identity and base components, held to your premium app standard: light and dark theme switcher, purposeful motion that respects reduced motion, loading states everywhere, themed toasts and modals (no native dialogs), and WCAG 2.2 AA.
 **Done when:** `design.md` covers type, colour, spacing, motion, and components; base components work by keyboard and in both themes.
 - [x] Design it (spec): `/architect design system & UI foundation`
-- [ ] Build it: `/develop design system & UI foundation`
+- [x] Build it: `/develop design system & UI foundation`
   - [x] Tokens, fonts, and theme: colour, type, and motion tokens, Bricolage Grotesque with Geist and Geist Mono, the no flash theme script and switcher, contrast and no literal colour tests, `no-alert` (AC-2, AC-3, AC-4, AC-5, AC-6, AC-9, AC-14)
   - [x] Components: primitives, form fields, `Modal`, `Toaster` (AC-6, AC-8, AC-9, AC-10, AC-11)
   - [x] Shell, motion, and styleguide: skip link, header with mobile menu, footer, view transitions, section entry, `/styleguide` (AC-7, AC-11, AC-12, AC-13)
-  - [ ] `docs/design.md` and a green check run (AC-1, AC-15)
+  - [x] `docs/design.md` and a green check run (AC-1, AC-15)
 - [ ] Verify it: `/check verify design system & UI foundation`
-Spec [0003](../specs/0003-design-system.md)
+Spec [0003](../specs/0003-design-system.md) · code in `app/globals.css`, `components/ui/`, `components/site/`, `features/design/`, `docs/design.md`
 
 ## Journey 1: The recruiter path
 
