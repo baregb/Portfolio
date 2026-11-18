@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
+  changeFilterQuery,
   filterProjects,
+  setFilter,
   filtersToQuery,
   hasFilters,
   parseFilters,
+  type FilterKey,
   type FilterOptions,
 } from "./filter.ts";
 
@@ -101,5 +104,53 @@ describe("filtersToQuery and hasFilters", () => {
   it("says whether any filter is set", () => {
     expect(hasFilters({})).toBe(false);
     expect(hasFilters({ role: "developer" })).toBe(true);
+  });
+});
+
+describe("setFilter", () => {
+  it("sets, replaces, and unsets one filter, leaving the rest", () => {
+    expect(setFilter({ role: "developer" }, "stack", "nextjs")).toEqual({
+      role: "developer",
+      stack: "nextjs",
+    });
+    expect(setFilter({ stack: "nextjs" }, "stack", "postgres")).toEqual({ stack: "postgres" });
+    expect(setFilter({ role: "developer", stack: "nextjs" }, "stack", "")).toEqual({
+      role: "developer",
+    });
+  });
+});
+
+describe("changeFilterQuery", () => {
+  // Regression: two selects changed before React re-rendered. The second
+  // change built on the rendered (stale) filters, so `?problem=` was lost and
+  // only `?stack=` survived. Each change must build on the address written by
+  // the one before it.
+  it("keeps the first of two changes made back to back", () => {
+    const rendered = "";
+    const first = changeFilterQuery(rendered, options, "problem", "commerce");
+    const second = changeFilterQuery(`?${first}`, options, "stack", "nextjs");
+    expect(second).toBe("problem=commerce&stack=nextjs");
+  });
+
+  it("applies three quick changes in any order", () => {
+    const changes: readonly (readonly [FilterKey, string])[] = [
+      ["stack", "postgres"],
+      ["role", "developer"],
+      ["problem", "data"],
+    ];
+    const query = changes.reduce(
+      (search, [key, value]) => `?${changeFilterQuery(search, options, key, value)}`,
+      "",
+    );
+    expect(query).toBe("?problem=data&role=developer&stack=postgres");
+  });
+
+  it("unsets a filter and drops unknown values already in the address", () => {
+    expect(changeFilterQuery("?problem=data&stack=nope", options, "role", "architect")).toBe(
+      "problem=data&role=architect",
+    );
+    expect(changeFilterQuery("?problem=data&role=architect", options, "problem", "")).toBe(
+      "role=architect",
+    );
   });
 });

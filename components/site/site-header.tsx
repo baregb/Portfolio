@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { cx } from "@/components/ui/cx";
 import { getProfile } from "@/features/content";
-import { MobileMenu } from "./mobile-menu";
 import { navItems, type NavItem } from "./nav";
-import { NavLinks } from "./nav-links";
+import { SiteMenu } from "./site-menu";
 import { ThemeSwitcher } from "./theme-switcher";
 
 type SiteHeaderProps = {
@@ -12,7 +11,10 @@ type SiteHeaderProps = {
   readonly position?: "sticky" | "static";
 };
 
-/** The floating frosted pill bar (D): name, nav, and theme switcher. */
+/**
+ * The floating frosted pill bar (D): the name and the menu button, at every
+ * size. The nav and the theme switcher live in the menu drawer.
+ */
 export function SiteHeader({ items = navItems, position = "sticky" }: SiteHeaderProps) {
   const { name } = getProfile();
   const hasNav = items.length > 0;
@@ -30,18 +32,8 @@ export function SiteHeader({ items = navItems, position = "sticky" }: SiteHeader
         >
           {name}
         </Link>
-        {hasNav ? (
-          <nav aria-label="Main" className="hidden md:block">
-            <NavLinks items={items} layout="row" />
-          </nav>
-        ) : null}
-        <div className="flex items-center gap-1">
-          {/* With a nav on small screens, the switcher moves into the menu panel. */}
-          <div className={hasNav ? "hidden md:block" : undefined}>
-            <ThemeSwitcher />
-          </div>
-          {hasNav ? <MobileMenu items={items} /> : null}
-        </div>
+        {/* With no nav (a styleguide demo), the switcher sits in the bar itself. */}
+        {hasNav ? <SiteMenu items={items} /> : <ThemeSwitcher />}
       </div>
     </header>
   );

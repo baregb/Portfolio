@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
 import { Container } from "@/components/ui/container";
 import { Icon } from "@/components/ui/icon";
 import { Section } from "@/components/ui/section";
@@ -28,12 +29,12 @@ export function CtaBand({
               Want to talk about a role or a project?
             </h2>
           </div>
-          <div className="flex flex-wrap gap-3">
+          <ButtonGroup>
             <Button href="/contact" iconEnd={<Icon icon={ArrowRight} />}>
               Get in touch
             </Button>
             <CvButton cv={cv} />
-          </div>
+          </ButtonGroup>
         </div>
       </Container>
     </Section>

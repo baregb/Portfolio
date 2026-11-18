@@ -100,8 +100,9 @@ Headings use `text-wrap: balance` automatically. Heading levels follow the page 
 - **Square** (no radius): cards, spec sheets, tags, badges, the green block, image frames for content, and the profile photo (with a hairline border; spec 0004 changed it from round).
 - **2px** (`rounded-input`): text inputs and the square `line` button.
 - **Round** (`rounded-full`): buttons, the nav bar, nav links, the lens switcher, the theme switcher, icon buttons.
-- **14px** (`rounded-panel`): toasts, the modal, the mobile menu panel.
-- **Shadow** (`shadow-soft`) only on floating pieces: the nav, toasts, the modal, the mobile menu, secondary buttons. Everything else separates with a hairline.
+- **14px** (`rounded-panel`): toasts and the modal.
+- **Full height drawer** (square, hairline on its left edge): the menu drawer.
+- **Shadow** (`shadow-soft`) only on floating pieces: the nav, toasts, the modal, the menu drawer, secondary buttons. Everything else separates with a hairline.
 
 ## Grid and the green block
 
@@ -144,8 +145,9 @@ All in `components/ui/` (primitives) and `components/site/` (shell). Named expor
 | `TextField`, `TextArea`, `SelectField` | `hint`, `error` (sets `aria-invalid`, read with the field), `required`, `disabled`; `SelectField` takes `options` | every form input and native select; the label always shows |
 | `Modal` | `closeOnBackdrop`, `description` | focused tasks that need the page to wait; native `<dialog>` |
 | `Toaster` and `useToast` | `success`, `info` (polite, close after 5s, pause on hover or focus), `error` (assertive, stays until dismissed); at most 3 | short confirmations and failures after an action |
-| `ThemeSwitcher` | none | System, Light, Dark; already in the header |
-| `SkipLink`, `SiteHeader`, `SiteFooter` | header `items`, `position` | the shell; already in `app/layout.tsx` |
+| `ButtonGroup` | `className` | every row of actions: stacks each button at full width on phones so they all match, side by side from `sm` |
+| `ThemeSwitcher` | none | System, Light, Dark; already in the menu drawer |
+| `SkipLink`, `SiteHeader`, `SiteFooter` | header `items`, `position` | the shell; already in `app/layout.tsx`. The header is the name plus a menu button at every size; `SiteMenu` is the drawer with the nav and the theme switcher |
 
 Add a nav entry by appending to `navItems` in `components/site/nav.ts` when its route ships. The nav lists Work, About, and Contact.
 
@@ -155,9 +157,9 @@ Content aware composites in `components/portfolio/` (spec 0004). They take conte
 
 | Component | Use it for |
 |---|---|
-| `PageHero` | every page header band: label, the one `h1`, the lead with an optional highlighted phrase, actions, and an optional photo (right column from `md`, above or below the text on phones) |
+| `PageHero` | every page header band: label, the one `h1`, the lead with an optional highlighted phrase, actions, and an optional photo: `mediaLayout="column"` (its own column from `md`) or `"split"` (fills the right side of the band to the screen edge from `md`, a full width band on top on phones) |
 | `HighlightedText` | the one highlighted phrase in a hero lead (`bg-accent-soft`) |
-| `ProfilePhoto` | `square` (112px on phones, 192px from `md`) in heroes, `portrait` (2:3) on about; crop centres on `photo.focus` |
+| `ProfilePhoto` | `fill` for the split hero on home and lenses, `portrait` (2:3) on about; crop centres on `photo.focus` |
 | `Availability` | the status mark and fixed label; the words carry the status, never colour alone |
 | `LensSwitcher` | Everything plus every role lens, as wrapping pill links with `aria-current` |
 | `FeaturedProject` | the green block on home and lenses: one flagship with up to four large stat tiles |
@@ -189,7 +191,8 @@ Content aware composites in `components/portfolio/` (spec 0004). They take conte
 
 - Image frames are boxes on `bg-surface` with the image's real width and height, so nothing shifts while they load. Real images come from `content/images/` through the asset step (`pnpm assets`, spec 0004): AVIF and WebP at 640, 960, 1280, and 1920, never wider than the source, drawn with `Picture`.
 - Covers, screenshots, and diagrams show whole (`fit="contain"`), never cropped. Only the profile photo crops (`fit="cover"`, centred on `photo.focus`).
-- The profile photo is square with a hairline border: about 112px on phones and 192px from `md` in heroes, and a large 2:3 portrait on the about page.
+- The profile photo has square corners and a hairline border. On home and lenses it fills the right side of the split hero from `md` (a full width band across the top on phones); on about it is a large 2:3 portrait.
+- Every row of actions uses `ButtonGroup`, so on phones the buttons stack at one full width.
 
 ## Do's and don'ts
 

@@ -5,6 +5,7 @@ import { CvButton } from "@/components/portfolio/cv-button";
 import { ExternalLinks } from "@/components/portfolio/external-links";
 import { profileLinks } from "@/components/portfolio/links";
 import { PageHero } from "@/components/portfolio/page-hero";
+import { ButtonGroup } from "@/components/ui/button-group";
 import { Container } from "@/components/ui/container";
 import { Icon } from "@/components/ui/icon";
 import { Section } from "@/components/ui/section";
@@ -44,9 +45,9 @@ export function ContactPage() {
     <>
       <PageHero label="Contact" title="Get in touch" lead={CONTACT_LEAD}>
         <Availability availability={profile.availability} />
-        <div>
+        <ButtonGroup>
           <CvButton cv={getCvAsset()} />
-        </div>
+        </ButtonGroup>
       </PageHero>
       <Section>
         <Container>

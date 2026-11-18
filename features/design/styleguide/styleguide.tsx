@@ -392,7 +392,7 @@ export function Styleguide() {
         <Block
           id="shell"
           title="Header"
-          description="The floating frosted bar with sample nav items. Below the md breakpoint the nav folds into the menu button."
+          description="The floating frosted bar with sample nav items. At every size the menu button opens a drawer with the nav and the theme switcher."
         >
           <div className="border border-line grid-band py-6">
             <SiteHeader items={SAMPLE_NAV} position="static" />

@@ -8,6 +8,7 @@ import { Section } from "@/components/ui/section";
 import { TextLink } from "@/components/ui/text-link";
 import { getAbout, getProfile, getSkillGroups } from "@/features/content";
 import { getCvAsset } from "@/features/media/manifest";
+import { HashTarget } from "./hash-target";
 
 const SKILLS_TITLE = "skills-title";
 
@@ -51,7 +52,7 @@ export function AboutPage() {
                     <li
                       key={skill.slug}
                       id={`skill-${skill.slug}`}
-                      className="grid content-start gap-3 border-e border-b border-line bg-surface p-5 target:bg-accent-soft md:p-6"
+                      className="grid content-start gap-3 border-e border-b border-line bg-surface p-5 target:bg-accent-soft data-hash-target:bg-accent-soft md:p-6"
                     >
                       <h4 className="font-display text-subheading font-bold">{skill.name}</h4>
                       <p className="text-muted">{skill.description}</p>
@@ -75,6 +76,7 @@ export function AboutPage() {
       ) : null}
 
       <CtaBand cv={getCvAsset()} availability={profile.availability} />
+      <HashTarget />
     </>
   );
 }

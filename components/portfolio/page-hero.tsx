@@ -22,6 +22,12 @@ type PageHeroProps = {
   readonly media?: ReactNode;
   /** Where `media` sits on phones: `top` (above the label) or `bottom` (after the text). */
   readonly mediaOnPhones?: "top" | "bottom";
+  /**
+   * `column`: `media` in its own column beside the text. `split`: `media`
+   * fills the right side of the band from `md`, top to bottom and out to the
+   * screen edge, and runs full width across the top on phones.
+   */
+  readonly mediaLayout?: "column" | "split";
 };
 
 /**
@@ -37,7 +43,45 @@ export function PageHero({
   children,
   media,
   mediaOnPhones = "top",
+  mediaLayout = "column",
 }: PageHeroProps) {
+  const text = (
+    <div className="grid min-w-0 content-start gap-5 md:gap-6">
+      <p className="label text-accent">{label}</p>
+      <h1
+        id={PAGE_TITLE_ID}
+        className={cx(
+          "font-extrabold break-words",
+          titleSize === "display" ? "text-display" : "text-title",
+        )}
+      >
+        {title}
+      </h1>
+      <p className="max-w-prose text-lead text-muted">
+        <HighlightedText text={lead} phrase={highlight} />
+      </p>
+      {children}
+    </div>
+  );
+
+  if (media && mediaLayout === "split") {
+    return (
+      <Section
+        variant="grid"
+        spacing="heroFlush"
+        labelledBy={PAGE_TITLE_ID}
+        className="relative md:flex md:min-h-[min(46rem,calc(100svh-5rem))] md:items-center"
+      >
+        <div className="md:absolute md:inset-y-0 md:right-0 md:left-[54%] lg:left-[56%]">
+          {media}
+        </div>
+        <Container className="pt-8 md:pt-0">
+          <div className="md:w-[49%] lg:w-[51%]">{text}</div>
+        </Container>
+      </Section>
+    );
+  }
+
   return (
     <Section variant="grid" spacing="hero" labelledBy={PAGE_TITLE_ID}>
       <Container
@@ -46,22 +90,7 @@ export function PageHero({
           media ? "md:grid-cols-[minmax(0,1fr)_auto]" : undefined,
         )}
       >
-        <div className="grid min-w-0 content-start gap-5 md:gap-6">
-          <p className="label text-accent">{label}</p>
-          <h1
-            id={PAGE_TITLE_ID}
-            className={cx(
-              "font-extrabold break-words",
-              titleSize === "display" ? "text-display" : "text-title",
-            )}
-          >
-            {title}
-          </h1>
-          <p className="max-w-prose text-lead text-muted">
-            <HighlightedText text={lead} phrase={highlight} />
-          </p>
-          {children}
-        </div>
+        {text}
         {media ? (
           <div className={cx(mediaOnPhones === "top" && "order-first md:order-none")}>{media}</div>
         ) : null}

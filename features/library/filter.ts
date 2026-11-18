@@ -53,5 +53,25 @@ export const filtersToQuery = (filters: Filters): string =>
     return value ? [`${key}=${encodeURIComponent(value)}`] : [];
   }).join("&");
 
+/** Sets one filter, or unsets it for an empty value, leaving the others alone. */
+export const setFilter = (filters: Filters, key: FilterKey, value: string): Filters => {
+  const { [key]: _previous, ...rest } = filters;
+  return value ? { ...rest, [key]: value } : rest;
+};
+
+/**
+ * The query after one filter change, built from the address as it is now
+ * (`location.search`), not from the last render. Two changes can land before
+ * React re-renders; building from rendered state made the second one drop
+ * the first.
+ */
+export const changeFilterQuery = (
+  search: string,
+  options: FilterOptions,
+  key: FilterKey,
+  value: string,
+): string =>
+  filtersToQuery(setFilter(parseFilters(new URLSearchParams(search), options), key, value));
+
 export const hasFilters = (filters: Filters): boolean =>
   FILTER_KEYS.some((key) => filters[key] !== undefined);

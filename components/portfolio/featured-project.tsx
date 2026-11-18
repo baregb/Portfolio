@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
 import { Container } from "@/components/ui/container";
 import { Icon } from "@/components/ui/icon";
 import { Section } from "@/components/ui/section";
@@ -34,14 +35,15 @@ export function FeaturedProject({ project }: { readonly project: Flagship }) {
           <p className="label text-block-muted">
             {project.primaryCategory.name} · {project.sector.name}
           </p>
-          <Button
-            href={projectAnchor(project)}
-            variant="onAccent"
-            iconEnd={<Icon icon={ArrowRight} />}
-            className="mt-2"
-          >
-            {onRequest ? "See the summary" : "Read the case study"}
-          </Button>
+          <ButtonGroup className="mt-2 justify-self-stretch sm:justify-self-start">
+            <Button
+              href={projectAnchor(project)}
+              variant="onAccent"
+              iconEnd={<Icon icon={ArrowRight} />}
+            >
+              {onRequest ? "See the summary" : "Read the case study"}
+            </Button>
+          </ButtonGroup>
         </div>
         {results.length > 0 ? (
           <dl className="grid grid-cols-1 gap-px border border-block-line bg-block-line min-[420px]:grid-cols-2 min-[420px]:[&>*:last-child:nth-child(odd)]:col-span-2">

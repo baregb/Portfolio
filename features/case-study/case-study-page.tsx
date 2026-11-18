@@ -10,6 +10,7 @@ import { Picture } from "@/components/portfolio/picture";
 import { Prose } from "@/components/portfolio/prose";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
 import { Container } from "@/components/ui/container";
 import { cx } from "@/components/ui/cx";
 import { Icon } from "@/components/ui/icon";
@@ -225,11 +226,11 @@ function OnRequestSections({ project }: { readonly project: OnRequestFlagship })
         <div className="grid gap-5 border border-dashed border-line-strong bg-surface p-6 md:grid-cols-[auto_minmax(0,1fr)_auto] md:items-center md:p-8">
           <Icon icon={Lock} className="size-6 text-accent" />
           <p className="text-lg font-medium">{REQUEST_PANEL}</p>
-          <div>
+          <ButtonGroup>
             <Button href={href} variant="line" iconEnd={<Icon icon={ArrowRight} />}>
               Request details
             </Button>
-          </div>
+          </ButtonGroup>
         </div>
       ) : null}
     </>

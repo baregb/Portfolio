@@ -11,6 +11,7 @@ import { PageHero } from "@/components/portfolio/page-hero";
 import { ProfilePhoto } from "@/components/portfolio/profile-photo";
 import { ProjectCard } from "@/components/portfolio/project-card";
 import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
 import { Container } from "@/components/ui/container";
 import { Icon } from "@/components/ui/icon";
 import { Section } from "@/components/ui/section";
@@ -91,19 +92,20 @@ export function ProfilePage({
         titleSize="display"
         lead={hero.lead}
         highlight={hero.highlight}
-        media={<ProfilePhoto photo={profile.photo} variant="square" priority />}
+        media={<ProfilePhoto photo={profile.photo} variant="fill" priority />}
+        mediaLayout="split"
       >
         {hero.intro ? <p className="max-w-prose text-muted">{hero.intro}</p> : null}
         <Availability availability={profile.availability} />
-        <div className="flex flex-wrap gap-3">
+        <ButtonGroup>
           <Button href="#work" iconEnd={<Icon icon={ArrowRight} />}>
             See case studies
           </Button>
           <CvButton cv={cv} />
-          <Button href="/contact" variant="ghost">
+          <Button href="/contact" variant="secondary">
             Contact
           </Button>
-        </div>
+        </ButtonGroup>
       </PageHero>
 
       <Section spacing="compact" labelledBy={SWITCHER_TITLE} className="border-b border-line">
@@ -141,7 +143,12 @@ export function ProfilePage({
                 <h2 id={WORK_TITLE} className="text-heading font-bold">
                   More work
                 </h2>
-                <Button href="/work" variant="secondary" iconEnd={<Icon icon={ArrowRight} />}>
+                <Button
+                  href="/work"
+                  variant="secondary"
+                  iconEnd={<Icon icon={ArrowRight} />}
+                  className="w-full sm:w-auto"
+                >
                   See all work
                 </Button>
               </div>

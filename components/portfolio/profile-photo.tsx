@@ -5,8 +5,12 @@ import { Picture } from "./picture";
 const DEFAULT_FOCUS = "50% 25%";
 
 const VARIANTS = {
-  // About 112px on phones, 192px from `md` (AC-2).
-  square: { frame: "size-28 md:size-48", sizes: "(min-width: 768px) 192px, 112px" },
+  // The split hero (AC-2): a wide band across the top on phones, then the
+  // whole right side of the hero from `md`, edge to edge.
+  fill: {
+    frame: "h-[clamp(11rem,26svh,20rem)] w-full md:h-full",
+    sizes: "(min-width: 1024px) 44vw, (min-width: 768px) 46vw, 100vw",
+  },
   // The about page portrait, large where the face reads.
   portrait: {
     frame: "aspect-[2/3] w-full max-w-xs md:w-72 lg:w-80",
@@ -16,7 +20,7 @@ const VARIANTS = {
 
 /**
  * The profile photo (spec 0004, AC-2): square corners and a hairline border,
- * a square crop centred on `photo.focus` in heroes, a 2:3 portrait on about.
+ * a crop centred on `photo.focus` filling the split hero, a 2:3 portrait on about.
  */
 export function ProfilePhoto({
   photo,
