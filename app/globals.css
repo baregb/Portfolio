@@ -135,6 +135,22 @@ html.dark {
   [hidden] {
     display: none !important;
   }
+
+  /* AC-9: the page behind an open modal does not scroll. */
+  html:has(dialog[open]) {
+    overflow: hidden;
+  }
+}
+
+/* The theme switcher's selected option, drawn from the attribute the head
+   script sets before first paint, so it never shows "nothing selected". */
+@layer components {
+  html[data-theme-setting="system"] [data-theme-option="system"],
+  html[data-theme-setting="light"] [data-theme-option="light"],
+  html[data-theme-setting="dark"] [data-theme-option="dark"] {
+    background-color: var(--color-accent);
+    color: var(--color-accent-ink);
+  }
 }
 
 /* The blueprint grid, only for `Section variant="grid"` bands (AC-14). */

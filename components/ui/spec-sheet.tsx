@@ -19,8 +19,8 @@ export function SpecSheet({
           key={key}
           className="flex justify-between gap-3 border-b border-dashed border-line px-3.5 py-2.5 last:border-b-0"
         >
-          <dt className="text-muted">{key}</dt>
-          <dd className="text-right">{value}</dd>
+          <dt className="shrink-0 text-muted">{key}</dt>
+          <dd className="min-w-0 text-right break-words">{value}</dd>
         </div>
       ))}
     </dl>

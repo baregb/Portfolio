@@ -80,10 +80,12 @@ export function ThemeSwitcher({ className }: { readonly className?: string }) {
           <label
             key={option}
             title={label}
+            // The selected look comes from <html data-theme-setting>, which the
+            // head script sets before first paint, so it is right before hydration.
+            data-theme-option={option}
             className={cx(
               "relative inline-flex size-9 cursor-pointer items-center justify-center rounded-full",
               "text-muted transition-colors duration-(--duration-fast) hover:text-fg",
-              "has-checked:bg-accent has-checked:text-accent-ink",
               "has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-accent",
             )}
           >

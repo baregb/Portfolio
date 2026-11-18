@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
+import { ViewTransition } from "react";
+import { SiteFooter } from "@/components/site/site-footer";
+import { SiteHeader } from "@/components/site/site-header";
+import { SkipLink } from "@/components/site/skip-link";
+import { Toaster } from "@/components/ui/toaster";
 import { THEME_SCRIPT } from "@/features/design/theme";
 import "./globals.css";
 
@@ -42,7 +47,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
-      <body>{children}</body>
+      <body className="flex min-h-dvh flex-col">
+        <Toaster>
+          <SkipLink />
+          <SiteHeader />
+          {/* AC-7: route changes crossfade; reduced motion turns it off in CSS. */}
+          <ViewTransition>
+            <main id="main" tabIndex={-1} className="flex-1 outline-none">
+              {children}
+            </main>
+          </ViewTransition>
+          <SiteFooter />
+        </Toaster>
+      </body>
     </html>
   );
 }
