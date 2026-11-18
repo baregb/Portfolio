@@ -4,4 +4,7 @@
 
 export type NavItem = { readonly href: string; readonly label: string };
 
-export const navItems: readonly NavItem[] = [{ href: "/contact", label: "Contact" }];
+export const navItems: readonly NavItem[] = [
+  { href: "/work", label: "Work" },
+  { href: "/contact", label: "Contact" },
+];

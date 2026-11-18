@@ -1,4 +1,10 @@
-import type { InputHTMLAttributes, ReactNode, TextareaHTMLAttributes } from "react";
+import { ChevronDown } from "lucide-react";
+import type {
+  InputHTMLAttributes,
+  ReactNode,
+  SelectHTMLAttributes,
+  TextareaHTMLAttributes,
+} from "react";
 import { cx } from "./cx";
 
 type FieldProps = {
@@ -111,6 +117,53 @@ export function TextArea({
           className,
         )}
       />
+    </FieldFrame>
+  );
+}
+
+export type SelectOption = { readonly value: string; readonly label: string };
+
+/** A labelled native select (spec 0004), styled like the inputs with its own chevron. */
+export function SelectField({
+  label,
+  name,
+  id = name,
+  error,
+  hint,
+  options,
+  className,
+  ...select
+}: FieldProps & {
+  readonly options: readonly SelectOption[];
+} & Omit<SelectHTMLAttributes<HTMLSelectElement>, "name" | "id" | "children">) {
+  return (
+    <FieldFrame id={id} label={label} hint={hint} error={error} required={select.required}>
+      <div className="relative">
+        <select
+          {...select}
+          id={id}
+          name={name}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={describedBy(id, hint, error)}
+          className={cx(
+            control,
+            "min-h-11 cursor-pointer appearance-none pe-10",
+            error ? "border-danger" : "border-line-strong",
+            className,
+          )}
+        >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          aria-hidden="true"
+          className="pointer-events-none absolute end-3 top-1/2 size-4 -translate-y-1/2 text-muted"
+          strokeWidth={2}
+        />
+      </div>
     </FieldFrame>
   );
 }

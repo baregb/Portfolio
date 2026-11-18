@@ -15,7 +15,7 @@ import { SpecSheet } from "@/components/ui/spec-sheet";
 import { Spinner } from "@/components/ui/spinner";
 import { StatTile } from "@/components/ui/stat-tile";
 import { Tag } from "@/components/ui/tag";
-import { TextArea, TextField } from "@/components/ui/text-field";
+import { SelectField, TextArea, TextField } from "@/components/ui/text-field";
 import { TextLink } from "@/components/ui/text-link";
 import { contrastRatio, formatRatio } from "../contrast";
 import { parseThemeTokens, type TokenMap } from "../tokens";
@@ -341,6 +341,16 @@ export function Styleguide() {
               name="sg-message"
               required
               hint="A few lines about the role or project."
+            />
+            <SelectField
+              label="Problem"
+              name="sg-problem"
+              defaultValue=""
+              options={[
+                { value: "", label: "All" },
+                { value: "commerce", label: "Commerce and payments" },
+                { value: "data", label: "Data migration" },
+              ]}
             />
           </div>
         </Block>

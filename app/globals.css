@@ -9,6 +9,8 @@
  */
 
 @custom-variant dark (&:where(.dark, .dark *));
+/* For parts that only work with JavaScript, such as the library filters. */
+@custom-variant noscript (@media (scripting: none));
 
 @theme static {
   --color-*: initial;
