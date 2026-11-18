@@ -9,7 +9,7 @@ contrast: "Body text 16.51:1 light, 15.29:1 dark. Muted 6.26:1 / 6.97:1. Accent 
 
 # Design system
 
-This file is the art direction and the rules. `/styleguide` shows every piece live in both themes, `app/globals.css` holds the values, and [spec 0003](specs/0003-design-system.md) is the decision record.
+This file is the art direction and the rules. `/styleguide` shows every piece live in both themes, `app/globals.css` holds the values, and [spec 0003](specs/0003-design-system/index.md) is the decision record.
 
 **This is the current direction, not a final one.** The art direction may change as the site takes shape. The system is built so a change lands in a few places (below) rather than across every page.
 

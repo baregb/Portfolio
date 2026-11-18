@@ -84,7 +84,7 @@ Visual identity and base components, held to your premium app standard: light an
   - [x] Shell, motion, and styleguide: skip link, header with mobile menu, footer, view transitions, section entry, `/styleguide` (AC-7, AC-11, AC-12, AC-13)
   - [x] `docs/design.md` and a green check run (AC-1, AC-15)
 - [ ] Verify it: `/check verify design system & UI foundation`
-Spec [0003](../specs/0003-design-system.md) · code in `app/globals.css`, `components/ui/`, `components/site/`, `features/design/`, `docs/design.md`
+Spec [0003](../specs/0003-design-system/index.md) · code in `app/globals.css`, `components/ui/`, `components/site/`, `features/design/`, `docs/design.md`
 
 ## Journey 1: The recruiter path
 
