@@ -248,6 +248,26 @@ describe("files and images (AC-2, AC-10, AC-12)", () => {
     ]);
   });
 
+  it("allows the CV at content/cv/cv.pdf and nothing else in content/cv", () => {
+    expect(errorsOf(baseSnapshot())).toEqual([]);
+    expect(errorsOf(withFiles((files) => [...files, "cv/old.pdf"]))).toEqual([
+      { file: "content/cv/old.pdf", message: "matches no collection and is not an image" },
+    ]);
+  });
+
+  it.each(both)("only warns when the CV is missing (includeDrafts=%s)", (includeDrafts) => {
+    const result = checkContent(
+      withFiles((files) => files.filter((file) => file !== "cv/cv.pdf")),
+      { includeDrafts },
+    );
+    expect(result.ok).toBe(true);
+    expect(result.warnings).toContainEqual({
+      file: "content/cv/cv.pdf",
+      message:
+        'is missing: the CV button shows "CV coming soon", and a production build fails until you add it',
+    });
+  });
+
   it("fails on an orphan image", () => {
     expect(errorsOf(withFiles((files) => [...files, "images/atlas-shop/old.png"]))).toEqual([
       {
@@ -337,5 +357,51 @@ describe("files and images (AC-2, AC-10, AC-12)", () => {
         "there must be exactly one about page, found 0",
       ]),
     );
+  });
+});
+
+describe("headline highlights (spec 0004, AC-15)", () => {
+  it("passes when the phrase appears once in the headline", () => {
+    const profiles = [
+      profile({ headline: "I build shops end to end", headlineHighlight: "end to end" }),
+    ];
+    const lenses = baseSnapshot().lenses.map((l) => ({
+      ...l,
+      headline: "Shapes systems well",
+      headlineHighlight: "systems",
+    }));
+    expect(errorsOf(baseSnapshot({ profiles, lenses }))).toEqual([]);
+  });
+
+  it("fails, naming the profile, when the phrase is missing", () => {
+    const profiles = [profile({ headline: "Invented headline", headlineHighlight: "nowhere" })];
+    expect(errorsOf(baseSnapshot({ profiles }))).toEqual([
+      {
+        file: "content/profile.yaml",
+        field: "headlineHighlight",
+        message: '"nowhere" must appear exactly once in headline (found 0 times)',
+      },
+    ]);
+  });
+
+  it("fails, naming the lens file, when the phrase appears twice", () => {
+    const lenses = baseSnapshot().lenses.map((l) =>
+      l._meta.path === "architect"
+        ? { ...l, headline: "Data in, data out", headlineHighlight: "data" }
+        : l,
+    );
+    expect(errorsOf(baseSnapshot({ lenses }))).toEqual([]);
+    const twice = baseSnapshot().lenses.map((l) =>
+      l._meta.path === "architect"
+        ? { ...l, headline: "data in, data out", headlineHighlight: "data" }
+        : l,
+    );
+    expect(errorsOf(baseSnapshot({ lenses: twice }))).toEqual([
+      {
+        file: "content/lenses/architect.yaml",
+        field: "headlineHighlight",
+        message: '"data" must appear exactly once in headline (found 2 times)',
+      },
+    ]);
   });
 });

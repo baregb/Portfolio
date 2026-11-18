@@ -166,6 +166,7 @@ export function createContentReader(data: ContentData, includeDrafts: boolean): 
     slug: slugOf(lens),
     name: lens.name,
     headline: lens.headline,
+    ...(lens.headlineHighlight === undefined ? {} : { headlineHighlight: lens.headlineHighlight }),
     intro: lens.intro,
     projects: pickProjects(lens.projects),
     skills: lens.skills.map((slug) => lookup(skills, slug, "skill")),

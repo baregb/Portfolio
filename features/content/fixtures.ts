@@ -223,6 +223,7 @@ export const baseSnapshot = (overrides: Partial<ContentSnapshot> = {}): ContentS
       "about.mdx",
       "images/atlas-shop/cover.png",
       "images/profile/me.jpg",
+      "cv/cv.pdf",
     ],
   };
 };

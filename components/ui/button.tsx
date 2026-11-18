@@ -21,15 +21,33 @@ type LinkProps = CommonProps & {
   readonly href: string;
   readonly external?: boolean;
   readonly disabled?: boolean;
+  readonly file?: undefined;
 };
+
+/** `data-*` attributes, passed through to the rendered element. */
+type DataAttributes = { readonly [key: `data-${string}`]: string | undefined };
+
+/**
+ * A file download (spec 0004, AC-10): a plain `<a download>`, never
+ * `next/link`, so the file is not prefetched or routed.
+ */
+type FileProps = CommonProps &
+  DataAttributes & {
+    readonly file: string;
+    readonly href?: undefined;
+  };
 
 type NativeButtonProps = CommonProps &
   Omit<ButtonHTMLAttributes<HTMLButtonElement>, "className" | "children"> & {
     readonly href?: undefined;
+    readonly file?: undefined;
     readonly pending?: boolean;
   };
 
-export type ButtonProps = LinkProps | NativeButtonProps;
+export type ButtonProps = LinkProps | FileProps | NativeButtonProps;
+
+const dataAttributesOf = (props: object): DataAttributes =>
+  Object.fromEntries(Object.entries(props).filter(([key]) => key.startsWith("data-")));
 
 // Controls are round (D); the square mono `line` variant is for quiet actions
 // that sit inside content boxes (B), like "Request details".
@@ -54,7 +72,7 @@ const base =
 
 const disabledLook = "cursor-not-allowed opacity-55 hover:brightness-100 active:translate-y-0";
 
-/** A button, or a link styled as one when given `href`. */
+/** A button, a link styled as one when given `href`, or a file download when given `file`. */
 export function Button(props: ButtonProps) {
   const { variant = "primary", size = "md", iconStart, iconEnd, className, children } = props;
   const classes = cx(base, VARIANTS[variant], SIZES[size], className);
@@ -65,6 +83,14 @@ export function Button(props: ButtonProps) {
       {iconEnd}
     </>
   );
+
+  if (props.file !== undefined) {
+    return (
+      <a href={props.file} download {...dataAttributesOf(props)} className={classes}>
+        {content}
+      </a>
+    );
+  }
 
   if (props.href !== undefined) {
     const { href, external, disabled } = props;
@@ -99,6 +125,7 @@ export function Button(props: ButtonProps) {
     className: _className,
     children: _children,
     href: _href,
+    file: _file,
     pending = false,
     disabled = false,
     type = "button",

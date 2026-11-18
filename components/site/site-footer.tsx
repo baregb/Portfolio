@@ -1,16 +1,12 @@
+import { ExternalLinks } from "@/components/portfolio/external-links";
+import { profileLinks } from "@/components/portfolio/links";
 import { Container } from "@/components/ui/container";
-import { TextLink } from "@/components/ui/text-link";
-import { getProfile, type Profile } from "@/features/content";
-
-const LINK_LABELS: Readonly<Record<Profile["links"][number]["kind"], string>> = {
-  github: "GitHub",
-  linkedin: "LinkedIn",
-  website: "Website",
-};
+import { getProfile } from "@/features/content";
 
 /** Name, role, profile links, and the year the site was built. */
 export function SiteFooter() {
-  const { name, roleLine, location, links } = getProfile();
+  const profile = getProfile();
+  const { name, roleLine, location } = profile;
   const year = new Date().getFullYear();
   return (
     <footer className="mt-24 border-t border-line">
@@ -21,17 +17,7 @@ export function SiteFooter() {
           <p className="mt-2 label text-muted">{location}</p>
         </div>
         <div className="grid gap-4 md:justify-items-end">
-          {links.length > 0 ? (
-            <ul className="flex flex-wrap gap-x-5 gap-y-2" aria-label="Profiles">
-              {links.map(({ kind, url }) => (
-                <li key={url}>
-                  <TextLink href={url} external>
-                    {LINK_LABELS[kind]}
-                  </TextLink>
-                </li>
-              ))}
-            </ul>
-          ) : null}
+          <ExternalLinks links={profileLinks(profile)} label="Profiles" />
           <p className="text-sm text-muted">
             © {year} {name}
           </p>

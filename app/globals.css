@@ -136,6 +136,11 @@ html.dark {
     display: none !important;
   }
 
+  /* Anchor jumps (#work, #skills, #project-*) land below the sticky nav. */
+  [id] {
+    scroll-margin-top: 6rem;
+  }
+
   /* AC-9: the page behind an open modal does not scroll. */
   html:has(dialog[open]) {
     overflow: hidden;

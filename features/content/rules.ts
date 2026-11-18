@@ -51,6 +51,8 @@ export const COLLECTION_FILES = {
 export const PROFILE_FILE = "profile.yaml";
 export const ABOUT_FILE = "about.mdx";
 export const IMAGES_DIRECTORY = "images";
+/** The one file allowed in `content/cv/`: the CV PDF you supply (spec 0004, AC-10). */
+export const CV_FILE = "cv/cv.pdf";
 
 /** Compares names and titles the same way everywhere (library order, name order). */
 export const collator = new Intl.Collator("en", { sensitivity: "base" });

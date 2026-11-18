@@ -232,6 +232,8 @@ export const lensSchema = strict(
   {
     name: text(40),
     headline: text(120),
+    // A phrase of `headline` the hero highlights; check.ts makes sure it is there once.
+    headlineHighlight: text(60).optional(),
     intro: text(400),
     projects: slugs.min(1, "a lens needs at least one project"),
     skills: slugs.default([]),
@@ -267,9 +269,18 @@ export const profileSchema = strict(
           { message: `must start with ${PROFILE_IMAGE_FOLDER}/` },
         ),
         alt: text(200),
+        // Where the square crop centres (spec 0004, AC-15): CSS object-position.
+        focus: z
+          .string()
+          .regex(
+            /^(100|[1-9]?\d)% (100|[1-9]?\d)%$/,
+            "must be two percentages from 0 to 100, for example 50% 25%",
+          )
+          .optional(),
       },
       "on the profile photo",
     ),
+    headlineHighlight: text(60).optional(),
     availability: strict(
       {
         status: z.enum(["open", "selective", "unavailable"]),

@@ -307,6 +307,44 @@ describe("other schemas", () => {
   });
 });
 
+describe("spec 0004 additions (AC-15)", () => {
+  const profile = {
+    name: "Ada Example",
+    roleLine: "Role",
+    headline: "Headline",
+    location: "Nowhere",
+    photo: { src: "profile/me.jpg", alt: "Portrait" },
+    availability: { status: "open" },
+    featured: ["a"],
+    flagshipOrder: ["a"],
+    lensOrder: ["l"],
+    skillGroups: ["Engineering"],
+  };
+  const withFocus = (focus: string) => ({ ...profile, photo: { ...profile.photo, focus } });
+
+  it.each(["50% 25%", "0% 100%", "100% 0%", "7% 93%"])("accepts photo.focus %s", async (focus) => {
+    expect(await issuesOf(profileSchema, withFocus(focus))).toEqual([]);
+  });
+
+  it.each(["50%", "101% 0%", "50% 25", "center top", "-5% 10%", "050% 25%"])(
+    "rejects photo.focus %s",
+    async (focus) => {
+      expect(await issuesOf(profileSchema, withFocus(focus))).toEqual([
+        "photo.focus: must be two percentages from 0 to 100, for example 50% 25%",
+      ]);
+    },
+  );
+
+  it("accepts headlineHighlight up to 60 characters on the profile and a lens", async () => {
+    const lens = { name: "Lens", headline: "Headline", intro: "Intro", projects: ["a"] };
+    expect(await issuesOf(profileSchema, { ...profile, headlineHighlight: "Head" })).toEqual([]);
+    expect(await issuesOf(lensSchema, { ...lens, headlineHighlight: "Head" })).toEqual([]);
+    expect(await issuesOf(lensSchema, { ...lens, headlineHighlight: "x".repeat(61) })).toEqual([
+      "headlineHighlight: must be at most 60 characters",
+    ]);
+  });
+});
+
 function escape(text: string): string {
   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

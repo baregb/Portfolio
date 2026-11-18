@@ -5,6 +5,7 @@ import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
 import { SkipLink } from "@/components/site/skip-link";
 import { Toaster } from "@/components/ui/toaster";
+import { getProfile } from "@/features/content";
 import { THEME_SCRIPT } from "@/features/design/theme";
 import "./globals.css";
 
@@ -30,10 +31,13 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
 });
 
+const profile = getProfile();
+
+// Spec 0004, AC-13: every page title reads "<page> · <name>"; home sets an
+// absolute title. Social cards and canonical addresses come with feature 13.
 export const metadata: Metadata = {
-  title: "Omogbolahan Ajibare",
-  description:
-    "Web solutions architect and software developer. Case studies organised around the problems solved.",
+  title: { template: `%s · ${profile.name}`, default: profile.name },
+  description: profile.headline,
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -99,6 +99,8 @@ export type Lens = {
   readonly slug: string;
   readonly name: string;
   readonly headline: string;
+  /** A phrase of `headline` the hero highlights (spec 0004, AC-15). */
+  readonly headlineHighlight?: string;
   readonly intro: string;
   readonly projects: readonly Project[];
   readonly skills: readonly Skill[];

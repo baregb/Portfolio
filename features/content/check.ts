@@ -1,6 +1,7 @@
 import {
   ABOUT_FILE,
   COLLECTION_FILES,
+  CV_FILE,
   DIAGRAM_EXTENSIONS,
   IMAGES_DIRECTORY,
   PROFILE_FILE,
@@ -77,11 +78,13 @@ export const projectImages = (project: RawProject): readonly { field: string; sr
 type FileKind =
   | { readonly kind: "document"; readonly collection: string; readonly slug: string }
   | { readonly kind: "image"; readonly owner: string }
+  | { readonly kind: "cv" }
   | undefined;
 
 const classify = (file: string): FileKind => {
   if (file === PROFILE_FILE) return { kind: "document", collection: "profile", slug: "profile" };
   if (file === ABOUT_FILE) return { kind: "document", collection: "about", slug: "about" };
+  if (file === CV_FILE) return { kind: "cv" };
   const segments = file.split("/");
   if (segments[0] === IMAGES_DIRECTORY && segments.length >= 3 && isImage(file)) {
     return { kind: "image", owner: segments[1] ?? "" };
@@ -125,6 +128,7 @@ function checkFiles(snapshot: ContentSnapshot): Issues {
     if (kind === undefined) {
       return [issue(path, undefined, "matches no collection and is not an image")];
     }
+    if (kind.kind === "cv") return [];
     if (kind.kind === "document") {
       return [
         ...when(!SLUG_PATTERN.test(kind.slug), () =>
@@ -293,6 +297,43 @@ function checkProfileReferences(data: ContentData, profile: RawProfile): Issues 
   ];
 }
 
+const occurrences = (text: string, phrase: string): number => text.split(phrase).length - 1;
+
+// The hero highlights `headlineHighlight` inside `headline`, so it must be
+// there exactly once (spec 0004, AC-15).
+function checkHighlights(data: ContentData): Issues {
+  const check = (file: string, headline: string, phrase: string | undefined): Issues => {
+    if (phrase === undefined) return [];
+    const found = occurrences(headline, phrase);
+    return when(found !== 1, () =>
+      issue(
+        file,
+        "headlineHighlight",
+        `"${phrase}" must appear exactly once in headline (found ${found} times)`,
+      ),
+    );
+  };
+  return [
+    ...data.profiles.flatMap((profile) =>
+      check(PROFILE, profile.headline, profile.headlineHighlight),
+    ),
+    ...data.lenses.flatMap((lens) =>
+      check(lensFile(slugOf(lens)), lens.headline, lens.headlineHighlight),
+    ),
+  ];
+}
+
+// A missing CV only warns, so dev, tests, and commits keep working; the asset
+// step fails a production build without it (spec 0004, AC-10).
+const checkCv = (snapshot: ContentSnapshot): Issues =>
+  when(!snapshot.files.includes(CV_FILE), () =>
+    issue(
+      contentPath(CV_FILE),
+      undefined,
+      'is missing: the CV button shows "CV coming soon", and a production build fails until you add it',
+    ),
+  );
+
 // Production mode: drafts named in lists are dropped with a warning, and the
 // minimums must still hold once they are gone.
 function checkProduction(data: ContentData): { errors: Issues; warnings: Issues } {
@@ -351,9 +392,9 @@ export function checkContent(
     ...checkProjectReferences(snapshot),
     ...checkLensReferences(snapshot),
     ...(profile ? checkProfileReferences(snapshot, profile) : []),
+    ...checkHighlights(snapshot),
     ...production.errors,
   ];
-  return errors.length === 0
-    ? { ok: true, warnings: production.warnings }
-    : { ok: false, errors, warnings: production.warnings };
+  const warnings = [...checkCv(snapshot), ...production.warnings];
+  return errors.length === 0 ? { ok: true, warnings } : { ok: false, errors, warnings };
 }

@@ -7,12 +7,13 @@
     "node": ">=24 <25"
   },
   "scripts": {
-    "dev": "pnpm content && pnpm run \"/^dev:(content|next)$/\"",
+    "dev": "pnpm content && CONTENT_DRAFTS=true pnpm assets && pnpm run \"/^dev:(content|next)$/\"",
     "dev:content": "content-collections watch",
     "dev:next": "CONTENT_DRAFTS=true next dev",
     "dev:api": "wrangler dev",
     "content": "content-collections build && node scripts/check-content.ts",
-    "build": "pnpm content && next build",
+    "assets": "node scripts/build-assets.ts",
+    "build": "pnpm content && pnpm assets && next build",
     "serve": "pnpm build && wrangler dev",
     "typecheck": "pnpm content && next typegen && tsc --noEmit && tsc --noEmit -p worker",
     "lint": "eslint .",
@@ -49,6 +50,7 @@
     "mdast-util-from-markdown": "^2.1.0",
     "prettier": "^3.10.1",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "sharp": "^0.35.5",
     "tailwindcss": "4.3.3",
     "typescript": "^5",
     "vitest": "^5.1.0",

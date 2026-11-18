@@ -157,6 +157,16 @@ describe("lenses (AC-6, AC-7)", () => {
     ]);
   });
 
+  it("passes headlineHighlight through only when the lens sets it (spec 0004, AC-15)", () => {
+    const base = baseSnapshot();
+    const lenses = base.lenses.map((l) =>
+      l._meta.path === "architect" ? { ...l, headlineHighlight: "architect" } : l,
+    );
+    const read = reader(false, baseSnapshot({ lenses }));
+    expect(read.getLens("architect")?.headlineHighlight).toBe("architect");
+    expect(read.getLens("developer")).not.toHaveProperty("headlineHighlight");
+  });
+
   it("returns undefined for an unknown lens", () => {
     expect(reader().getLens("nope")).toBeUndefined();
   });
