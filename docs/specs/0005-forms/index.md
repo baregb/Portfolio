@@ -1,7 +1,7 @@
 # 0005. Contact and request details forms
 
 **Date**: 2026-11-19
-**Status**: In Progress
+**Status**: Accepted
 
 ## Summary
 

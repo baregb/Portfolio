@@ -32,9 +32,9 @@ Journeys 3 to 5 (#16 to #18) come after launch and are unchanged.
 | 9 | Project library (B) | Journey 1 | done |
 | 10 | About & skills (B) | Journey 1 | done |
 | 11 | CV download (B) | Journey 1 | done |
-| 12 | Contact (D) | Journey 1 | in-progress |
+| 12 | Contact (D) | Journey 1 | done |
 | 13 | SEO, social cards & analytics (E) | Journey 1 | planned |
-| 14 | Request access (D) | Journey 2 | in-progress |
+| 14 | Request access (D) | Journey 2 | done |
 | 15 | Launch (E) | Launch | planned |
 | 16 | Ask AI about my work | Journey 3 | planned |
 | 17 | Writing | Journey 4 | planned |
@@ -150,7 +150,7 @@ A downloadable CV that matches the site. The decision is one general CV or one p
 - [x] Build and verify: tracked under #5 (`/develop journey 1 pages`, then `/check verify journey 1 pages`)
 Spec [0004](../specs/0004-journey-1-pages/index.md)
 
-### 12. Contact · in-progress · Beta
+### 12. Contact · done · Beta
 A contact form for job and project enquiries, with spam protection and a notification to you.
 **Done when:** a visitor can send a message and sees a themed confirmation, invalid input shows clear errors, a failed send says so, and you are notified.
 **Fast track D:** one spec for both forms, which share the Worker pipeline.
@@ -160,8 +160,8 @@ A contact form for job and project enquiries, with spam protection and a notific
   - [x] Contact path end to end: `/api/contact`, the email after responding, the contact form and its states, Worker tests (AC-1, AC-4, AC-6, AC-10, AC-11, AC-13)
   - [x] Request path: the generated project map, `/api/request`, the request form, tests (AC-2, AC-5, AC-6)
   - [x] Scheduled retry and retention job, styleguide form states, design.md, verify.md (AC-7, AC-8, AC-13)
-- [ ] Verify it: `/check verify forms`
-- [ ] Test it: `/test forms`
+- [x] Verify it: `/check verify forms`
+- [x] Test it: `/test forms`
 Spec [0005](../specs/0005-forms/index.md) · code in `features/forms/`, `worker/forms/`, `worker/db/`, `drizzle/` · real email needs the domain, D1 databases, Turnstile widget, and Sentry project (spec 0005 Follow-up)
 
 ### 13. SEO, social cards & analytics · planned
@@ -175,12 +175,12 @@ Metadata, sitemap, structured data, and good looking link previews for LinkedIn 
 
 A visitor sees a project marked available on request, asks for details, and gets a confirmation, while you get notified with who asked and about which project.
 
-### 14. Request access · in-progress · Beta
+### 14. Request access · done · Beta
 A short request form tied to a named project, with spam protection, a confirmation to the visitor, and a notification to you.
 **Done when:** a request from any on request project reaches you with the project name, the visitor sees a themed confirmation, and errors are handled clearly.
 **Fast track D:** one spec for both forms, which share the Worker pipeline.
 - [x] Design it (spec): `/architect forms` (shared with #12 and #14)
-- [ ] Build, verify, and test: tracked under #12 (`/develop forms`, `/check verify forms`, `/test forms`)
+- [x] Build, verify, and test: tracked under #12 (`/develop forms`, `/check verify forms`, `/test forms`)
 Spec [0005](../specs/0005-forms/index.md)
 
 ## Launch
