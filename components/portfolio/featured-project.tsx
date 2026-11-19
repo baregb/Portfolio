@@ -48,9 +48,13 @@ export function FeaturedProject({ project }: { readonly project: Flagship }) {
         {results.length > 0 ? (
           <dl className="grid grid-cols-1 gap-px border border-block-line bg-block-line min-[420px]:grid-cols-2 min-[420px]:[&>*:last-child:nth-child(odd)]:col-span-2">
             {results.map((result) => (
-              <div key={`${result.value} ${result.label}`} className="bg-block p-5 md:p-6">
-                <StatTile value={result.value} label={result.label} size="large" />
-              </div>
+              <StatTile
+                key={`${result.value} ${result.label}`}
+                value={result.value}
+                label={result.label}
+                size="large"
+                className="bg-block p-5 md:p-6"
+              />
             ))}
           </dl>
         ) : null}

@@ -117,14 +117,14 @@ function ResultsBlock({ project }: { readonly project: Flagship }) {
           )}
         >
           {project.results.map((result) => (
-            <div key={`${result.value} ${result.label}`} className="bg-block p-5 md:p-6">
-              <StatTile
-                value={result.value}
-                label={result.label}
-                context={result.context}
-                size="large"
-              />
-            </div>
+            <StatTile
+              key={`${result.value} ${result.label}`}
+              value={result.value}
+              label={result.label}
+              context={result.context}
+              size="large"
+              className="bg-block p-5 md:p-6"
+            />
           ))}
         </dl>
       </Container>
