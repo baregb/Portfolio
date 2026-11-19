@@ -101,12 +101,12 @@ Headings use `text-wrap: balance` automatically. Heading levels follow the page 
 - **2px** (`rounded-input`): text inputs and the square `line` button.
 - **Round** (`rounded-full`): buttons, the nav bar, nav links, the lens switcher, the theme switcher, icon buttons.
 - **14px** (`rounded-panel`): toasts and the modal.
-- **Menu panel**: slides down over the top 70% of the screen (taller only when its content needs it), frosted like the nav with a soft accent glow, the page dimmed below; links in Bricolage, bold and centred, split by short faint lines (`bg-fg/8`, 5rem wide).
+- **Menu panel**: slides down over the top 70% of the screen (taller only when its content needs it) on `bg-bg` with the blueprint grid, the page dimmed below; links in Bricolage, bold and centred, split by short faint lines (`bg-fg/8`, 5rem wide); a bottom row holds availability, profile links, the CV button, and the theme switcher.
 - **Shadow** (`shadow-soft`) only on floating pieces: the nav, toasts, the modal, secondary buttons. Everything else separates with a hairline.
 
 ## Grid and the green block
 
-- The grid pattern (`Section variant="grid"`, or the `grid-band` utility) appears only in hero and page header bands, never behind running text.
+- The grid pattern (`Section variant="grid"`, or the `grid-band` utility) appears only in hero and page header bands and behind the menu panel, never behind running text.
 - The green block (`Section variant="accent"`) is for the one featured item on a page, at most once per page. Inside it use `StatTile size="large"`, `Tag tone="onAccent"`, and `Button variant="onAccent"`.
 
 ## Motion

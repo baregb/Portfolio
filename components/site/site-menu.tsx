@@ -4,24 +4,37 @@ import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, type FocusEvent } from "react";
+import { Availability } from "@/components/portfolio/availability";
+import { CvButton } from "@/components/portfolio/cv-button";
+import { ExternalLinks } from "@/components/portfolio/external-links";
+import type { ExternalLink } from "@/components/portfolio/links";
 import { cx } from "@/components/ui/cx";
+import type { Profile } from "@/features/content";
+import type { CvAsset } from "@/features/media/manifest";
 import type { NavItem } from "./nav";
 import { NavLinks } from "./nav-links";
 import { ThemeSwitcher } from "./theme-switcher";
 
 /**
  * The menu at every size: a native popover that slides down over the top
- * 70% of the screen, with the nav as large bold centred links split by faint
- * lines and the theme switcher below; the page shows dimmed underneath. The browser handles opening, Escape, and returning focus, so it
+ * 70% of the screen on the blueprint grid, with the nav as large bold centred
+ * links split by faint lines, and a row with availability, profile links, the
+ * CV, and the theme switcher below; the page shows dimmed underneath. The browser handles opening, Escape, and returning focus, so it
  * works with JavaScript off too; script only closes it after a client side
  * navigation or when focus leaves it.
  */
 export function SiteMenu({
   name,
   items,
+  availability,
+  links,
+  cv,
 }: {
   readonly name: string;
   readonly items: readonly NavItem[];
+  readonly availability: Profile["availability"];
+  readonly links: readonly ExternalLink[];
+  readonly cv: CvAsset;
 }) {
   const panelId = useId();
   const titleId = useId();
@@ -69,9 +82,8 @@ export function SiteMenu({
           // when its content needs it), over the popover defaults. The page
           // shows dimmed below it; a tap there closes it.
           "fixed inset-x-0 top-0 bottom-auto m-0 h-auto max-h-dvh w-full max-w-none",
-          // Frosted glass like the header bar, with a soft accent glow behind the links.
-          "overflow-y-auto border-0 border-b border-line frosted p-0 text-fg shadow-soft",
-          "bg-[radial-gradient(ellipse_60%_55%_at_50%_45%,var(--color-accent-soft),transparent)]",
+          // The theme background with the faint blueprint grid behind it.
+          "overflow-x-hidden overflow-y-auto border-0 border-b border-line bg-bg grid-band p-0 text-fg shadow-soft",
           "backdrop:bg-fg/40",
           // Slide down and fade in; reduced motion shows and hides it at once.
           "-translate-y-full opacity-0 transition-[translate,opacity,display,overlay] transition-discrete duration-(--duration-slow) ease-(--ease-out)",
@@ -105,9 +117,16 @@ export function SiteMenu({
             {/* Also close on a link to the page already open, where the path does not change. */}
             <NavLinks items={items} layout="overlay" onNavigate={close} />
           </nav>
-          <div className="flex items-center justify-center gap-4">
-            <span className="label text-muted">Theme</span>
-            <ThemeSwitcher />
+          {/* Availability, profiles, the CV, and the theme: stacked and centred on phones, one row from md. */}
+          <div className="mx-auto grid w-full max-w-page gap-4 border-t border-line px-2 pt-5 md:flex md:items-center md:justify-between md:px-5">
+            <div className="grid justify-items-center gap-3 md:flex md:items-center md:gap-6">
+              <Availability availability={availability} />
+              <ExternalLinks links={links} label="Profiles" />
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <CvButton cv={cv} size="sm" />
+              <ThemeSwitcher />
+            </div>
           </div>
         </div>
       </div>

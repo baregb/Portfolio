@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { cx } from "@/components/ui/cx";
+import { profileLinks } from "@/components/portfolio/links";
 import { getProfile } from "@/features/content";
+import { getCvAsset } from "@/features/media/manifest";
 import { navItems, type NavItem } from "./nav";
 import { SiteMenu } from "./site-menu";
 import { ThemeSwitcher } from "./theme-switcher";
@@ -16,7 +18,8 @@ type SiteHeaderProps = {
  * size. The nav and the theme switcher live in the full screen menu.
  */
 export function SiteHeader({ items = navItems, position = "sticky" }: SiteHeaderProps) {
-  const { name } = getProfile();
+  const profile = getProfile();
+  const { name } = profile;
   const hasNav = items.length > 0;
   return (
     <header
@@ -33,7 +36,17 @@ export function SiteHeader({ items = navItems, position = "sticky" }: SiteHeader
           {name}
         </Link>
         {/* With no nav (a styleguide demo), the switcher sits in the bar itself. */}
-        {hasNav ? <SiteMenu name={name} items={items} /> : <ThemeSwitcher />}
+        {hasNav ? (
+          <SiteMenu
+            name={name}
+            items={items}
+            availability={profile.availability}
+            links={profileLinks(profile)}
+            cv={getCvAsset()}
+          />
+        ) : (
+          <ThemeSwitcher />
+        )}
       </div>
     </header>
   );
