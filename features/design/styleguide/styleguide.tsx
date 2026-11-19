@@ -17,6 +17,7 @@ import { StatTile } from "@/components/ui/stat-tile";
 import { Tag } from "@/components/ui/tag";
 import { SelectField, TextArea, TextField } from "@/components/ui/text-field";
 import { TextLink } from "@/components/ui/text-link";
+import { ContactForm } from "@/features/forms/contact-form";
 import { contrastRatio, formatRatio } from "../contrast";
 import { parseThemeTokens, type TokenMap } from "../tokens";
 import { ModalDemo, PendingDemo, ToastDemo } from "./demos";
@@ -352,6 +353,19 @@ export function Styleguide() {
                 { value: "data", label: "Data migration" },
               ]}
             />
+          </div>
+        </Block>
+
+        <Block
+          id="contact-form-states"
+          title="Contact and request forms"
+          description="Spec 0005. Errors sit under each field, the button shows pending while sending, a failure keeps what was typed, and success replaces the form."
+        >
+          <div className="grid gap-6 lg:grid-cols-2">
+            <ContactForm headingLevel="h3" demo="errors" linkedinUrl="https://www.linkedin.com" />
+            <ContactForm headingLevel="h3" demo="failed" linkedinUrl="https://www.linkedin.com" />
+            <ContactForm headingLevel="h3" demo="pending" />
+            <ContactForm headingLevel="h3" demo="sent" />
           </div>
         </Block>
 

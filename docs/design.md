@@ -185,7 +185,8 @@ Content aware composites in `components/portfolio/` (spec 0004). They take conte
 - Pages are prerendered and links prefetch, so there is no route level loading skeleton (Next does not support `loading.js` with static export).
 - Anything that loads in the browser (form submits, the AI chat later) shows `Skeleton` blocks or a `pending` button, inside a `role="status"` region.
 - Empty states are a `Card` with an icon, a heading that says what is empty, a line on what to do, and one action. See `/styleguide` (feedback section).
-- Errors say what went wrong and how to fix it, in plain words, with no apology and no codes. Field errors sit under the field; failures after an action use an error toast.
+- Errors say what went wrong and how to fix it, in plain words, with no apology and no codes. Field errors sit under the field; failures after an action use an error toast, except the forms, which show theirs inside the form.
+- **Forms** (spec 0005, `features/forms/`): `FormFrame` composes the fields in a `Card` with an `h2`, validates in the browser with the same schema the Worker uses, moves focus to the first invalid field, shows a pending button while sending, shows a failure inside the form (`role="alert"`) that keeps every typed value, and replaces the form with a confirmation panel whose heading takes focus. The privacy line sits under the button. Hidden without JavaScript, with a line pointing to the profile links. All states are on `/styleguide`.
 
 ## Images
 

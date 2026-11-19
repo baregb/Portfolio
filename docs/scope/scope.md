@@ -155,14 +155,14 @@ A contact form for job and project enquiries, with spam protection and a notific
 **Done when:** a visitor can send a message and sees a themed confirmation, invalid input shows clear errors, a failed send says so, and you are notified.
 **Fast track D:** one spec for both forms, which share the Worker pipeline.
 - [x] Design it (spec): `/architect forms` (shared with #12 and #14)
-- [ ] Build it: `/develop forms` (builds #12 and #14 together)
+- [x] Build it: `/develop forms` (builds #12 and #14 together)
   - [x] Shared form schema, D1 and Drizzle, and the Worker check pipeline with Sentry (AC-3, AC-5, AC-9, AC-12)
-  - [ ] Contact path end to end: `/api/contact`, the email after responding, the contact form and its states, Worker tests (AC-1, AC-4, AC-6, AC-10, AC-11, AC-13)
-  - [ ] Request path: the generated project map, `/api/request`, the request form, tests (AC-2, AC-5, AC-6)
-  - [ ] Scheduled retry and retention job, styleguide form states, design.md, verify.md (AC-7, AC-8, AC-13)
+  - [x] Contact path end to end: `/api/contact`, the email after responding, the contact form and its states, Worker tests (AC-1, AC-4, AC-6, AC-10, AC-11, AC-13)
+  - [x] Request path: the generated project map, `/api/request`, the request form, tests (AC-2, AC-5, AC-6)
+  - [x] Scheduled retry and retention job, styleguide form states, design.md, verify.md (AC-7, AC-8, AC-13)
 - [ ] Verify it: `/check verify forms`
 - [ ] Test it: `/test forms`
-Spec [0005](../specs/0005-forms/index.md) · needs the domain, D1 databases, Turnstile widget, and Sentry project first (spec 0005 Follow-up)
+Spec [0005](../specs/0005-forms/index.md) · code in `features/forms/`, `worker/forms/`, `worker/db/`, `drizzle/` · real email needs the domain, D1 databases, Turnstile widget, and Sentry project (spec 0005 Follow-up)
 
 ### 13. SEO, social cards & analytics · planned
 Metadata, sitemap, structured data, and good looking link previews for LinkedIn and messaging apps, plus privacy friendly analytics with no cookies (page views, lens visits, case study reads, CV downloads) and error monitoring.

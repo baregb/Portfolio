@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Availability } from "@/components/portfolio/availability";
@@ -10,6 +11,8 @@ import { Container } from "@/components/ui/container";
 import { Icon } from "@/components/ui/icon";
 import { Section } from "@/components/ui/section";
 import { getProfile, type OnRequestCard, type OnRequestFlagship } from "@/features/content";
+import { ContactForm } from "@/features/forms/contact-form";
+import { RequestForm } from "@/features/forms/request-form";
 import { getCvAsset } from "@/features/media/manifest";
 
 // Contact and request details (spec 0004, AC-11). Both exist before the forms
@@ -34,10 +37,22 @@ function ProfileLinks() {
   );
 }
 
-/** Group D mounts its form here (spec 0004, AC-11). Empty until then. */
-function FormSlot({ form }: { readonly form: "contact" | "request" }) {
-  return <div id={`${form}-form`} data-form-slot={form} className="empty:hidden" />;
+/** Where each page's form lives (spec 0004, AC-11; spec 0005). */
+function FormSlot({
+  form,
+  children,
+}: {
+  readonly form: "contact" | "request";
+  readonly children: ReactNode;
+}) {
+  return (
+    <div id={`${form}-form`} data-form-slot={form}>
+      {children}
+    </div>
+  );
 }
+
+const linkedinUrl = () => getProfile().links.find((link) => link.kind === "linkedin")?.url;
 
 export function ContactPage() {
   const profile = getProfile();
@@ -53,7 +68,9 @@ export function ContactPage() {
         <Container>
           <div className="grid max-w-3xl gap-10">
             <ProfileLinks />
-            <FormSlot form="contact" />
+            <FormSlot form="contact">
+              <ContactForm linkedinUrl={linkedinUrl()} />
+            </FormSlot>
           </div>
         </Container>
       </Section>
@@ -82,7 +99,9 @@ export function RequestPage({
         <Container>
           <div className="grid max-w-3xl gap-10">
             <ProfileLinks />
-            <FormSlot form="request" />
+            <FormSlot form="request">
+              <RequestForm projectSlug={project.slug} linkedinUrl={linkedinUrl()} />
+            </FormSlot>
             <p>
               <Link
                 href={backHref}

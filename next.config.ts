@@ -1,4 +1,6 @@
 import type { NextConfig } from "next";
+import { PHASE_PRODUCTION_BUILD } from "next/constants";
+import { readTurnstileSiteKey } from "./features/forms/submission";
 
 // Spec 0001: every route is generated at build time and exported as plain
 // files to `out/`. Cloudflare Static Assets serves them; only `/api/*` runs
@@ -19,4 +21,12 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+// Spec 0005, AC-12: a production build fails, naming the variable, without
+// the Turnstile site key the forms need.
+export default function config(phase: string): NextConfig {
+  if (phase === PHASE_PRODUCTION_BUILD) {
+    const siteKey = readTurnstileSiteKey(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
+    if (!siteKey.ok) throw new Error(siteKey.error);
+  }
+  return nextConfig;
+}
