@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { getAbout, getFlagships, getLenses, getProfile } from "@/features/content";
 import { fallbackSocialMetadata, pageMetadata } from "./metadata";
 import { sitePages, type SitePage } from "./pages";
-import { DEV_SITE_URL, isIndexable, readSiteUrl } from "./site-url";
+import { DEV_SITE_URL, readSiteUrl } from "./site-url";
 
 // Binds the SEO helpers to the built content and `NEXT_PUBLIC_SITE_URL`,
 // read once at build. A production build without the variable already failed
@@ -26,7 +26,6 @@ const pages = sitePages({
 });
 
 export const getSiteUrl = () => siteUrl;
-export const getSiteIndexable = () => isIndexable(siteUrl);
 export const getSitePages = (): readonly SitePage[] => pages;
 
 /** Social card defaults for the root layout (pages with no card of their own). */
@@ -47,4 +46,6 @@ export {
   caseStudyStructuredData,
   homeStructuredData,
 } from "./structured-data";
+export { ICON_FILES } from "./icon";
 export { JsonLd } from "./json-ld";
+export { robotsRules, siteRobotsMetadata } from "./robots";

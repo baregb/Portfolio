@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { AnalyticsClicks, AnalyticsScript, getUmamiWebsiteId } from "@/features/analytics";
 import { getProfile } from "@/features/content";
 import { THEME_SCRIPT } from "@/features/design/theme";
-import { defaultSocialMetadata, getSiteUrl } from "@/features/seo";
+import { defaultSocialMetadata, getSiteUrl, ICON_FILES, siteRobotsMetadata } from "@/features/seo";
 import "./globals.css";
 
 // Spec 0003: fonts self hosted at build by next/font; no request to Google.
@@ -40,12 +40,24 @@ const umamiWebsiteId = getUmamiWebsiteId();
 // Spec 0004, AC-13: every page title reads "<page> · <name>"; home sets an
 // absolute title. Feature 13: `metadataBase` makes every page's canonical and
 // card paths absolute, and pages with no card of their own (request details,
-// the styleguide, both never indexed) fall back to the home card.
+// the styleguide, both never indexed) fall back to the home card. A preview or
+// local build marks every page `noindex` (feature 15).
+const robots = siteRobotsMetadata(siteUrl);
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: { template: `%s · ${profile.name}`, default: profile.name },
   description: profile.headline,
   ...defaultSocialMetadata(),
+  ...(robots ? { robots } : {}),
+  // Rendered into `public/` by `pnpm cards` (feature 15).
+  icons: {
+    icon: [
+      { url: `/${ICON_FILES.favicon.file}`, sizes: "32x32" },
+      { url: `/${ICON_FILES.icon.file}`, type: "image/png", sizes: "512x512" },
+    ],
+    apple: { url: `/${ICON_FILES.apple.file}`, sizes: "180x180" },
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

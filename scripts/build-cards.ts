@@ -2,7 +2,8 @@
 // and before `next build`, on Node directly (type stripping). It is the file
 // system edge: it empties `public/og/`, then renders one 1200 by 630 PNG per
 // indexed page with satori and resvg, from the same page list that gives each
-// page its metadata. Anything it cannot render fails the step, naming it.
+// page its metadata. It also writes the site icons (feature 15) into
+// `public/`. Anything it cannot render fails the step, naming it.
 
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
@@ -22,6 +23,7 @@ import { parseContentDrafts } from "../features/content/env.ts";
 import { createContentReader } from "../features/content/read.ts";
 import { parseThemeTokens } from "../features/design/tokens.ts";
 import { cardColours, cardElement } from "../features/seo/card.ts";
+import { ICON_FILES, icoFromPng, iconElement, initialsOf } from "../features/seo/icon.ts";
 import { CARD_DIR, CARD_SIZE, cardFileName, sitePages } from "../features/seo/pages.ts";
 import { readSiteUrl } from "../features/seo/site-url.ts";
 
@@ -119,3 +121,25 @@ for (const page of pages) {
 }
 
 console.log(`Social cards: ${pages.length} written to public/${CARD_DIR}/.`);
+
+// The site icons: one mark, rendered at each size so small ones stay crisp.
+const renderIcon = async (size: number): Promise<Uint8Array> => {
+  const element = iconElement(initialsOf(profile.name), size, colour);
+  const svg = await satori(element as unknown as Parameters<typeof satori>[0], {
+    width: size,
+    height: size,
+    fonts,
+  });
+  return new Resvg(svg, { fitTo: { mode: "width", value: size } }).render().asPng();
+};
+
+for (const [kind, { file, size }] of Object.entries(ICON_FILES)) {
+  try {
+    const png = await renderIcon(size);
+    writeFileSync(join(root, "public", file), kind === "favicon" ? icoFromPng(png, size) : png);
+  } catch (error) {
+    fail(`${file}: ${error instanceof Error ? error.message : String(error)}`);
+  }
+}
+
+console.log(`Site icons: ${Object.keys(ICON_FILES).length} written to public/.`);

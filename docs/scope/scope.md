@@ -35,7 +35,7 @@ Journeys 3 to 5 (#16 to #18) come after launch and are unchanged.
 | 12 | Contact (D) | Journey 1 | done |
 | 13 | SEO, social cards & analytics (E) | Journey 1 | in-progress |
 | 14 | Request access (D) | Journey 2 | done |
-| 15 | Launch (E) | Launch | planned |
+| 15 | Launch (E) | Launch | in-progress |
 | 16 | Ask AI about my work | Journey 3 | planned |
 | 17 | Writing | Journey 4 | planned |
 | 18 | Content admin | Journey 5 | planned |
@@ -189,10 +189,15 @@ Spec [0005](../specs/0005-forms/index.md)
 
 ## Launch
 
-### 15. Launch · planned
+### 15. Launch · in-progress
 Put Journeys 1 and 2 live on your domain: production deploy, a short privacy note covering the forms and analytics, a 404 page, and a final pass on speed and accessibility.
 **Done when:** the site is live on your domain over HTTPS, passes Core Web Vitals and an accessibility check, and every link and form works in production.
 - [ ] Ship it: `/develop launch`
+  - [x] Privacy note at `/privacy` (footer link, sitemap, social card) and the 404 page
+  - [x] Launch fixes from the feature 13 review: `noindex` instead of robots `Disallow`, every page of a preview or local build `noindex`, stale Umami host out of the CSP
+  - [x] Accessibility and speed pass: axe clean on every page in both themes, Lighthouse accessibility 100; stat tile lists fixed; site icons added
+  - [ ] Production deploy and live checks: the README `## Launch` checklist (needs the domain and your accounts)
+Code in `features/privacy/`, `features/not-found/`, `features/seo/robots.ts`, `features/seo/icon.ts`, `app/privacy/`, `app/not-found.tsx` · deploy steps in the README `## Launch` section
 
 ## Journey 3: Ask AI about my work
 

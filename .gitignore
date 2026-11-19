@@ -55,6 +55,9 @@ next-env.d.ts
 
 # social card step output (feature 13, `pnpm cards`)
 /public/og/
+/public/favicon.ico
+/public/icon.png
+/public/apple-icon.png
 
 # deploy copy of wrangler.jsonc with NOTIFY_TO filled in (scripts/deploy-config.ts)
 /wrangler.deploy.jsonc
