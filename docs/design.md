@@ -101,7 +101,7 @@ Headings use `text-wrap: balance` automatically. Heading levels follow the page 
 - **2px** (`rounded-input`): text inputs and the square `line` button.
 - **Round** (`rounded-full`): buttons, the nav bar, nav links, the lens switcher, the theme switcher, icon buttons.
 - **14px** (`rounded-panel`): toasts and the modal.
-- **Full screen menu**: covers the page on `bg-bg`, no frame; links in Bricolage at display size, centred.
+- **Menu panel**: slides down over the top 70% of the screen (taller only when its content needs it), frosted like the nav with a soft accent glow, the page dimmed below; links in Bricolage, bold and centred, split by short faint lines (`bg-fg/8`, 5rem wide).
 - **Shadow** (`shadow-soft`) only on floating pieces: the nav, toasts, the modal, secondary buttons. Everything else separates with a hairline.
 
 ## Grid and the green block

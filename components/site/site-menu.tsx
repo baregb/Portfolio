@@ -10,9 +10,9 @@ import { NavLinks } from "./nav-links";
 import { ThemeSwitcher } from "./theme-switcher";
 
 /**
- * The menu at every size: a native popover that fades in over the whole
- * screen, with the nav as large bold centred links and the theme switcher
- * below. The browser handles opening, Escape, and returning focus, so it
+ * The menu at every size: a native popover that slides down over the top
+ * 70% of the screen, with the nav as large bold centred links split by faint
+ * lines and the theme switcher below; the page shows dimmed underneath. The browser handles opening, Escape, and returning focus, so it
  * works with JavaScript off too; script only closes it after a client side
  * navigation or when focus leaves it.
  */
@@ -65,14 +65,20 @@ export function SiteMenu({
         data-site-menu=""
         onBlur={closeOnFocusLeave}
         className={cx(
-          // Cover the whole screen, over the popover defaults.
-          "fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none overflow-y-auto border-0 bg-bg p-0 text-fg",
-          // Fade in and out; reduced motion shows and hides it at once.
-          "opacity-0 transition-[opacity,display,overlay] transition-discrete duration-(--duration-slow) ease-(--ease-out)",
-          "open:opacity-100 motion-reduce:transition-none starting:open:opacity-0",
+          // A panel across the top, about 70% of the screen tall (taller only
+          // when its content needs it), over the popover defaults. The page
+          // shows dimmed below it; a tap there closes it.
+          "fixed inset-x-0 top-0 bottom-auto m-0 h-auto max-h-dvh w-full max-w-none",
+          // Frosted glass like the header bar, with a soft accent glow behind the links.
+          "overflow-y-auto border-0 border-b border-line frosted p-0 text-fg shadow-soft",
+          "bg-[radial-gradient(ellipse_60%_55%_at_50%_45%,var(--color-accent-soft),transparent)]",
+          "backdrop:bg-fg/40",
+          // Slide down and fade in; reduced motion shows and hides it at once.
+          "-translate-y-full opacity-0 transition-[translate,opacity,display,overlay] transition-discrete duration-(--duration-slow) ease-(--ease-out)",
+          "open:translate-y-0 open:opacity-100 motion-reduce:transition-none starting:open:-translate-y-full starting:open:opacity-0",
         )}
       >
-        <div className="grid min-h-full grid-rows-[auto_1fr_auto] px-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-8 sm:px-4">
+        <div className="grid min-h-[70svh] grid-rows-[auto_1fr_auto] px-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-6 sm:px-4">
           {/* Mirrors the header bar, so the close button sits where the menu button was. */}
           <div className="mx-auto flex w-full max-w-page items-center justify-between gap-3 border border-transparent py-1.5 pr-1.5 pl-5">
             <h2 id={titleId} className="sr-only">
@@ -95,7 +101,7 @@ export function SiteMenu({
               <span className="sr-only">Close menu</span>
             </button>
           </div>
-          <nav aria-label="Main" className="grid place-items-center py-10">
+          <nav aria-label="Main" className="grid place-items-center py-4">
             {/* Also close on a link to the page already open, where the path does not change. */}
             <NavLinks items={items} layout="overlay" onNavigate={close} />
           </nav>

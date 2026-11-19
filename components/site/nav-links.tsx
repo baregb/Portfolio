@@ -26,7 +26,7 @@ export function NavLinks({
         "flex",
         layout === "row" && "items-center gap-0.5",
         layout === "column" && "flex-col gap-1",
-        layout === "overlay" && "flex-col items-center gap-2 text-center md:gap-4",
+        layout === "overlay" && "flex-col items-center text-center",
       )}
     >
       {items.map(({ href, label }, index) => {
@@ -37,14 +37,21 @@ export function NavLinks({
               key={href}
               // Each link rises in a beat after the one above it when the menu opens.
               style={{ transitionDelay: `calc(${index} * 60ms + 80ms)` }}
-              className="transition-[opacity,translate] duration-(--duration-slow) ease-(--ease-out) motion-reduce:transition-none starting:translate-y-6 starting:opacity-0"
+              className="relative py-5 transition-[opacity,translate] duration-(--duration-slow) ease-(--ease-out) motion-reduce:transition-none md:py-5 starting:translate-y-6 starting:opacity-0"
             >
+              {/* A short, faint line between links, none above the first. */}
+              {index > 0 ? (
+                <span
+                  aria-hidden="true"
+                  className="absolute top-0 left-1/2 h-px w-20 -translate-x-1/2 bg-fg/8"
+                />
+              ) : null}
               <Link
                 href={href}
                 onClick={onNavigate}
                 aria-current={current ? "page" : undefined}
                 className={cx(
-                  "inline-block px-2 font-display text-[clamp(3.25rem,13vw,6rem)] leading-[0.95] font-extrabold tracking-[-0.045em]",
+                  "block px-2 font-display text-[clamp(3rem,12vw,4.5rem)] leading-[0.95] font-extrabold tracking-[-0.045em]",
                   "transition-colors duration-(--duration-fast)",
                   current ? "text-accent" : "text-fg hover:text-accent",
                 )}
