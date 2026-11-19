@@ -7,8 +7,9 @@
 import { contactDescription } from "../contact/copy.ts";
 import type { About, Flagship, Lens, Profile } from "../content/types.ts";
 import { LIBRARY_LEAD } from "../library/copy.ts";
+import { PRIVACY_DESCRIPTION } from "../privacy/copy.ts";
 
-export type PageKind = "home" | "about" | "work" | "contact" | "lens" | "case-study";
+export type PageKind = "home" | "about" | "work" | "contact" | "privacy" | "lens" | "case-study";
 
 export type SitePage = {
   readonly kind: PageKind;
@@ -69,6 +70,14 @@ export const sitePages = ({
     absoluteTitle: false,
     description: contactDescription(profile.name),
     card: { label: "Contact", heading: "Get in touch" },
+  },
+  {
+    kind: "privacy",
+    path: "/privacy",
+    title: "Privacy",
+    absoluteTitle: false,
+    description: PRIVACY_DESCRIPTION,
+    card: { label: "Privacy", heading: "What this site collects" },
   },
   ...lenses.map((lens): SitePage => ({
     kind: "lens",

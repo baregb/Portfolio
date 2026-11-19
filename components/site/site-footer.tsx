@@ -1,9 +1,10 @@
+import Link from "next/link";
 import { ExternalLinks } from "@/components/portfolio/external-links";
 import { profileLinks } from "@/components/portfolio/links";
 import { Container } from "@/components/ui/container";
 import { getProfile } from "@/features/content";
 
-/** Name, role, profile links, and the year the site was built. */
+/** Name, role, profile links, the year the site was built, and the privacy note. */
 export function SiteFooter() {
   const profile = getProfile();
   const { name, roleLine, location } = profile;
@@ -18,8 +19,16 @@ export function SiteFooter() {
         </div>
         <div className="grid gap-4 md:justify-items-end">
           <ExternalLinks links={profileLinks(profile)} label="Profiles" />
-          <p className="text-sm text-muted">
-            © {year} {name}
+          <p className="flex flex-wrap items-center gap-x-4 text-sm text-muted">
+            <span>
+              © {year} {name}
+            </span>
+            <Link
+              href="/privacy"
+              className="inline-flex min-h-11 items-center underline decoration-1 underline-offset-4 hover:text-fg hover:decoration-2"
+            >
+              Privacy
+            </Link>
           </p>
         </div>
       </Container>

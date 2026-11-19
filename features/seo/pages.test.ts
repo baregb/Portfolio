@@ -46,12 +46,13 @@ describe.each([false, true])("sitePages (drafts %s)", (includeDrafts) => {
   const { reader, pages } = pagesFor(includeDrafts);
   const paths = pages.map(({ path }) => path);
 
-  it("lists every public page: home, about, work, contact, each lens, each flagship", () => {
+  it("lists every public page: home, about, work, contact, privacy, each lens, each flagship", () => {
     expect(paths).toEqual([
       "/",
       "/about",
       "/work",
       "/contact",
+      "/privacy",
       ...reader.getLenses().map(({ slug }) => `/for/${slug}`),
       ...reader.getFlagships().map(({ slug }) => `/work/${slug}`),
     ]);
