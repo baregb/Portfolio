@@ -100,6 +100,17 @@ describe("retry pass (AC-7)", () => {
     expect(alert).toHaveBeenCalledTimes(1);
   });
 
+  it("retries a row that is exactly 2 minutes old", async () => {
+    const { run, email } = setup();
+    const id = await insert({ createdAt: ago(2 * MINUTE), attempts: 1 });
+
+    const result = await run();
+
+    expect(result).toMatchObject({ retried: 1, sent: 1 });
+    expect(email.sent).toHaveLength(1);
+    expect(await row(id)).toMatchObject({ notified_at: NOW.toISOString(), notify_attempts: 2 });
+  });
+
   it("gives up after 8 attempts", async () => {
     const { run, email } = setup();
     const id = await insert({ createdAt: ago(DAY), attempts: 8 });
@@ -154,5 +165,28 @@ describe("retention pass (AC-8)", () => {
     expect(await row(expired)).toBeNull();
     expect(await row(unsentExpired)).toBeNull();
     expect(await row(kept)).not.toBeNull();
+  });
+
+  it("keeps a row exactly 365 days old and deletes one a millisecond older", async () => {
+    const { run } = setup();
+    const edge = await insert({ createdAt: ago(365 * DAY), notifiedAt: ago(365 * DAY) });
+    const past = await insert({ createdAt: ago(365 * DAY + 1), notifiedAt: ago(365 * DAY) });
+
+    const result = await run();
+
+    expect(result.deleted).toBe(1);
+    expect(await row(edge)).not.toBeNull();
+    expect(await row(past)).toBeNull();
+  });
+
+  it("deletes an unsent row past retention without emailing it first", async () => {
+    const { run, email } = setup();
+    const expired = await insert({ createdAt: ago(366 * DAY), attempts: 1 });
+
+    const result = await run();
+
+    expect(result).toEqual({ retried: 0, sent: 0, deleted: 1 });
+    expect(email.sent).toHaveLength(0);
+    expect(await row(expired)).toBeNull();
   });
 });
