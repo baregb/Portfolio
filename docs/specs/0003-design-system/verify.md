@@ -20,7 +20,7 @@ Run against the production build (`pnpm serve`, or `pnpm build` and serve `out/`
 - [x] "Pending", "Disabled", and "Disabled link" buttons look muted; the disabled link is plain text with no `href` → AC-8, AC-11
 - [x] The external link and external button open a new tab and carry "(opens in a new tab)" for screen readers → AC-8
 - [x] The email field shows its error under it; the input has `aria-invalid="true"` and `aria-describedby` pointing at the error text; required fields announce "required" → AC-8
-- [x] At any width, the header shows the name and a menu button; it opens a drawer from the right with the nav and the theme switcher; Escape, the close button, or a click outside closes it and focus returns to the button; it opens with JavaScript off too → AC-12 (drawer since 2026-11-18)
+- [x] At any width, the header shows the name and a menu button; it opens a full screen menu with large bold centred links and the theme switcher; the close button sits where the menu button was; Escape or the close button closes it and focus returns to the button; the page behind does not scroll; it opens with JavaScript off too → AC-12 (full screen menu since 2026-11-19)
 - [x] At 390px wide, `/` and `/styleguide` have no horizontal scroll in either theme → AC-8, AC-14
 - [x] With the OS set to reduce motion, scroll `/styleguide` and navigate between `/` and `/styleguide` → nothing rises or crossfades; with it off, the green block rises in and routes crossfade → AC-7
 - [x] With JavaScript off, `/` and `/styleguide` show all their content (nothing waits for an animation) → AC-7
@@ -54,7 +54,7 @@ Run against the production build (`pnpm serve`, or `pnpm build` and serve `out/`
 - AC-9 modal: the modal step and the `no-alert` step
 - AC-10 toasts: the two toast steps
 - AC-11 loading: the pending step and the no streamed skeleton command
-- AC-12 shell: the skip link, menu drawer, and header and footer steps
+- AC-12 shell: the skip link, full screen menu, and header and footer steps
 - AC-13 styleguide: the noindex and contents steps
 - AC-14 grid, block, shapes, measure: the shapes and measure steps
 - AC-15 checks and dependency: the full command run

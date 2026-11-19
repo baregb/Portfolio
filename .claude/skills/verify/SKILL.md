@@ -34,7 +34,7 @@ Theme follows the system: pass `colorScheme: "dark"` to `newContext`. Also usefu
 - Cards: `[id^="project-"]`; skills on about: `[id^="skill-"]`
 - CV button: `a[data-analytics-event="cv-download"]`
 - Form slots: `[data-form-slot]`
-- The nav and theme switcher live in the menu drawer, a native popover (`header [popover]`, opened by `header button[popovertarget]`). The drawer sits inside `header`, so `header button[popovertarget]` also matches its close button; take the first. At 390px the open drawer covers the menu button.
+- The nav and theme switcher live in the full screen menu, a native popover (`[data-site-menu]`, opened by `header > div > button[popovertarget]`). It sits inside `header`, so a bare `header button[popovertarget]` also matches its close button. Open, it covers the whole page, including the menu button.
 
 ## Gotchas
 

@@ -13,7 +13,7 @@ type SiteHeaderProps = {
 
 /**
  * The floating frosted pill bar (D): the name and the menu button, at every
- * size. The nav and the theme switcher live in the menu drawer.
+ * size. The nav and the theme switcher live in the full screen menu.
  */
 export function SiteHeader({ items = navItems, position = "sticky" }: SiteHeaderProps) {
   const { name } = getProfile();
@@ -33,7 +33,7 @@ export function SiteHeader({ items = navItems, position = "sticky" }: SiteHeader
           {name}
         </Link>
         {/* With no nav (a styleguide demo), the switcher sits in the bar itself. */}
-        {hasNav ? <SiteMenu items={items} /> : <ThemeSwitcher />}
+        {hasNav ? <SiteMenu name={name} items={items} /> : <ThemeSwitcher />}
       </div>
     </header>
   );

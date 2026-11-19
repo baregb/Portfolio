@@ -101,8 +101,8 @@ Headings use `text-wrap: balance` automatically. Heading levels follow the page 
 - **2px** (`rounded-input`): text inputs and the square `line` button.
 - **Round** (`rounded-full`): buttons, the nav bar, nav links, the lens switcher, the theme switcher, icon buttons.
 - **14px** (`rounded-panel`): toasts and the modal.
-- **Full height drawer** (square, hairline on its left edge): the menu drawer.
-- **Shadow** (`shadow-soft`) only on floating pieces: the nav, toasts, the modal, the menu drawer, secondary buttons. Everything else separates with a hairline.
+- **Full screen menu**: covers the page on `bg-bg`, no frame; links in Bricolage at display size, centred.
+- **Shadow** (`shadow-soft`) only on floating pieces: the nav, toasts, the modal, secondary buttons. Everything else separates with a hairline.
 
 ## Grid and the green block
 
@@ -146,8 +146,8 @@ All in `components/ui/` (primitives) and `components/site/` (shell). Named expor
 | `Modal` | `closeOnBackdrop`, `description` | focused tasks that need the page to wait; native `<dialog>` |
 | `Toaster` and `useToast` | `success`, `info` (polite, close after 5s, pause on hover or focus), `error` (assertive, stays until dismissed); at most 3 | short confirmations and failures after an action |
 | `ButtonGroup` | `className` | every row of actions: stacks each button at full width on phones so they all match, side by side from `sm` |
-| `ThemeSwitcher` | none | System, Light, Dark; already in the menu drawer |
-| `SkipLink`, `SiteHeader`, `SiteFooter` | header `items`, `position` | the shell; already in `app/layout.tsx`. The header is the name plus a menu button at every size; `SiteMenu` is the drawer with the nav and the theme switcher |
+| `ThemeSwitcher` | none | System, Light, Dark; already in the full screen menu |
+| `SkipLink`, `SiteHeader`, `SiteFooter` | header `items`, `position` | the shell; already in `app/layout.tsx`. The header is the name plus a menu button at every size; `SiteMenu` is the full screen menu with the nav and the theme switcher |
 
 Add a nav entry by appending to `navItems` in `components/site/nav.ts` when its route ships. The nav lists Work, About, and Contact.
 

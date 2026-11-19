@@ -168,6 +168,11 @@ html.dark {
   background-size: 24px 24px;
 }
 
+/* The page behind the full screen menu stays still while it is open. */
+html:has([data-site-menu]:popover-open) {
+  overflow: hidden;
+}
+
 /* The frosted floating nav (D). */
 @utility frosted {
   background-color: var(--color-nav);

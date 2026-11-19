@@ -15,14 +15,45 @@ export function NavLinks({
   onNavigate,
 }: {
   readonly items: readonly NavItem[];
-  readonly layout: "row" | "column";
+  /** `overlay`: the full screen menu, large bold centred links that rise in one after another. */
+  readonly layout: "row" | "column" | "overlay";
   readonly onNavigate?: () => void;
 }) {
   const pathname = usePathname();
   return (
-    <ul className={cx("flex", layout === "row" ? "items-center gap-0.5" : "flex-col gap-1")}>
-      {items.map(({ href, label }) => {
+    <ul
+      className={cx(
+        "flex",
+        layout === "row" && "items-center gap-0.5",
+        layout === "column" && "flex-col gap-1",
+        layout === "overlay" && "flex-col items-center gap-2 text-center md:gap-4",
+      )}
+    >
+      {items.map(({ href, label }, index) => {
         const current = isCurrent(pathname, href);
+        if (layout === "overlay") {
+          return (
+            <li
+              key={href}
+              // Each link rises in a beat after the one above it when the menu opens.
+              style={{ transitionDelay: `calc(${index} * 60ms + 80ms)` }}
+              className="transition-[opacity,translate] duration-(--duration-slow) ease-(--ease-out) motion-reduce:transition-none starting:translate-y-6 starting:opacity-0"
+            >
+              <Link
+                href={href}
+                onClick={onNavigate}
+                aria-current={current ? "page" : undefined}
+                className={cx(
+                  "inline-block px-2 font-display text-[clamp(3.25rem,13vw,6rem)] leading-[0.95] font-extrabold tracking-[-0.045em]",
+                  "transition-colors duration-(--duration-fast)",
+                  current ? "text-accent" : "text-fg hover:text-accent",
+                )}
+              >
+                {label}
+              </Link>
+            </li>
+          );
+        }
         return (
           <li key={href}>
             <Link
