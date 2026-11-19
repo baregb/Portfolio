@@ -155,121 +155,132 @@ export function FormFrame({
     }
   };
 
-  if (status.kind === "sent") {
-    return (
-      <Card className="gap-4 md:p-8">
-        <div role="status" className="grid gap-3">
-          <Icon icon={CircleCheck} className="size-8 text-accent" />
-          <Heading ref={sentHeadingRef} tabIndex={-1} className="text-heading font-bold">
-            {sentHeading}
-          </Heading>
-          <p className="text-muted">
-            Thanks, {status.name}. I will reply to {status.email}.
-          </p>
-        </div>
-      </Card>
-    );
-  }
+  // A polite live region that stays mounted through every state, so screen
+  // readers announce the confirmation when its text changes (AC-4). A region
+  // inserted with its text already inside is often skipped.
+  const announcement =
+    status.kind === "sent" && !demo
+      ? `${sentHeading}. Thanks, ${status.name}. I will reply to ${status.email}.`
+      : "";
 
   return (
     <>
-      <Card className="gap-6 md:p-8 noscript:hidden">
-        <Heading id={headingId} className="text-heading font-bold">
-          {heading}
-        </Heading>
-        <form aria-labelledby={headingId} noValidate onSubmit={onSubmit} className="grid gap-5">
-          {fields.map((field) => {
-            const common = {
-              id: fieldId(field.name),
-              name: field.name,
-              label: field.label,
-              hint: field.hint,
-              error: errors[field.name],
-              required: true,
-              value: values[field.name] ?? "",
-            };
-            const update = (value: string) =>
-              setValues((current) => ({ ...current, [field.name]: value }));
-            if (field.control === "textarea") {
-              return (
-                <TextArea
-                  key={field.name}
-                  {...common}
-                  rows={field.rows ?? 6}
-                  onChange={(event) => update(event.target.value)}
-                />
-              );
-            }
-            if (field.control === "select") {
-              return (
-                <SelectField
-                  key={field.name}
-                  {...common}
-                  options={field.options ?? []}
-                  onChange={(event) => update(event.target.value)}
-                />
-              );
-            }
-            return (
-              <TextField
-                key={field.name}
-                {...common}
-                type={field.type ?? "text"}
-                autoComplete={field.autoComplete}
-                onChange={(event) => update(event.target.value)}
-              />
-            );
-          })}
-
-          {/* The honeypot: hidden from people and screen readers, filled by bots (AC-5). */}
-          <div aria-hidden="true" className="absolute -left-[10000px] size-px overflow-hidden">
-            <label htmlFor={fieldId(HONEYPOT_FIELD)}>Leave this field empty</label>
-            <input
-              id={fieldId(HONEYPOT_FIELD)}
-              name={HONEYPOT_FIELD}
-              type="text"
-              tabIndex={-1}
-              autoComplete="off"
-              value={honeypot}
-              onChange={(event) => setHoneypot(event.target.value)}
-            />
-          </div>
-
-          <TurnstileWidget ref={turnstile} siteKey={SITE_KEY} />
-
-          {status.kind === "failed" ? (
-            <p role="alert" className="border-s-2 border-danger ps-3 text-sm text-danger">
-              {status.failure === "generic" ? (
-                linkedinUrl ? (
-                  <>
-                    Something went wrong on my side. Try again, or reach me on{" "}
-                    <TextLink href={linkedinUrl} external>
-                      LinkedIn
-                    </TextLink>
-                    .
-                  </>
-                ) : (
-                  "Something went wrong on my side. Try again."
-                )
-              ) : (
-                FAILURE_MESSAGES[status.failure]
-              )}
-            </p>
-          ) : null}
-
-          <div className="grid gap-3">
-            <ButtonGroup>
-              <Button type="submit" pending={status.kind === "submitting"}>
-                {submitLabel}
-              </Button>
-            </ButtonGroup>
-            <p className="text-sm text-muted">{RETENTION_LINE}</p>
-          </div>
-        </form>
-      </Card>
-      <p className="hidden text-muted noscript:block">
-        This form needs JavaScript. You can still reach me through the links above.
+      <p role="status" className="sr-only">
+        {announcement}
       </p>
+      {status.kind === "sent" ? (
+        <Card className="gap-4 md:p-8">
+          <div className="grid gap-3">
+            <Icon icon={CircleCheck} className="size-8 text-accent" />
+            <Heading ref={sentHeadingRef} tabIndex={-1} className="text-heading font-bold">
+              {sentHeading}
+            </Heading>
+            <p className="text-muted">
+              Thanks, {status.name}. I will reply to {status.email}.
+            </p>
+          </div>
+        </Card>
+      ) : (
+        <>
+          <Card className="gap-6 md:p-8 noscript:hidden">
+            <Heading id={headingId} className="text-heading font-bold">
+              {heading}
+            </Heading>
+            <form aria-labelledby={headingId} noValidate onSubmit={onSubmit} className="grid gap-5">
+              {fields.map((field) => {
+                const common = {
+                  id: fieldId(field.name),
+                  name: field.name,
+                  label: field.label,
+                  hint: field.hint,
+                  error: errors[field.name],
+                  required: true,
+                  value: values[field.name] ?? "",
+                };
+                const update = (value: string) =>
+                  setValues((current) => ({ ...current, [field.name]: value }));
+                if (field.control === "textarea") {
+                  return (
+                    <TextArea
+                      key={field.name}
+                      {...common}
+                      rows={field.rows ?? 6}
+                      onChange={(event) => update(event.target.value)}
+                    />
+                  );
+                }
+                if (field.control === "select") {
+                  return (
+                    <SelectField
+                      key={field.name}
+                      {...common}
+                      options={field.options ?? []}
+                      onChange={(event) => update(event.target.value)}
+                    />
+                  );
+                }
+                return (
+                  <TextField
+                    key={field.name}
+                    {...common}
+                    type={field.type ?? "text"}
+                    autoComplete={field.autoComplete}
+                    onChange={(event) => update(event.target.value)}
+                  />
+                );
+              })}
+
+              {/* The honeypot: hidden from people and screen readers, filled by bots (AC-5). */}
+              <div aria-hidden="true" className="absolute -left-[10000px] size-px overflow-hidden">
+                <label htmlFor={fieldId(HONEYPOT_FIELD)}>Leave this field empty</label>
+                <input
+                  id={fieldId(HONEYPOT_FIELD)}
+                  name={HONEYPOT_FIELD}
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(event) => setHoneypot(event.target.value)}
+                />
+              </div>
+
+              <TurnstileWidget ref={turnstile} siteKey={SITE_KEY} />
+
+              {status.kind === "failed" ? (
+                <p role="alert" className="border-s-2 border-danger ps-3 text-sm text-danger">
+                  {status.failure === "generic" ? (
+                    linkedinUrl ? (
+                      <>
+                        Something went wrong on my side. Try again, or reach me on{" "}
+                        <TextLink href={linkedinUrl} external>
+                          LinkedIn
+                        </TextLink>
+                        .
+                      </>
+                    ) : (
+                      "Something went wrong on my side. Try again."
+                    )
+                  ) : (
+                    FAILURE_MESSAGES[status.failure]
+                  )}
+                </p>
+              ) : null}
+
+              <div className="grid gap-3">
+                <ButtonGroup>
+                  <Button type="submit" pending={status.kind === "submitting"}>
+                    {submitLabel}
+                  </Button>
+                </ButtonGroup>
+                <p className="text-sm text-muted">{RETENTION_LINE}</p>
+              </div>
+            </form>
+          </Card>
+          <p className="hidden text-muted noscript:block">
+            This form needs JavaScript. You can still reach me through the links above.
+          </p>
+        </>
+      )}
     </>
   );
 }

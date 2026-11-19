@@ -12,8 +12,8 @@ import { readEmailConfig } from "./config";
 import { logEvent } from "./log";
 import { attemptNotify } from "./notify";
 
-// Spec 0005, AC-7 and AC-8: every 15 minutes, resend notifications that have
-// not gone out, then delete rows past the retention period. Cutoffs are ISO
+// Spec 0005, AC-7 and AC-8: every 15 minutes, delete rows past the retention
+// period, then resend notifications that have not gone out. Cutoffs are ISO
 // strings computed here and bound as parameters, never SQLite's datetime().
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -41,6 +41,13 @@ export const runScheduled = async ({
     return { retried: 0, sent: 0, deleted: 0 };
   }
   const db = drizzle(env.DB);
+
+  // Retention pass first, so a row past its retention is deleted, never emailed.
+  const retentionCutoff = new Date(now.getTime() - RETENTION_DAYS * DAY_MS).toISOString();
+  const deleted = await db
+    .delete(submission)
+    .where(lt(submission.createdAt, retentionCutoff))
+    .returning({ id: submission.id });
 
   // Retry pass: oldest first, at most one batch per run.
   let retried = 0;
@@ -76,13 +83,6 @@ export const runScheduled = async ({
       if (outcome === "sent") sent += 1;
     }
   }
-
-  // Retention pass.
-  const retentionCutoff = new Date(now.getTime() - RETENTION_DAYS * DAY_MS).toISOString();
-  const deleted = await db
-    .delete(submission)
-    .where(lt(submission.createdAt, retentionCutoff))
-    .returning({ id: submission.id });
 
   logEvent("info", "scheduled_run", { ...WHERE, retried, sent, deleted: deleted.length });
   return { retried, sent, deleted: deleted.length };

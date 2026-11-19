@@ -26,7 +26,9 @@ export function TextLink({ href, children, external = false, className }: TextLi
         className={cx(classes, "inline-flex items-center gap-0.5", className)}
       >
         {children}
-        <ArrowUpRight aria-hidden="true" className="size-3.5" strokeWidth={2.25} />
+        {/* The arrow's path leaves about 4px empty on its right; pull it in so
+            punctuation after the link sits close, as it would after a word. */}
+        <ArrowUpRight aria-hidden="true" className="-me-0.5 size-3.5" strokeWidth={2.25} />
         <span className="sr-only"> (opens in a new tab)</span>
       </a>
     );
