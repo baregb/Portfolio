@@ -1,0 +1,65 @@
+---
+title: "Webstore: selling websites in three currencies"
+summary: A storefront for done for you websites, with template previews, pricing tiers, checkout in USD, CAD, or NGN across three payment providers, and a briefing CMS.
+status: draft
+depth: flagship
+visibility: onRequest
+client:
+  descriptor: a web studio that sells done for you websites
+role: Developer
+period:
+  start: 2026-07
+  end: null
+sector: web-services
+categories:
+  - commerce-and-payments
+  - operations-tooling
+stack:
+  - nextjs
+  - typescript
+  - tailwind-css
+  - supabase
+  - postgres
+  - stripe
+  - paystack
+  - flutterwave
+  - vercel
+  - vitest
+aiTools:
+  - claude-code
+skills:
+  - solution-architecture
+  - payments-integration
+  - full-stack-development
+  - ai-assisted-development
+results:
+  - value: "3"
+    label: currencies at checkout
+    context: USD and CAD through Stripe, NGN through Paystack with Flutterwave as the fallback.
+  - value: "330"
+    label: automated tests
+    context: They run against an in memory database stand in, never the live project.
+  - value: "2"
+    label: tagged releases
+    context: Version 1.0.0, then a 1.0.1 hotfix, under a main and develop branching model.
+brief:
+  problem: >-
+    A studio wanted to sell ready made website templates online: customers browse templates by
+    industry, preview them, pick a pricing tier, pay in their own currency, and then brief the
+    build team on what to make. Customers pay in dollars or naira, and no single payment
+    provider covers both well.
+  approach: >-
+    One Next.js app on Supabase and Vercel. Checkout uses each provider's hosted page, so no
+    card data touches the app: Stripe for USD and CAD, Paystack for NGN, Flutterwave as the
+    naira fallback. Webhooks gate each order on a confirmed payment. The app degrades instead of
+    crashing when keys are missing, and an admin CMS behind a secret path runs the catalogue,
+    pricing, and incoming briefs.
+  outcome: >-
+    Released as version 1.0.0 with a 1.0.1 hotfix, with regional pricing and add ons built on
+    top. A suite of 330 tests runs against an in memory stand in for the database, so it is safe
+    to run even though local development points at the live project.
+  ai: >-
+    I built it with Claude Code across parallel git worktrees, one per phase or fix, following
+    the studio's branching and release standard, with every phase written up in a handoff note
+    so the next session could pick it up cold.
+---

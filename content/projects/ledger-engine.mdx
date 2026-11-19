@@ -1,0 +1,95 @@
+---
+title: "Ledger Engine: bank statements read on your own device"
+summary: A browser app that reads Nigerian bank statements without uploading them, separates personal from business money, and produces a cash basis profit and loss.
+status: draft
+depth: flagship
+visibility: public
+updated: 2026-11-19
+client:
+  descriptor: my own product, for small businesses and their accountants in Nigeria
+role: Sole developer and architect
+period:
+  start: 2026-08
+  end: null
+sector: finance
+categories:
+  - finance-and-data
+stack:
+  - nextjs
+  - typescript
+  - tailwind-css
+  - pdfjs
+  - vitest
+aiTools:
+  - claude-code
+skills:
+  - solution-architecture
+  - data-modelling
+  - full-stack-development
+  - ai-assisted-development
+results:
+  - value: "0"
+    label: upload endpoints
+    context: The statement is read in the browser tab, and the security policy pins network requests to the site itself.
+    source: "bank-sift README.md, opening section, and src/lib/security/csp.ts (connect-src 'self')."
+  - value: "11"
+    label: defects fixed in the build manual's code
+    context: Each one would have produced a wrong number that looked right; each is commented where the code changed.
+    source: "bank-sift README.md, Where this deviates from the Build Manual: 11 rows."
+  - value: "69"
+    label: automated tests passing
+    context: The parser runs against real PDFs generated in memory, so no real statement enters the repo.
+    source: "bank-sift HANDOFF.md, section 2, Done and verified (2026-08-18): npm run test, 69 passing across 4 files."
+  - value: "13"
+    label: bank statement profiles
+    context: None is marked validated until it passes a real statement.
+    source: "bank-sift src/lib/pdf/profiles.ts: 13 profiles, all validated false, counted 2026-11-19."
+cover:
+  src: ledger-engine/cover.png
+  alt: The Ledger Engine converter page, with a drop zone for a bank statement PDF and three promises, nothing is uploaded, the balance is checked, yours to keep.
+screenshots:
+  - src: ledger-engine/proof.png
+    alt: The proof page, stating three things that are true of the app and a four step test to confirm no request carries the statement file.
+    caption: The proof page tells visitors how to check the privacy claim themselves, and where the claim stops.
+---
+
+## Problem
+
+Small businesses in Nigeria often run personal and business money through several accounts at several banks. When an accountant, a lender, or a visa office asks for a profit and loss, someone has to turn a pile of PDF statements into one ledger by hand.
+
+The obvious product is an upload and convert website. But a bank statement is about the most sensitive file a person owns, and asking people to upload it is the reason many of them never will.
+
+## Constraints
+
+- **The file must never leave the device.** Not as a policy, as the architecture: there is no server to send it to.
+- **Every bank formats statements differently**, right aligns its money columns, and wraps long narrations across lines.
+- **Money moving between your own accounts is not revenue or expense.** If a transfer pair is missed, the report overstates income and costs at the same time, and nothing looks wrong.
+- **No budget for infrastructure**, and no language model: classification has to be rules a person can read.
+
+## Decision and tradeoffs
+
+- **Parse in the browser.** PDF.js reads the file in memory, page by page; the content security policy allows network requests only to the site itself, so even a bug cannot send the file anywhere. The cost: no server side processing to lean on, and the parser has to be fast on a phone.
+- **One parser, one profile per bank.** Column positions come from whitespace corridors rather than where text starts, because right aligned amounts share no start edge.
+- **Device storage, not accounts.** Rows live in IndexedDB on the device, and the app says plainly that this is not a backup. Accounts and sync wait until a paying user asks for them.
+- **Rules, not a model.** Classification is deterministic rules plus rules learned from your corrections, so every category can be explained.
+
+## What I built
+
+- **An eleven step pipeline:** open the PDF in memory (with password support), extract text with coordinates, find columns, join wrapped lines, normalise money and dates, check balance continuity, remove duplicates across overlapping periods, classify, match internal transfers, report, and transmit nothing.
+- **A local workbench** with tabs for accounts, import, review, transfers, reports, and integrity. The transfers tab shows near misses with the failed condition named in plain words.
+- **A cash basis profit and loss and a CSV export**, with the five cash basis disclosures on every export, and CSV cells neutralised against spreadsheet formula injection.
+- **A public converter** (no login, no database) and a proof page that tells visitors how to check the privacy claim themselves in four steps.
+
+## Results
+
+The privacy claim holds by construction: there is no upload endpoint, and the policy blocks any other destination. A test suite of 69 cases generates real PDFs in memory and runs them through the real PDF reader, so the parser is tested end to end without a single real statement in the repo.
+
+The build followed a detailed build manual closely, and testing found 11 places where the manual's own code would have shipped a wrong number, from lost minus signs to same day rows sorted out of order. Each fix is commented where it was made.
+
+The next step is validating each bank profile against real statements before any bank is released; until then the app says so on every import.
+
+## How AI was used
+
+I built it with Claude Code, working from three source documents: a technical and commercial assessment, a build manual, and a cost reduction review. Where they disagreed, the review decided scope and the manual decided sequence.
+
+I did not take the manual's code on trust. Tests against realistic PDFs exposed its defects, and every departure is recorded in the README with the reason, so the next person can see why the code differs from the plan.

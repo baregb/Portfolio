@@ -18,6 +18,10 @@ featured:
 flagshipOrder:
   - beccahs-kitchen
   - membership-charity-data-migration
+  - ledger-engine
+  - loveseal
+  - webstore
+  - spec-driven-workflow
 lensOrder:
   - solutions-architect
   - software-developer

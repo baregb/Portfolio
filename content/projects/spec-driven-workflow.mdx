@@ -1,0 +1,82 @@
+---
+title: "A spec driven workflow for building with AI agents"
+summary: Nine agent skills that take each feature from a written spec to a verified, tested build, shown through the making of this portfolio.
+status: draft
+depth: flagship
+visibility: public
+updated: 2026-11-19
+client:
+  descriptor: my own workflow, used on the projects on this site
+role: Designer and sole developer
+period:
+  start: 2026-09
+  end: null
+sector: web-services
+categories:
+  - ai-assisted-delivery
+stack:
+  - typescript
+  - nextjs
+  - vitest
+aiTools:
+  - claude-code
+skills:
+  - ai-assisted-development
+  - solution-architecture
+results:
+  - value: "9"
+    label: workflow skills
+    context: Scope, architect, develop, check, test, debug, document, sync, and audit, each with one job.
+    source: "~/.claude/skills: architect, audit, check, debug, develop, document, scope, sync, test (counted 2026-11-19)."
+  - value: "5"
+    label: specs written before the code
+    context: For this portfolio, from the stack decision to the contact forms.
+    source: "portfolio docs/specs: 0001 to 0005 (2026-11-19)."
+  - value: "153"
+    label: verify steps passed in a real browser
+    context: Each step ties to an acceptance criterion and is ticked only with evidence.
+    source: "portfolio docs/specs/*/verify.md: 10 + 48 + 32 + 63 ticked steps, counted 2026-11-19."
+  - value: "395"
+    label: automated tests passing
+    context: Across the content rules, the design tokens, the pages, and the Worker.
+    source: "portfolio pnpm test, 15 files, 395 tests passed (2026-11-19)."
+cover:
+  src: spec-driven-workflow/cover.png
+  alt: The home page of this portfolio, built with the workflow, showing the name, the headline, and the profile photo in a split hero.
+---
+
+## Problem
+
+AI coding agents write code fast, and that speed hides the risk. Asked to build a feature, an agent fills every gap in the request with a guess: a missing field, an unhandled error, a value with no source. The code looks finished, the tests it wrote pass, and the gaps surface later, in front of users.
+
+I wanted the speed without the guessing, on real client work where mistakes cost money.
+
+## Constraints
+
+- **One person** reviews everything, so the process has to catch gaps before code, not after.
+- **Green tests are not proof.** Tests only check what their author thought of.
+- **It has to work in any repo,** on any stack, and with any agent that reads skills, not only one tool.
+- **Ceremony has a cost.** A process too slow for a small feature gets skipped.
+
+## Decision and tradeoffs
+
+- **Decide in writing first.** `/architect` interviews me one decision at a time, recommends an answer, and writes a spec with numbered acceptance criteria and a table naming where every value comes from. A gap there is a question for me, not a guess for the agent.
+- **Prove it in the running app.** `/check verify` drives the real site and ticks a criterion only with evidence: a screenshot, a response, a command's output. A fresh model, not the one that wrote the code, does the review.
+- **Keep the plan alive.** `/scope` holds a coarse plan, and `/sync` updates it and the context files after each change, so a new session starts informed.
+- **Scale the rigour.** Each feature carries a tier, and the steps follow it. On this portfolio, related pages share one spec and one build pass to reach launch faster.
+
+## What I built
+
+Nine skills, each with one job and a clear hand off: `/scope` plans, `/architect` decides, `/develop` builds to the spec, `/check` verifies and reviews, `/test` locks in behaviour, `/debug` finds root causes, `/document` writes the human facing prose, `/sync` keeps the context current, and `/audit` bootstraps a repo's context files.
+
+Each spec lives beside its rationale and a verify checklist, so anyone can see what was decided, why, and how it was proven.
+
+## Results
+
+This portfolio is the working example: five specs written before their code, 153 verify steps passed in a real browser, and 395 automated tests. The verify runs caught real bugs that tests had missed, such as two quick filter changes overwriting each other, and a cross check by a fresh model found gaps in the contact form spec before a line of it was built.
+
+The same workflow built Beccah's Kitchen, which reached 1,277 passing tests.
+
+## How AI was used
+
+The skills are instructions for AI agents, written and refined with Claude Code. Every skill keeps the agent in its lane: it asks before deciding something load bearing, it never marks work done without evidence, and the spec, not the chat, is the record a new session reads.

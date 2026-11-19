@@ -1,0 +1,92 @@
+---
+title: "LoveSeal Church: off a legacy site, one piece at a time"
+summary: A live multilingual resources library, a rebuilt main site, and a redesigned sermon library that runs inside the old Laravel app without touching its data.
+status: draft
+depth: flagship
+visibility: public
+updated: 2026-11-19
+client:
+  name: LoveSeal Church
+  descriptor: a church in Ikeja, Lagos
+role: Sole developer
+period:
+  start: 2026-05
+  end: null
+sector: faith-and-community
+categories:
+  - legacy-modernisation
+  - content-platforms
+stack:
+  - nextjs
+  - typescript
+  - supabase
+  - tiptap
+  - vercel
+  - laravel
+  - vue
+  - vitest
+aiTools:
+  - claude-code
+skills:
+  - solution-architecture
+  - full-stack-development
+  - data-migration
+  - ai-assisted-development
+results:
+  - value: "5"
+    label: languages on the resources library
+    context: English, Spanish, French, Portuguese, and Arabic, including right to left.
+    source: "loveseal-resources src/i18n/routing.ts: locales en, es, fr, pt, ar."
+  - value: "0"
+    label: database changes for the new sermon library
+    context: It reads the same table the old admin writes, so the old pages keep working until the switch.
+    source: "loveseal-messages docs/messages-library.md: nothing here changes the database, S3 or the admin."
+  - value: "41"
+    label: automated tests on the resources API
+    context: Every API route has unit tests, run in CI on each push.
+    source: "loveseal-resources: commit 2026-07-17 Add Vitest unit tests for all API routes and wire up CI; 41 test cases counted 2026-11-19."
+  - value: "5"
+    label: legacy link patterns redirected
+    context: Old message, search, minister, and page links all forward to the new library with a permanent redirect.
+    source: "loveseal-messages docs/messages-library.md, Launch step 7."
+links:
+  live: https://resources.lovesealchurch.org
+cover:
+  src: loveseal/cover.png
+  alt: The LoveSeal resources library home page, with a stack of sermon note cards and the content types manuals, prophecies, articles, blog, and sermon notes.
+---
+
+## Problem
+
+LoveSeal Church ran everything from one Laravel site built in 2020: the main pages, the sermon message library, and the admin where staff upload each week's audio. It still worked, but it was hard to change, ran on PHP 7.4, and the message pages looked their age.
+
+The church also wanted somewhere to publish manuals, prophecies, articles, and sermon notes, in more than one language, without asking a developer every time.
+
+## Constraints
+
+- **Nothing could break on a Sunday.** Staff upload sermons every week, and old message links are shared widely.
+- **The legacy server stays for now.** Its lock file no longer matches the server's PHP version, so a normal dependency install was off the table.
+- **One developer, part time,** so each new piece had to stand on its own.
+- **Staff edit content, not code.** Publishing needed a real editor, not Markdown.
+
+## Decision and tradeoffs
+
+- **Replace in slices, not all at once.** A new resources library first, then a rebuilt main site, then the sermon library, each live on its own before the next. The cost is running old and new side by side for a while.
+- **Next.js and Supabase for the new pieces,** on Vercel, with a Tiptap editor for staff and next-intl for languages.
+- **Redesign the sermon library inside the old app.** It runs on its own subdomain from the same Laravel code, reads the same table the old admin writes, and changes nothing in the database or file storage. Launch is a switch: new pages first go live with `noindex`, then a flag turns on permanent redirects from every old link pattern, and turning the flag off is the rollback.
+
+## What I built
+
+- **Resources library (live):** five content types (manuals, prophecies, articles, blog, sermon notes), an admin with a rich text editor, PDF uploads with text extraction, Bible lookups, translation, email subscriptions, and five languages including Arabic.
+- **New main site:** rebuilt in Next.js in six phases, with the same editor and language setup, ready to replace the legacy home pages.
+- **Sermon library redesign:** new message pages with a Vue audio player, grouping by minister and series, generated link preview images, a sitemap, and a redesigned admin for messages that keeps the old sign in and permissions.
+
+## Results
+
+The resources library is live on its own subdomain in five languages, and every one of its API routes has unit tests that run in CI.
+
+The sermon library redesign needs no database change at all, so the old pages keep serving until the moment of the switch, and switching back is one setting. Five old link patterns forward to the new pages, so years of shared links keep working.
+
+## How AI was used
+
+I built all three pieces with Claude Code. For the legacy app, that meant reading the existing Laravel and Voyager code first and writing every change to sit beside it rather than replace it, with the launch and rollback steps written down before anything went live.
