@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import app from "./index";
+import { app } from "./index";
 
 // Integration tests for the API Worker (spec 0001). Requests go through the
 // real Hono app; only the Static Assets binding is faked, since it is the one

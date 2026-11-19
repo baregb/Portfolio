@@ -1,6 +1,6 @@
-// Spec 0001. Top level is production; `env.preview` overrides it.
-// Bindings for D1, email, and rate limiting are added by the features that
-// need them (contact, request access). See docs/specs/0001-stack-architecture.
+// Spec 0001. Top level is production; `env.preview` overrides it. Bindings
+// and `vars` do not inherit into `env.preview`, so each is repeated there.
+// The forms (spec 0005) add D1, email, rate limiting, and the cron trigger.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "portfolio",
@@ -20,6 +20,7 @@
   // Production is reached only through the custom domain (added once the
   // domain is bought), never through workers.dev.
   "workers_dev": false,
+  "preview_urls": false,
 
   "observability": {
     "enabled": true,
@@ -29,17 +30,84 @@
     }
   },
 
-  "vars": {
-    "ENVIRONMENT": "production"
+  // Spec 0005: retry unsent notifications and delete old rows every 15 minutes.
+  "triggers": {
+    "crons": ["*/15 * * * *"]
   },
+
+  "vars": {
+    "ENVIRONMENT": "production",
+    // Set to the apex domain once it is bought (spec 0005, Follow-up).
+    "ALLOWED_ORIGINS": "https://example.invalid",
+    "SITE_URL": "https://example.invalid",
+    "NOTIFY_FROM": "Portfolio <notify@example.invalid>"
+  },
+
+  // Replace the id with the real `portfolio-prod` id from `wrangler d1 create`.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "portfolio-prod",
+      "database_id": "00000000-0000-4000-8000-000000000001",
+      "migrations_dir": "drizzle/migrations"
+    }
+  ],
+
+  // `scripts/deploy-config.ts` replaces the placeholder with `NOTIFY_TO` at
+  // deploy time, so your address never lives in the repo. Locally the
+  // placeholder matches `NOTIFY_TO` in `.dev.vars`.
+  "send_email": [
+    {
+      "name": "EMAIL",
+      "destination_address": "notify-to@example.invalid"
+    }
+  ],
+
+  // Spec 0001: 5 requests per 60 seconds per visitor and route.
+  "ratelimits": [
+    {
+      "name": "RATE_LIMITER",
+      "namespace_id": "1001",
+      "simple": { "limit": 5, "period": 60 }
+    }
+  ],
 
   "env": {
     "preview": {
       "name": "portfolio-preview",
       "workers_dev": true,
+      "preview_urls": false,
+      "triggers": {
+        "crons": ["*/15 * * * *"]
+      },
       "vars": {
-        "ENVIRONMENT": "preview"
-      }
+        "ENVIRONMENT": "preview",
+        // Set to the exact preview origin, https://portfolio-preview.<subdomain>.workers.dev.
+        "ALLOWED_ORIGINS": "https://portfolio-preview.example.invalid",
+        "SITE_URL": "https://portfolio-preview.example.invalid",
+        "NOTIFY_FROM": "Portfolio preview <notify@example.invalid>"
+      },
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "portfolio-preview",
+          "database_id": "00000000-0000-4000-8000-000000000002",
+          "migrations_dir": "drizzle/migrations"
+        }
+      ],
+      "send_email": [
+        {
+          "name": "EMAIL",
+          "destination_address": "notify-to@example.invalid"
+        }
+      ],
+      "ratelimits": [
+        {
+          "name": "RATE_LIMITER",
+          "namespace_id": "1002",
+          "simple": { "limit": 5, "period": 60 }
+        }
+      ]
     }
   }
 }

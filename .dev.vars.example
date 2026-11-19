@@ -1,0 +1,6 @@
+# Copy to .dev.vars for `pnpm serve` (wrangler dev). Never commit real values.
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA
+NOTIFY_TO=notify-to@example.invalid
+ALLOWED_ORIGINS=http://localhost:8787,http://127.0.0.1:8787
+SITE_URL=http://localhost:8787
+SENTRY_DSN=

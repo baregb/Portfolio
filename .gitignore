@@ -52,3 +52,6 @@ next-env.d.ts
 /.generated/
 /public/img/
 /public/cv/
+
+# deploy copy of wrangler.jsonc with NOTIFY_TO filled in (scripts/deploy-config.ts)
+/wrangler.deploy.jsonc

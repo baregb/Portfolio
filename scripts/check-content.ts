@@ -4,7 +4,7 @@
 // list, runs `checkContent` in both draft modes, prints what it found, and
 // exits 1 on any error so the pre-commit hook, CI, and the build all stop.
 
-import { existsSync, readdirSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, writeFileSync } from "node:fs";
 import { join, relative, sep } from "node:path";
 import {
   allAbouts,
@@ -18,6 +18,7 @@ import {
 } from "../.content-collections/generated/index.js";
 import { checkContent, type ContentIssue } from "../features/content/check.ts";
 import { parseContentDrafts } from "../features/content/env.ts";
+import { requestProjectMap } from "../features/forms/request-projects.ts";
 
 // Fail loudly on a mistyped CONTENT_DRAFTS before anything else, so every
 // `pnpm content` (commit, typecheck, test, CI, build) enforces it (AC-7).
@@ -74,6 +75,15 @@ if (errors.length > 0) {
   }
   process.exit(1);
 }
+
+// Spec 0005: the on request projects the Worker accepts requests for, in this
+// run's draft mode, so a dev build also takes requests for draft projects.
+const generated = join(import.meta.dirname, "..", ".generated");
+mkdirSync(generated, { recursive: true });
+writeFileSync(
+  join(generated, "request-projects.json"),
+  `${JSON.stringify(requestProjectMap(allProjects, drafts.includeDrafts), null, 2)}\n`,
+);
 
 console.log(
   `Content check passed: ${allProjects.length} projects, ${allLenses.length} lenses, both draft modes.`,
