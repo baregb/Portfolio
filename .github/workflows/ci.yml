@@ -40,3 +40,6 @@ jobs:
         env:
           # Spec 0005: Turnstile's always pass test site key; production sets the real one.
           NEXT_PUBLIC_TURNSTILE_SITE_KEY: 1x00000000000000000000AA
+          # Feature 13: a local address keeps CI builds out of search (robots
+          # disallows everything); no Umami id, so no tracker loads.
+          NEXT_PUBLIC_SITE_URL: http://localhost:8787

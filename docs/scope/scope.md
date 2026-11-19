@@ -33,7 +33,7 @@ Journeys 3 to 5 (#16 to #18) come after launch and are unchanged.
 | 10 | About & skills (B) | Journey 1 | done |
 | 11 | CV download (B) | Journey 1 | done |
 | 12 | Contact (D) | Journey 1 | done |
-| 13 | SEO, social cards & analytics (E) | Journey 1 | planned |
+| 13 | SEO, social cards & analytics (E) | Journey 1 | in-progress |
 | 14 | Request access (D) | Journey 2 | done |
 | 15 | Launch (E) | Launch | planned |
 | 16 | Ask AI about my work | Journey 3 | planned |
@@ -164,12 +164,16 @@ A contact form for job and project enquiries, with spam protection and a notific
 - [x] Test it: `/test forms`
 Spec [0005](../specs/0005-forms/index.md) · code in `features/forms/`, `worker/forms/`, `worker/db/`, `drizzle/` · real email needs the domain, D1 databases, Turnstile widget, and Sentry project (spec 0005 Follow-up)
 
-### 13. SEO, social cards & analytics · planned
+### 13. SEO, social cards & analytics · in-progress
 Metadata, sitemap, structured data, and good looking link previews for LinkedIn and messaging apps, plus privacy friendly analytics with no cookies (page views, lens visits, case study reads, CV downloads) and error monitoring.
 **Done when:** every public page has a title, description, and social card; the sitemap lists them; analytics records those events without a cookie banner.
-**Fast track E:** no spec; Cloudflare Web Analytics (no cookies) and Next metadata follow from spec 0001.
+**Fast track E:** no spec; Umami Cloud (cookieless, with custom events) and Next metadata follow from spec 0001. Error monitoring is the Worker's Sentry from spec 0005.
 - [x] Design it (spec): skipped, fast track
-- [ ] Build it: `/develop SEO, social cards & analytics`
+- [x] Build it: `/develop SEO, social cards & analytics`
+  - [x] Page list, metadata, canonical addresses, sitemap, robots, and JSON-LD for home, about, and case studies
+  - [x] Social cards rendered at build (satori and resvg) into `public/og/`, one per indexed page
+  - [x] Umami tracker (only with a website id), CSP hosts, and the CV download, lens visit, and case study read events
+Code in `features/seo/`, `features/analytics/`, `scripts/build-cards.ts`, `app/sitemap.ts`, `app/robots.ts` · production needs `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_UMAMI_WEBSITE_ID` in the Workers Builds variables, and a check of which Umami collector host is live
 
 ## Journey 2: The available on request path
 

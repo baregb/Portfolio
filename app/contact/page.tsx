@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { ContactPage, contactMetadata } from "@/features/contact/contact-page";
+import { ContactPage } from "@/features/contact/contact-page";
+import { seoMetadata } from "@/features/seo";
 
-export const metadata: Metadata = contactMetadata();
+export const metadata: Metadata = seoMetadata("/contact");
 
 export default function Contact() {
   return <ContactPage />;

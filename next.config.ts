@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 import { PHASE_PRODUCTION_BUILD } from "next/constants";
+import { readUmamiWebsiteId } from "./features/analytics/config";
 import { readTurnstileSiteKey } from "./features/forms/submission";
+import { readSiteUrl } from "./features/seo/site-url";
 
 // Spec 0001: every route is generated at build time and exported as plain
 // files to `out/`. Cloudflare Static Assets serves them; only `/api/*` runs
@@ -21,12 +23,19 @@ const nextConfig: NextConfig = {
   },
 };
 
-// Spec 0005, AC-12: a production build fails, naming the variable, without
-// the Turnstile site key the forms need.
+// A production build fails, naming the variable, without the Turnstile site
+// key the forms need (spec 0005, AC-12) or the canonical site address the
+// metadata, sitemap, and cards need (feature 13), or with a malformed Umami
+// website id. Analytics is optional: without an id, pages load no tracker.
 export default function config(phase: string): NextConfig {
   if (phase === PHASE_PRODUCTION_BUILD) {
-    const siteKey = readTurnstileSiteKey(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY);
-    if (!siteKey.ok) throw new Error(siteKey.error);
+    const checks = [
+      readTurnstileSiteKey(process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY),
+      readSiteUrl(process.env.NEXT_PUBLIC_SITE_URL),
+      readUmamiWebsiteId(process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID),
+    ];
+    const errors = checks.flatMap((check) => (check.ok ? [] : [check.error]));
+    if (errors.length > 0) throw new Error(errors.join("\n"));
   }
   return nextConfig;
 }

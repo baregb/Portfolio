@@ -78,11 +78,6 @@ export function ContactPage() {
   );
 }
 
-export const contactMetadata = () => ({
-  title: "Contact",
-  description: `How to reach ${getProfile().name} about a role or a project.`,
-});
-
 export function RequestPage({
   project,
   backHref,

@@ -5,13 +5,11 @@ import { PageHero } from "@/components/portfolio/page-hero";
 import { Container } from "@/components/ui/container";
 import { Section } from "@/components/ui/section";
 import { getCategories, getLenses, getProjects, getStackEntries } from "@/features/content";
+import { LIBRARY_LEAD } from "./copy";
 import type { FilterOptions } from "./filter";
 import { FilterBar } from "./filter-bar";
 import { ProjectLibrary } from "./project-library";
 import { ProjectList } from "./project-list";
-
-export const LIBRARY_LEAD =
-  "Every project I can show, from full case studies to short summaries. Filter by the problem, the role, or the stack.";
 
 const LIST_TITLE = "projects-title";
 

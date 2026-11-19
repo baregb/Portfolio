@@ -18,6 +18,7 @@ import { Section } from "@/components/ui/section";
 import { SpecSheet } from "@/components/ui/spec-sheet";
 import { StatTile } from "@/components/ui/stat-tile";
 import { Tag } from "@/components/ui/tag";
+import { TrackCaseStudyRead } from "@/features/analytics";
 import { TextLink } from "@/components/ui/text-link";
 import {
   SECTIONS,
@@ -333,7 +334,10 @@ export function CaseStudyPage({ project }: { readonly project: Flagship }) {
           ) : (
             <OnRequestSections project={project} />
           )}
-          <SkillsShown project={project} />
+          {/* Feature 13: scrolling past the last section counts as a read. */}
+          <TrackCaseStudyRead project={project.slug}>
+            <SkillsShown project={project} />
+          </TrackCaseStudyRead>
           <Neighbours slug={project.slug} />
         </Container>
       </Section>

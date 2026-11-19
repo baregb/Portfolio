@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { LIBRARY_LEAD, LibraryPage } from "@/features/library/library-page";
+import { LibraryPage } from "@/features/library/library-page";
+import { seoMetadata } from "@/features/seo";
 
-export const metadata: Metadata = { title: "Work", description: LIBRARY_LEAD };
+export const metadata: Metadata = seoMetadata("/work");
 
 export default function Work() {
   return <LibraryPage />;

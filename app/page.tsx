@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
-import { HomePage, homeMetadata } from "@/features/home/home-page";
+import { getProfile } from "@/features/content";
+import { HomePage } from "@/features/home/home-page";
+import { getSiteUrl, homeStructuredData, JsonLd, seoMetadata } from "@/features/seo";
 
-export const metadata: Metadata = homeMetadata();
+export const metadata: Metadata = seoMetadata("/");
 
 export default function Home() {
-  return <HomePage />;
+  return (
+    <>
+      <JsonLd data={homeStructuredData(getProfile(), getSiteUrl())} />
+      <HomePage />
+    </>
+  );
 }

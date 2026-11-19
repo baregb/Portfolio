@@ -80,11 +80,3 @@ export function AboutPage() {
     </>
   );
 }
-
-export const aboutMetadata = () => {
-  const { seo } = getAbout();
-  return {
-    title: seo?.title ?? "About",
-    description: seo?.description ?? getProfile().headline,
-  };
-};

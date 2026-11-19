@@ -53,5 +53,8 @@ next-env.d.ts
 /public/img/
 /public/cv/
 
+# social card step output (feature 13, `pnpm cards`)
+/public/og/
+
 # deploy copy of wrangler.jsonc with NOTIFY_TO filled in (scripts/deploy-config.ts)
 /wrangler.deploy.jsonc

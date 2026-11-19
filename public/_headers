@@ -2,10 +2,11 @@
 # The API Worker (worker/index.ts) mirrors these on /api responses.
 # script-src needs 'unsafe-inline' because Next's static export inlines page
 # data scripts, and static files cannot carry a nonce.
-# The Umami analytics hosts are added to script-src and connect-src when
-# analytics is wired up (feature 13).
+# Umami Cloud (feature 13): the tracker loads from cloud.umami.is and posts
+# events to its collector. The collector host has changed over time, so every
+# one Umami Cloud has used is allowed; confirm in production which one is live.
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://cloud.umami.is; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://cloud.umami.is https://gateway.umami.is https://api-gateway.umami.dev; frame-src https://challenges.cloudflare.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

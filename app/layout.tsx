@@ -5,8 +5,10 @@ import { SiteFooter } from "@/components/site/site-footer";
 import { SiteHeader } from "@/components/site/site-header";
 import { SkipLink } from "@/components/site/skip-link";
 import { Toaster } from "@/components/ui/toaster";
+import { AnalyticsClicks, AnalyticsScript, getUmamiWebsiteId } from "@/features/analytics";
 import { getProfile } from "@/features/content";
 import { THEME_SCRIPT } from "@/features/design/theme";
+import { defaultSocialMetadata, getSiteUrl } from "@/features/seo";
 import "./globals.css";
 
 // Spec 0003: fonts self hosted at build by next/font; no request to Google.
@@ -32,12 +34,18 @@ const geistMono = Geist_Mono({
 });
 
 const profile = getProfile();
+const siteUrl = getSiteUrl();
+const umamiWebsiteId = getUmamiWebsiteId();
 
 // Spec 0004, AC-13: every page title reads "<page> · <name>"; home sets an
-// absolute title. Social cards and canonical addresses come with feature 13.
+// absolute title. Feature 13: `metadataBase` makes every page's canonical and
+// card paths absolute, and pages with no card of their own (request details,
+// the styleguide, both never indexed) fall back to the home card.
 export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: { template: `%s · ${profile.name}`, default: profile.name },
   description: profile.headline,
+  ...defaultSocialMetadata(),
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -50,6 +58,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
+        {umamiWebsiteId ? (
+          <AnalyticsScript websiteId={umamiWebsiteId} host={new URL(siteUrl).hostname} />
+        ) : null}
       </head>
       <body className="flex min-h-dvh flex-col">
         <Toaster>
@@ -63,6 +74,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </ViewTransition>
           <SiteFooter />
         </Toaster>
+        <AnalyticsClicks />
       </body>
     </html>
   );

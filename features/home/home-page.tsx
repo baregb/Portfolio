@@ -43,8 +43,3 @@ export function HomePage() {
     />
   );
 }
-
-export const homeMetadata = () => {
-  const { name, roleLine, headline } = getProfile();
-  return { title: { absolute: `${name} · ${roleLine}` }, description: headline };
-};

@@ -1,4 +1,5 @@
 import { toLibraryItem } from "@/components/portfolio/library-item";
+import { TrackLensVisit } from "@/features/analytics";
 import { ProfilePage, type LensSkill } from "@/features/home/profile-page";
 import {
   getLenses,
@@ -30,20 +31,23 @@ export function LensPage({ lens }: { readonly lens: Lens }) {
   }));
 
   return (
-    <ProfilePage
-      profile={profile}
-      cv={getCvAsset()}
-      hero={{
-        label: lens.name,
-        lead: lens.headline,
-        highlight: lens.headlineHighlight,
-        intro: lens.intro,
-      }}
-      lenses={getLenses().map(({ slug, name }) => ({ slug, name }))}
-      current={lens.slug}
-      featured={featured}
-      projects={lens.projects.filter((project) => project !== featured).map(toLibraryItem)}
-      lensSkills={lensSkills}
-    />
+    <>
+      <TrackLensVisit lens={lens.slug} />
+      <ProfilePage
+        profile={profile}
+        cv={getCvAsset()}
+        hero={{
+          label: lens.name,
+          lead: lens.headline,
+          highlight: lens.headlineHighlight,
+          intro: lens.intro,
+        }}
+        lenses={getLenses().map(({ slug, name }) => ({ slug, name }))}
+        current={lens.slug}
+        featured={featured}
+        projects={lens.projects.filter((project) => project !== featured).map(toLibraryItem)}
+        lensSkills={lensSkills}
+      />
+    </>
   );
 }
