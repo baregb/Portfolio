@@ -24,14 +24,14 @@ Journeys 3 to 5 (#16 to #18) come after launch and are unchanged.
 | 1 | Stack & architecture | Foundation | done |
 | 2 | Coding standards & tooling | Foundation | done |
 | 3 | Content model | Foundation | done |
-| 4 | Design system & UI foundation (A) | Foundation | in-progress |
-| 5 | Home page (B) | Journey 1 | in-progress |
-| 6 | Role lenses (B) | Journey 1 | in-progress |
-| 7 | Case study page (B) | Journey 1 | in-progress |
+| 4 | Design system & UI foundation (A) | Foundation | done |
+| 5 | Home page (B) | Journey 1 | done |
+| 6 | Role lenses (B) | Journey 1 | done |
+| 7 | Case study page (B) | Journey 1 | done |
 | 8 | Flagship case studies (C) | Journey 1 | planned |
-| 9 | Project library (B) | Journey 1 | in-progress |
-| 10 | About & skills (B) | Journey 1 | in-progress |
-| 11 | CV download (B) | Journey 1 | in-progress |
+| 9 | Project library (B) | Journey 1 | done |
+| 10 | About & skills (B) | Journey 1 | done |
+| 11 | CV download (B) | Journey 1 | done |
 | 12 | Contact (D) | Journey 1 | in-progress |
 | 13 | SEO, social cards & analytics (E) | Journey 1 | planned |
 | 14 | Request access (D) | Journey 2 | in-progress |
@@ -74,7 +74,7 @@ The shape of everything the site shows: a project (problem, constraints, decisio
 - [x] Test it: skipped, the build already shipped 143 Vitest tests covering every rule, and verify passed
 Spec [0002](../specs/0002-content-model/index.md) · code in `features/content/`, `content-collections.ts`, `scripts/check-content.ts`, `content/`
 
-### 4. Design system & UI foundation · in-progress
+### 4. Design system & UI foundation · done
 Visual identity and base components, held to your premium app standard: light and dark theme switcher, purposeful motion that respects reduced motion, loading states everywhere, themed toasts and modals (no native dialogs), and WCAG 2.2 AA.
 **Done when:** `design.md` covers type, colour, spacing, motion, and components; base components work by keyboard and in both themes.
 - [x] Design it (spec): `/architect design system & UI foundation`
@@ -90,7 +90,7 @@ Spec [0003](../specs/0003-design-system/index.md) · code in `app/globals.css`, 
 
 A hiring manager opens the link you sent with an application, sees quickly that you fit the role, reads proof, and downloads your CV or gets in touch. Built completely, every state included, before anything else.
 
-### 5. Home page · in-progress
+### 5. Home page · done
 Your positioning in one look: who you are, the problems you solve, the strongest proof, and clear paths into the role lenses, case studies, CV, and contact.
 **Done when:** a first time visitor can tell within one screen what you do and reach a case study, the CV, or contact in one click, on phone and desktop.
 **Fast track B:** designed and built with the other Journey 1 pages: `/architect journey 1 pages`, then `/develop journey 1 pages`.
@@ -103,7 +103,7 @@ Your positioning in one look: who you are, the problems you solve, the strongest
 - [x] Verify it: `/check verify journey 1 pages`
 Spec [0004](../specs/0004-journey-1-pages/index.md) · code in `app/`, `components/portfolio/`, `features/home/`, `features/lenses/`, `features/case-study/`, `features/library/`, `features/about/`, `features/contact/`, `features/media/`, `scripts/build-assets.ts`
 
-### 6. Role lenses · in-progress
+### 6. Role lenses · done
 A tailored view per role (solutions architect, software developer, AI assisted builder and prompt engineering, plus any others you add) with its own headline, ordered projects, and skills, at a link you can send with each application.
 **Done when:** each lens has a shareable address, shows a headline and project order for that role, and a visitor can switch lenses or see everything.
 **Fast track B:** designed and built with the other Journey 1 pages: `/architect journey 1 pages`, then `/develop journey 1 pages`.
@@ -111,7 +111,7 @@ A tailored view per role (solutions architect, software developer, AI assisted b
 - [x] Build and verify: tracked under #5 (`/develop journey 1 pages`, then `/check verify journey 1 pages`)
 Spec [0004](../specs/0004-journey-1-pages/index.md)
 
-### 7. Case study page · in-progress
+### 7. Case study page · done
 The template every case study uses: problem, constraints, decision and tradeoffs, a simple architecture diagram, what was built, results, stack, and how AI was used. On request projects show the summary and a request button instead of links and screenshots.
 **Done when:** a public and an on request case study both render fully, with next and previous navigation and a clear way to contact or request details.
 **Fast track B:** designed and built with the other Journey 1 pages: `/architect journey 1 pages`, then `/develop journey 1 pages`.
@@ -126,7 +126,7 @@ Write the 6 to 8 deep case studies, drafted from each project's repo and docs an
 - [x] Design it (spec): skipped, fast track
 - [ ] Draft them: `/develop flagship case studies` (can run alongside B)
 
-### 9. Project library · in-progress
+### 9. Project library · done
 Every other project from the folder as a short card, filterable by problem, role, and stack, with clear "available on request" badges.
 **Done when:** all chosen projects appear, filters work and are reflected in the address, and empty filter results show a helpful state.
 **Fast track B:** designed and built with the other Journey 1 pages: `/architect journey 1 pages`, then `/develop journey 1 pages`.
@@ -134,7 +134,7 @@ Every other project from the folder as a short card, filterable by problem, role
 - [x] Build and verify: tracked under #5 (`/develop journey 1 pages`, then `/check verify journey 1 pages`)
 Spec [0004](../specs/0004-journey-1-pages/index.md)
 
-### 10. About & skills · in-progress
+### 10. About & skills · done
 Your story, how you work (including your AI assisted workflow), and a skills section grouped by what you can do, not a wall of logos.
 **Done when:** the page reads well on phone and desktop and links back to the case studies that prove each skill.
 **Fast track B:** designed and built with the other Journey 1 pages: `/architect journey 1 pages`, then `/develop journey 1 pages`.
@@ -142,7 +142,7 @@ Your story, how you work (including your AI assisted workflow), and a skills sec
 - [x] Build and verify: tracked under #5 (`/develop journey 1 pages`, then `/check verify journey 1 pages`)
 Spec [0004](../specs/0004-journey-1-pages/index.md)
 
-### 11. CV download · in-progress
+### 11. CV download · done
 A downloadable CV that matches the site. The decision is one general CV or one per role lens, and whether it is written by hand or generated from site content.
 **Done when:** a visitor can download a current CV from the home page, each role lens, and the about page, and the download is counted.
 **Fast track B:** designed and built with the other Journey 1 pages: `/architect journey 1 pages`, then `/develop journey 1 pages`.

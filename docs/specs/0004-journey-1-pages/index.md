@@ -1,7 +1,7 @@
 # 0004. Build the recruiter path as static pages composed from content and the design system
 
 **Date**: 2026-11-18
-**Status**: In Progress
+**Status**: Accepted
 
 ## Summary
 
