@@ -1,10 +1,13 @@
 import { toLibraryItem } from "@/components/portfolio/library-item";
+import { clientLogos } from "@/components/portfolio/logo-strip";
 import {
   getCategories,
   getFeatured,
+  getFeaturedTestimonials,
   getLenses,
   getProfile,
   getProjects,
+  getServices,
   getSkillGroups,
 } from "@/features/content";
 import { getCvAsset } from "@/features/media/manifest";
@@ -40,6 +43,9 @@ export function HomePage() {
         group,
         skills: skills.map(({ skill }) => skill.name),
       }))}
+      logos={clientLogos(profile.clients)}
+      testimonials={getFeaturedTestimonials()}
+      showServicesBand={getServices().length > 0}
     />
   );
 }

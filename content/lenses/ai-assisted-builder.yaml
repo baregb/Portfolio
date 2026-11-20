@@ -8,3 +8,6 @@ projects:
   - beccahs-kitchen
 skills:
   - ai-assisted-development
+trackRecord:
+  - beccahs-kitchen/tests-passing
+  - beccahs-kitchen/pages-routes

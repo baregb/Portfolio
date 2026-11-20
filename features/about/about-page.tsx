@@ -1,4 +1,5 @@
 import { CtaBand } from "@/components/portfolio/cta-band";
+import { LogoStrip, clientLogos } from "@/components/portfolio/logo-strip";
 import { projectAnchor } from "@/components/portfolio/links";
 import { PageHero } from "@/components/portfolio/page-hero";
 import { ProfilePhoto } from "@/components/portfolio/profile-photo";
@@ -37,6 +38,8 @@ export function AboutPage() {
           <Prose code={getAbout().body.code} />
         </Container>
       </Section>
+
+      <LogoStrip logos={clientLogos(profile.clients)} />
 
       {groups.length > 0 ? (
         <Section id="skills" labelledBy={SKILLS_TITLE} className="border-t border-line">

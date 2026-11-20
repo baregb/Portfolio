@@ -149,7 +149,7 @@ All in `components/ui/` (primitives) and `components/site/` (shell). Named expor
 | `ThemeSwitcher` | none | System, Light, Dark; already in the full screen menu |
 | `SkipLink`, `SiteHeader`, `SiteFooter` | header `items`, `position` | the shell; already in `app/layout.tsx`. The header is the name plus a menu button at every size; `SiteMenu` is the full screen menu with the nav and the theme switcher |
 
-Add a nav entry by appending to `navItems` in `components/site/nav.ts` when its route ships. The nav lists Work, About, and Contact.
+Add a nav entry in `navItemsFor` (`components/site/nav.ts`) when its route ships. The nav lists Work, Services, About, and Contact; Services appears only once a service is published (spec 0006).
 
 ### Portfolio components
 
@@ -160,11 +160,17 @@ Content aware composites in `components/portfolio/` (spec 0004). They take conte
 | `PageHero` | every page header band: label, the one `h1`, the lead with an optional highlighted phrase, actions, and an optional photo: `mediaLayout="column"` (its own column from `md`) or `"split"` (fills the right side of the band to the screen edge from `md`, a full width band on top on phones) |
 | `HighlightedText` | the one highlighted phrase in a hero lead (`bg-accent-soft`) |
 | `ProfilePhoto` | `fill` for the split hero on home and lenses, `portrait` (2:3) on about; crop centres on `photo.focus` |
-| `Availability` | the status mark and fixed label; the words carry the status, never colour alone |
+| `Availability` | the status mark and fixed label; the words carry the status, never colour alone. `audience="roles"` (default) for employers, `"projects"` for clients on the services pages (no note) |
 | `LensSwitcher` | Everything plus every role lens, as wrapping pill links with `aria-current` |
 | `FeaturedProject` | the green block on home and lenses: one flagship with up to four large stat tiles |
 | `ProjectCard` | one project from a `LibraryItem`; safe in client components; `id="project-<slug>"` |
-| `CtaBand` | the closing "Want to talk about a role or a project?" box with contact and the CV |
+| `CtaBand` | the closing "Want to talk about a role or a project?" box with contact and the CV; `audience="projects"` is the services pages' "Have a project in mind?" with one "Start a project" button and no CV |
+| `TrackRecord` | up to three numbered results (spec 0006) from a page's projects: `tone="green"` is a service page's one green block, `"plain"` sits on a lens |
+| `Faq` | "Questions, answered" as native `details`: opens without JavaScript, counted by the one global toggle listener |
+| `Testimonials` | "What clients say": quotes as figures in hairline boxes, with an optional square photo |
+| `LogoStrip` | "Clients I've built for": each SVG logo drawn in the muted text colour through a CSS mask (`clientLogos` reads the proportions from the asset step) |
+| `ServiceCard` | one service on `/services`: number, name, tagline, headline; the whole box is the link |
+| `ServicesBand` | home's quiet way into the services, above the closing call to action, only when a service is published |
 | `CvButton` | the CV download with its size, or a disabled "CV coming soon" with no file |
 | `ExternalLinks` | `inline` text links, or a `list` of boxes with the address shown |
 | `Picture` | every content image from the asset step: AVIF and WebP, real width and height, lazy unless `priority` |
@@ -175,7 +181,8 @@ Content aware composites in `components/portfolio/` (spec 0004). They take conte
 - Route files in `app/` stay thin: metadata, static params, and one page component from `features/<page>/`.
 - Pages compose only: components from `components/ui/`, `components/site/`, and `components/portfolio/`, plus layout utilities (grid, gap, padding) and token classes. No literal colours (the test scans `features/**/*.tsx` too) and no one off visual treatments.
 - Every page opens with a grid band (`PageHero`, or the case study hero) and has exactly one `h1`. Section headings follow in order.
-- At most one green block per page: home, a lens with a flagship, and a case study with results have exactly one; library, about, contact, and request pages have none.
+- At most one green block per page: home, a lens with a flagship, a case study with results, and a service page (its track record) have exactly one; library, about, contact, request, and `/services` pages have none.
+- Every proof block (track record, quotes, FAQ, logos) renders nothing when it has no content, so a page never shows an empty section.
 - Grids of hairline boxes draw borders on each cell (`border-s border-t` on the grid, `border-e border-b` on each cell), so a short last row leaves the page background, not a filled gap.
 - Parts that only work with JavaScript (the library filters) hide under the `noscript:` variant (`@media (scripting: none)`), and the page still shows all its content without them.
 - Anchor targets clear the sticky nav through a global `scroll-margin-top` on `[id]`.

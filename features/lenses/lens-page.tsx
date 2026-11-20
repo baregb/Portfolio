@@ -47,6 +47,9 @@ export function LensPage({ lens }: { readonly lens: Lens }) {
         featured={featured}
         projects={lens.projects.filter((project) => project !== featured).map(toLibraryItem)}
         lensSkills={lensSkills}
+        trackRecord={lens.trackRecord}
+        testimonials={lens.testimonials}
+        faq={lens.faq}
       />
     </>
   );

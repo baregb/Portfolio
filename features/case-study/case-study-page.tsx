@@ -8,6 +8,7 @@ import { projectLinks, requestHref } from "@/components/portfolio/links";
 import { PAGE_TITLE_ID } from "@/components/portfolio/page-hero";
 import { Picture } from "@/components/portfolio/picture";
 import { Prose } from "@/components/portfolio/prose";
+import { Testimonials } from "@/components/portfolio/testimonials";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
@@ -24,6 +25,7 @@ import {
   SECTIONS,
   getFlagshipNeighbours,
   getProfile,
+  getTestimonialsFor,
   type Flagship,
   type OnRequestFlagship,
   type ProjectRef,
@@ -327,6 +329,7 @@ export function CaseStudyPage({ project }: { readonly project: Flagship }) {
     <>
       <CaseStudyHero project={project} cover={cover} />
       <ResultsBlock project={project} />
+      <Testimonials quotes={getTestimonialsFor(project.slug)} />
       <Section>
         <Container className="grid gap-12">
           {project.visibility === "public" ? (

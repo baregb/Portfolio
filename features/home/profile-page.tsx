@@ -3,13 +3,18 @@ import Link from "next/link";
 import { Availability } from "@/components/portfolio/availability";
 import { CtaBand } from "@/components/portfolio/cta-band";
 import { CvButton } from "@/components/portfolio/cv-button";
+import { Faq } from "@/components/portfolio/faq";
 import { FeaturedProject } from "@/components/portfolio/featured-project";
 import { countLabel } from "@/components/portfolio/format";
 import { LensSwitcher, type LensOption } from "@/components/portfolio/lens-switcher";
+import { LogoStrip, type ClientLogo } from "@/components/portfolio/logo-strip";
 import type { LibraryItem } from "@/components/portfolio/library-item";
 import { PageHero } from "@/components/portfolio/page-hero";
 import { ProfilePhoto } from "@/components/portfolio/profile-photo";
 import { ProjectCard } from "@/components/portfolio/project-card";
+import { ServicesBand } from "@/components/portfolio/services-band";
+import { Testimonials } from "@/components/portfolio/testimonials";
+import { TrackRecord } from "@/components/portfolio/track-record";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Container } from "@/components/ui/container";
@@ -17,7 +22,7 @@ import { Icon } from "@/components/ui/icon";
 import { Section } from "@/components/ui/section";
 import { Tag } from "@/components/ui/tag";
 import { TextLink } from "@/components/ui/text-link";
-import type { Flagship, Profile } from "@/features/content";
+import type { FaqItem, Flagship, Profile, Testimonial, TrackRecordItem } from "@/features/content";
 import type { CvAsset } from "@/features/media/manifest";
 
 // The one composition behind home and every role lens (spec 0004, AC-1,
@@ -65,6 +70,16 @@ type ProfilePageProps = {
   readonly skillGroups?: readonly SkillGroupSummary[];
   /** A lens: its own skills with descriptions. */
   readonly lensSkills?: readonly LensSkill[];
+  /** Home: the client logo strip, right after the hero (spec 0006, AC-9). */
+  readonly logos?: readonly ClientLogo[];
+  /** A lens: its track record, plain, after the switcher (spec 0006, AC-15). */
+  readonly trackRecord?: readonly TrackRecordItem[];
+  /** Quotes after the work: home's featured ones, or a lens's (spec 0006, AC-8). */
+  readonly testimonials?: readonly Testimonial[];
+  /** A lens: its FAQ, after its skills (spec 0006, AC-15). */
+  readonly faq?: readonly FaqItem[];
+  /** Home: the way into the services, when one is published (spec 0006, AC-12). */
+  readonly showServicesBand?: boolean;
 };
 
 const SWITCHER_TITLE = "lens-switcher-title";
@@ -83,6 +98,11 @@ export function ProfilePage({
   categories = [],
   skillGroups = [],
   lensSkills = [],
+  logos = [],
+  trackRecord = [],
+  testimonials = [],
+  faq = [],
+  showServicesBand = false,
 }: ProfilePageProps) {
   return (
     <>
@@ -108,6 +128,8 @@ export function ProfilePage({
         </ButtonGroup>
       </PageHero>
 
+      <LogoStrip logos={logos} />
+
       <Section spacing="compact" labelledBy={SWITCHER_TITLE} className="border-b border-line">
         <Container className="grid gap-4 md:grid-cols-[auto_minmax(0,1fr)] md:items-center md:gap-8">
           <h2 id={SWITCHER_TITLE} className="label text-muted">
@@ -116,6 +138,8 @@ export function ProfilePage({
           <LensSwitcher lenses={lenses} current={current} labelledBy={SWITCHER_TITLE} />
         </Container>
       </Section>
+
+      <TrackRecord items={trackRecord} tone="plain" />
 
       {/* The hero's "See case studies" lands here. */}
       <div id="work">
@@ -156,6 +180,8 @@ export function ProfilePage({
           </Container>
         </Section>
       </div>
+
+      <Testimonials quotes={testimonials} />
 
       {categories.length > 0 ? (
         <Section labelledBy={PROBLEMS_TITLE} reveal className="border-t border-line">
@@ -234,6 +260,12 @@ export function ProfilePage({
             </ul>
           </Container>
         </Section>
+      ) : null}
+
+      <Faq items={faq} />
+
+      {showServicesBand ? (
+        <ServicesBand services={profile.services} availability={profile.availability} />
       ) : null}
 
       <CtaBand cv={cv} availability={profile.availability} />
