@@ -39,6 +39,7 @@ Journeys 3 to 5 (#16 to #18) come after launch and are unchanged.
 | 16 | Ask AI about my work | Journey 3 | planned |
 | 17 | Writing | Journey 4 | planned |
 | 18 | Content admin | Journey 5 | planned |
+| 19 | Services and proof blocks | Journey 6 | in-progress |
 
 ## Foundations
 
@@ -226,9 +227,27 @@ A private dashboard for managing site content, behind sign in that only you can 
 **Done when:** you can create, edit, preview, and publish content from the dashboard, nobody else can reach it, and changes appear on the live site.
 - [ ] Design it (spec): `/architect content admin`
 
+## Journey 6: The client path
+
+A business owner finds a service page, sees what is included, numbered proof, quotes, and honest answers, and starts a project through the contact form. The same proof blocks sharpen the recruiter pages.
+
+### 19. Services and proof blocks · in-progress · Beta
+Freelance service pages (`/services` and four services) plus four shared blocks (track record, FAQ, testimonials, client logos) on services, lenses, case studies, home, and about. From the mosesnwigberi.com review on 2026-11-19.
+**Done when:** a published service renders every section with its track record as the green block, "Start a project" lands on a prefilled contact form, each lens leads with its own track record, and quotes and logos show only with permission on file and never for a private client.
+- [x] Design it (spec): `/architect services and proof blocks`
+- [ ] Build it: `/develop services and proof blocks`
+  - [ ] Content model: services, testimonials, result ids and refs, lens and profile fields, image wiring, draft and privacy checks (AC-1 to AC-5)
+  - [ ] Shared blocks: track record, FAQ, testimonials, logo strip, service card, availability and CTA band audiences, styleguide (AC-6 to AC-9, AC-13)
+  - [ ] Client path: `/services`, service pages, conditional nav, contact prefill, four draft services (AC-5b, AC-10 to AC-12, AC-14, AC-18)
+  - [ ] SEO and tracking: pages list, sitemap, cards, `Service` JSON-LD, three new events (AC-16, AC-17)
+  - [ ] Recruiter path: lens, case study, home, and about blocks; lens track record seeds; design.md, verify.md, notes on specs 0002 and 0004 (AC-8, AC-9, AC-12, AC-15, AC-18, AC-19)
+- [ ] Verify it: `/check verify services and proof blocks`
+- [ ] Test it: `/test services and proof blocks`
+Spec [0006](../specs/0006-services-proof-blocks/index.md)
+
 ## Deferred
 Out of scope for this build pass, kept so the plan stays honest.
-- **Testimonials**: quotes from clients and colleagues, once you collect them
+- **Speed fixes on live proof** (from spec 0006): Beccah's Kitchen mobile performance and LoveSeal resources (canonical, layout shift), in their own repos, then before and after PageSpeed results for the SEO service
 - **Case study videos**: short motion pieces for flagship projects · needs a decision
 - **CV per application**: a CV tuned to a specific job advert · needs a decision
 
