@@ -7,8 +7,10 @@ import {
   allProfiles,
   allProjects,
   allSectors,
+  allServices,
   allSkills,
   allStacks,
+  allTestimonials,
 } from "content-collections";
 import { describe, expect, it } from "vitest";
 import { createContentReader } from "../content/read";
@@ -26,6 +28,8 @@ const pagesFor = (includeDrafts: boolean) => {
       stack: allStacks,
       skills: allSkills,
       sectors: allSectors,
+      services: allServices,
+      testimonials: allTestimonials,
       profiles: allProfiles,
       abouts: allAbouts,
     },

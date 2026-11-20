@@ -5,8 +5,10 @@ import type {
   Profile as GeneratedProfile,
   Project as GeneratedProject,
   Sector as GeneratedSector,
+  Service as GeneratedService,
   Skill as GeneratedSkill,
   Stack as GeneratedStack,
+  Testimonial as GeneratedTestimonial,
 } from "content-collections";
 import type { SectionKey, STACK_GROUPS } from "./rules.ts";
 
@@ -27,6 +29,8 @@ export type RawSkill = GeneratedSkill;
 export type RawSector = GeneratedSector;
 export type RawProfile = GeneratedProfile;
 export type RawAbout = GeneratedAbout;
+export type RawService = GeneratedService;
+export type RawTestimonial = GeneratedTestimonial;
 
 /** Every generated collection, the input to the checker and the read layer. */
 export type ContentData = {
@@ -36,6 +40,8 @@ export type ContentData = {
   readonly stack: readonly RawStack[];
   readonly skills: readonly RawSkill[];
   readonly sectors: readonly RawSector[];
+  readonly services: readonly RawService[];
+  readonly testimonials: readonly RawTestimonial[];
   readonly profiles: readonly RawProfile[];
   readonly abouts: readonly RawAbout[];
 };
@@ -95,6 +101,25 @@ export type OnRequestCard = Resolved<RawOnRequestCard>;
 export type Project = PublicFlagship | PublicCard | OnRequestFlagship | OnRequestCard;
 export type Flagship = PublicFlagship | OnRequestFlagship;
 
+/** One numbered track record entry (spec 0006, AC-6); a result's `source` never reaches a page. */
+export type TrackRecordItem = {
+  readonly project: { readonly title: string; readonly href: string | null };
+  readonly result: { readonly value: string; readonly label: string; readonly context?: string };
+};
+
+export type FaqItem = { readonly question: string; readonly answer: string };
+
+/** A quote as pages show it; `permission` stays in the content file (spec 0006, AC-3). */
+export type Testimonial = {
+  readonly slug: string;
+  readonly quote: string;
+  readonly name: string;
+  readonly role?: string;
+  readonly company?: string;
+  readonly project?: string;
+  readonly photo?: { readonly src: string; readonly alt: string };
+};
+
 export type Lens = {
   readonly slug: string;
   readonly name: string;
@@ -104,6 +129,27 @@ export type Lens = {
   readonly intro: string;
   readonly projects: readonly Project[];
   readonly skills: readonly Skill[];
+  readonly trackRecord: readonly TrackRecordItem[];
+  readonly faq: readonly FaqItem[];
+  readonly testimonials: readonly Testimonial[];
+  readonly seoTitle: string;
+  readonly seoDescription: string;
+};
+
+export type Offering = { readonly title: string; readonly description: string };
+
+export type Service = {
+  readonly slug: string;
+  readonly name: string;
+  readonly tagline: string;
+  readonly headline: string;
+  readonly headlineHighlight?: string;
+  readonly intro: string;
+  readonly offerings: readonly Offering[];
+  readonly trackRecord: readonly TrackRecordItem[];
+  readonly projects: readonly Project[];
+  readonly faq: readonly FaqItem[];
+  readonly testimonials: readonly Testimonial[];
   readonly seoTitle: string;
   readonly seoDescription: string;
 };

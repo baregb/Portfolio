@@ -2,11 +2,20 @@ name: Omogbolahan Ajibare
 roleLine: Web solutions architect and software developer
 headline: I design and build web systems end to end, from the data model to the checkout, using AI tools to ship faster without cutting corners.
 location: Remote (worldwide)
+base: Lagos
 photo:
   src: profile/photo.jpg
   alt: Omogbolahan Ajibare in a purple kaftan, green fila cap, and round glasses, standing in front of a colourful mural.
 availability:
   status: selective
+  projects: open
+services:
+  headline: I build fast, findable websites and web apps for businesses that need them to work.
+  headlineHighlight: fast, findable
+  intro: >-
+    Hire me for one piece or the whole build: speed and search fixes, a web app from data model to
+    deploy, payments that reconcile, or a careful move off an old system. Tell me what you need and
+    I'll reply with a clear quote.
 links:
   - kind: github
     url: https://github.com/baregb

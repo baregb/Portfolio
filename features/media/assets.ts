@@ -1,5 +1,5 @@
 import { projectImages } from "../content/check.ts";
-import type { RawProfile, RawProject } from "../content/types.ts";
+import type { RawProfile, RawProject, RawTestimonial } from "../content/types.ts";
 
 // Pure helpers for the build time asset step (spec 0004, AC-10, AC-12). The
 // step itself (`scripts/build-assets.ts`) is the file system edge; it and the
@@ -69,20 +69,32 @@ export const formatFileSize = (bytes: number): string =>
   `${Math.max(1, Math.round(bytes / 1000))} KB`;
 
 /**
- * Every image the included content references (profile photo, covers,
- * screenshots, diagrams), once each, in a stable order. Drafts count only
- * when they are included; on request projects never carry images.
+ * Every image the included content references (profile photo, client logos,
+ * covers, screenshots, diagrams, testimonial photos), once each, in a stable
+ * order. Drafts count only when they are included, and so do quotes tied to
+ * them; on request projects never carry images.
  */
 export const collectImages = (
-  data: { readonly projects: readonly RawProject[]; readonly profiles: readonly RawProfile[] },
+  data: {
+    readonly projects: readonly RawProject[];
+    readonly profiles: readonly RawProfile[];
+    readonly testimonials: readonly RawTestimonial[];
+  },
   includeDrafts: boolean,
 ): readonly string[] => {
   const projects = data.projects.filter(
     (project) => includeDrafts || project.status === "published",
   );
+  const included = new Set(projects.map((project) => project._meta.path));
   const sources = [
-    ...data.profiles.map((profile) => profile.photo.src),
+    ...data.profiles.flatMap((profile) => [
+      profile.photo.src,
+      ...profile.clients.map((client) => client.logo),
+    ]),
     ...projects.flatMap((project) => projectImages(project).map((image) => image.src)),
+    ...data.testimonials
+      .filter((quote) => quote.project === undefined || included.has(quote.project))
+      .flatMap((quote) => (quote.photo ? [quote.photo.src] : [])),
   ];
   return [...new Set(sources)];
 };

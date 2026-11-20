@@ -236,7 +236,7 @@ Freelance service pages (`/services` and four services) plus four shared blocks 
 **Done when:** a published service renders every section with its track record as the green block, "Start a project" lands on a prefilled contact form, each lens leads with its own track record, and quotes and logos show only with permission on file and never for a private client.
 - [x] Design it (spec): `/architect services and proof blocks`
 - [ ] Build it: `/develop services and proof blocks`
-  - [ ] Content model: services, testimonials, result ids and refs, lens and profile fields, image wiring, draft and privacy checks (AC-1 to AC-5)
+  - [x] Content model: services, testimonials, result ids and refs, lens and profile fields, image wiring, draft and privacy checks (AC-1 to AC-5)
   - [ ] Shared blocks: track record, FAQ, testimonials, logo strip, service card, availability and CTA band audiences, styleguide (AC-6 to AC-9, AC-13)
   - [ ] Client path: `/services`, service pages, conditional nav, contact prefill, four draft services (AC-5b, AC-10 to AC-12, AC-14, AC-18)
   - [ ] SEO and tracking: pages list, sitemap, cards, `Service` JSON-LD, three new events (AC-16, AC-17)

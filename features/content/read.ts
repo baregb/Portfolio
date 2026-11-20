@@ -1,4 +1,4 @@
-import { collator } from "./rules.ts";
+import { collator, serviceFallbackTitle, splitRef } from "./rules.ts";
 import type {
   About,
   Category,
@@ -13,10 +13,14 @@ import type {
   RawProject,
   RawSkill,
   RawStack,
+  RawTestimonial,
   Sector,
+  Service,
   Skill,
   SkillGroup,
   StackEntry,
+  Testimonial,
+  TrackRecordItem,
 } from "./types.ts";
 
 // The read layer (spec 0002): pure functions over the generated collections
@@ -41,6 +45,11 @@ export type ContentReader = {
   readonly getStackEntries: () => readonly StackEntry[];
   readonly getSectors: () => readonly Sector[];
   readonly getSkillGroups: () => readonly SkillGroup[];
+  readonly getServices: () => readonly Service[];
+  readonly getService: (slug: string) => Service | undefined;
+  /** Quotes tied to one project, in file name order (spec 0006, AC-8). */
+  readonly getTestimonialsFor: (projectSlug: string) => readonly Testimonial[];
+  readonly getFeaturedTestimonials: () => readonly Testimonial[];
 };
 
 type ResolveEach<T> = T extends RawProject
@@ -91,6 +100,23 @@ const toSkill = (doc: RawSkill): Skill => ({
 });
 
 const isFlagship = (project: Project): project is Flagship => project.depth === "flagship";
+
+const toTestimonial = (doc: RawTestimonial): Testimonial => ({
+  slug: slugOf(doc),
+  quote: doc.quote,
+  name: doc.name,
+  ...(doc.role === undefined ? {} : { role: doc.role }),
+  ...(doc.company === undefined ? {} : { company: doc.company }),
+  ...(doc.project === undefined ? {} : { project: doc.project }),
+  ...(doc.photo === undefined ? {} : { photo: { src: doc.photo.src, alt: doc.photo.alt } }),
+});
+
+type ResultFields = {
+  readonly id?: string;
+  readonly value: string;
+  readonly label: string;
+  readonly context?: string;
+};
 const toRef = (project: Project): ProjectRef => ({ slug: project.slug, title: project.title });
 
 export function createContentReader(data: ContentData, includeDrafts: boolean): ContentReader {
@@ -159,21 +185,99 @@ export function createContentReader(data: ContentData, includeDrafts: boolean): 
       return project ? [project] : [];
     });
 
+  // Spec 0006, AC-2 and AC-6: a ref to a dropped (draft) project drops too;
+  // `pnpm content` has already warned and checked every id.
+  const resolveTrackRecord = (refs: readonly string[]): readonly TrackRecordItem[] =>
+    refs.flatMap((ref) => {
+      const { project: slug, id } = splitRef(ref);
+      const project = projectsBySlug.get(slug);
+      if (!project) return [];
+      const results: readonly ResultFields[] = project.results;
+      const result = results.find((candidate) => candidate.id === id);
+      if (!result) throw new Error(`content: unresolved result "${ref}"; run pnpm content`);
+      return [
+        {
+          project: {
+            title: project.title,
+            href: isFlagship(project) ? `/work/${project.slug}` : null,
+          },
+          result: {
+            value: result.value,
+            label: result.label,
+            ...(result.context === undefined ? {} : { context: result.context }),
+          },
+        },
+      ];
+    });
+
+  // Quotes tied to a dropped project drop too; file name order throughout.
+  const testimonials: readonly Testimonial[] = data.testimonials
+    .filter((doc) => doc.project === undefined || projectsBySlug.has(doc.project))
+    .map(toTestimonial)
+    .toSorted((a, b) => compareText(a.slug, b.slug));
+  const testimonialsBySlug = new Map(testimonials.map((quote) => [quote.slug, quote]));
+  const testimonialsFor = (pageProjects: readonly Project[]): readonly Testimonial[] =>
+    pageProjects.flatMap((project) =>
+      testimonials.filter((quote) => quote.project === project.slug),
+    );
+
   const flagships = pickProjects(profile.flagshipOrder).filter(isFlagship);
   const featured = pickProjects(profile.featured).filter(isFlagship);
 
-  const lenses: readonly Lens[] = orderedLenses.map((lens) => ({
-    slug: slugOf(lens),
-    name: lens.name,
-    headline: lens.headline,
-    ...(lens.headlineHighlight === undefined ? {} : { headlineHighlight: lens.headlineHighlight }),
-    intro: lens.intro,
-    projects: pickProjects(lens.projects),
-    skills: lens.skills.map((slug) => lookup(skills, slug, "skill")),
-    seoTitle: lens.seo?.title ?? lens.name,
-    seoDescription: lens.seo?.description ?? lens.headline,
-  }));
+  const lenses: readonly Lens[] = orderedLenses.map((lens) => {
+    const lensProjects = pickProjects(lens.projects);
+    return {
+      slug: slugOf(lens),
+      name: lens.name,
+      headline: lens.headline,
+      ...(lens.headlineHighlight === undefined
+        ? {}
+        : { headlineHighlight: lens.headlineHighlight }),
+      intro: lens.intro,
+      projects: lensProjects,
+      skills: lens.skills.map((slug) => lookup(skills, slug, "skill")),
+      trackRecord: resolveTrackRecord(lens.trackRecord),
+      faq: lens.faq,
+      testimonials: testimonialsFor(lensProjects),
+      seoTitle: lens.seo?.title ?? lens.name,
+      seoDescription: lens.seo?.description ?? lens.headline,
+    };
+  });
   const lensesBySlug = new Map(lenses.map((lens) => [lens.slug, lens]));
+
+  // Spec 0006, AC-1 and AC-5: services in `serviceOrder`; a draft, or a
+  // service left with no included project, drops out.
+  const rawServices = indexBySlug(data.services, (doc) => doc);
+  const services: readonly Service[] = profile.serviceOrder.flatMap((slug): Service[] => {
+    const raw = lookup(rawServices, slug, "service");
+    if (!includeDrafts && raw.status !== "published") return [];
+    const serviceProjects = pickProjects(raw.projects);
+    if (serviceProjects.length === 0) return [];
+    return [
+      {
+        slug,
+        name: raw.name,
+        tagline: raw.tagline,
+        headline: raw.headline,
+        ...(raw.headlineHighlight === undefined
+          ? {}
+          : { headlineHighlight: raw.headlineHighlight }),
+        intro: raw.intro,
+        offerings: raw.offerings,
+        trackRecord: resolveTrackRecord(raw.trackRecord),
+        projects: serviceProjects,
+        faq: raw.faq,
+        testimonials: testimonialsFor(serviceProjects),
+        seoTitle: raw.seo?.title ?? serviceFallbackTitle(raw.name, profile.base),
+        seoDescription: raw.seo?.description ?? raw.headline,
+      },
+    ];
+  });
+  const servicesBySlug = new Map(services.map((service) => [service.slug, service]));
+  const featuredTestimonials = profile.featuredTestimonials.flatMap((slug) => {
+    const quote = testimonialsBySlug.get(slug);
+    return quote ? [quote] : [];
+  });
 
   // Only entries at least one included project uses, in name order.
   const used = <T extends { readonly slug: string; readonly name: string }>(
@@ -228,5 +332,10 @@ export function createContentReader(data: ContentData, includeDrafts: boolean): 
     getStackEntries: () => usedStack,
     getSectors: () => usedSectors,
     getSkillGroups: () => skillGroups,
+    getServices: () => services,
+    getService: (slug) => servicesBySlug.get(slug),
+    getTestimonialsFor: (projectSlug) =>
+      testimonials.filter((quote) => quote.project === projectSlug),
+    getFeaturedTestimonials: () => featuredTestimonials,
   };
 }

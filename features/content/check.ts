@@ -1,5 +1,6 @@
 import {
   ABOUT_FILE,
+  CLIENT_IMAGE_FOLDER,
   COLLECTION_FILES,
   CV_FILE,
   DIAGRAM_EXTENSIONS,
@@ -8,6 +9,10 @@ import {
   PROFILE_IMAGE_FOLDER,
   RESERVED_PROJECT_SLUGS,
   SLUG_PATTERN,
+  TESTIMONIAL_IMAGE_FOLDER,
+  TITLE_MAX,
+  serviceFallbackTitle,
+  splitRef,
 } from "./rules.ts";
 import type { ContentData, RawProfile, RawProject } from "./types.ts";
 
@@ -40,6 +45,8 @@ const contentPath = (file: string) => `content/${file}`;
 const projectFile = (slug: string) => contentPath(`projects/${slug}.mdx`);
 const lensFile = (slug: string) => contentPath(`lenses/${slug}.yaml`);
 const skillFile = (slug: string) => contentPath(`skills/${slug}.yaml`);
+const serviceFile = (slug: string) => contentPath(`services/${slug}.yaml`);
+const testimonialFile = (slug: string) => contentPath(`testimonials/${slug}.yaml`);
 const PROFILE = contentPath(PROFILE_FILE);
 const ABOUT = contentPath(ABOUT_FILE);
 const PRODUCTION = "in production (drafts excluded)";
@@ -109,6 +116,8 @@ const builtSlugs = (data: ContentData): Readonly<Record<string, readonly string[
   stack: data.stack.map(slugOf),
   skills: data.skills.map(slugOf),
   sectors: data.sectors.map(slugOf),
+  services: data.services.map(slugOf),
+  testimonials: data.testimonials.map(slugOf),
   profile: data.profiles.map(() => "profile"),
   about: data.abouts.map(() => "about"),
 });
@@ -119,7 +128,11 @@ function checkFiles(snapshot: ContentSnapshot): Issues {
   const projects = new Map(snapshot.projects.map((p) => [slugOf(p), p]));
   const referenced = new Set([
     ...snapshot.projects.flatMap((p) => projectImages(p).map((image) => image.src)),
-    ...snapshot.profiles.map((profile) => profile.photo.src),
+    ...snapshot.profiles.flatMap((profile) => [
+      profile.photo.src,
+      ...profile.clients.map((client) => client.logo),
+    ]),
+    ...snapshot.testimonials.flatMap((quote) => (quote.photo ? [quote.photo.src] : [])),
   ]);
 
   return snapshot.files.flatMap((file): Issues => {
@@ -143,7 +156,11 @@ function checkFiles(snapshot: ContentSnapshot): Issues {
       return [issue(path, undefined, `on request project "${kind.owner}" must have no images`)];
     }
     return when(!referenced.has(file.slice(IMAGES_DIRECTORY.length + 1)), () =>
-      issue(path, undefined, "image is not referenced by any project or the profile"),
+      issue(
+        path,
+        undefined,
+        "image is not referenced by any project, the profile, or a testimonial",
+      ),
     );
   });
 }
@@ -170,17 +187,41 @@ function checkDocuments(snapshot: ContentSnapshot): Issues {
     ];
   });
 
-  const profileIssues = snapshot.profiles.flatMap((profile) =>
-    when(
+  const profileIssues = snapshot.profiles.flatMap((profile) => [
+    ...when(
       profile.photo.src.startsWith(`${PROFILE_IMAGE_FOLDER}/`) && missing(profile.photo.src),
       () =>
         issue(PROFILE, "photo.src", `names a missing file: content/images/${profile.photo.src}`),
     ),
+    ...profile.clients.flatMap((client, index) =>
+      when(client.logo.startsWith(`${CLIENT_IMAGE_FOLDER}/`) && missing(client.logo), () =>
+        issue(
+          PROFILE,
+          `clients[${index}].logo`,
+          `names a missing file: content/images/${client.logo}`,
+        ),
+      ),
+    ),
+  ]);
+
+  const testimonialIssues = snapshot.testimonials.flatMap((quote) =>
+    quote.photo &&
+    quote.photo.src.startsWith(`${TESTIMONIAL_IMAGE_FOLDER}/`) &&
+    missing(quote.photo.src)
+      ? [
+          issue(
+            testimonialFile(slugOf(quote)),
+            "photo.src",
+            `names a missing file: content/images/${quote.photo.src}`,
+          ),
+        ]
+      : [],
   );
 
   return [
     ...projectIssues,
     ...profileIssues,
+    ...testimonialIssues,
     ...when(snapshot.profiles.length !== 1, () =>
       issue(
         PROFILE,
@@ -211,6 +252,41 @@ const checkList = (
     .map((value) => issue(file, field, `unknown ${noun} "${value}"`)),
   ...duplicatesIn(values).map((value) => issue(file, field, `"${value}" is listed more than once`)),
 ];
+
+// Spec 0006, AC-2: each `<project>/<id>` names a real result, once per list.
+const checkRefs = (
+  file: string,
+  field: string,
+  refs: readonly string[],
+  projects: ReadonlyMap<string, RawProject>,
+): Issues => [
+  ...refs.flatMap((ref): Issues => {
+    const { project: slug, id } = splitRef(ref);
+    const project = projects.get(slug);
+    if (!project) return [issue(file, field, `"${ref}" names an unknown project "${slug}"`)];
+    const ids: readonly (string | undefined)[] = project.results.map((result) => result.id);
+    return when(!ids.includes(id), () =>
+      issue(file, field, `"${ref}" names no result with id "${id}" in ${slug}`),
+    );
+  }),
+  ...duplicatesIn(refs).map((ref) => issue(file, field, `"${ref}" is listed more than once`)),
+];
+
+const projectMap = (data: ContentData): ReadonlyMap<string, RawProject> =>
+  new Map(data.projects.map((project) => [slugOf(project), project]));
+
+// No two results in one project share an id.
+const checkResultIds = (data: ContentData): Issues =>
+  data.projects.flatMap((project) => {
+    const ids = project.results.flatMap((result) => (result.id ? [result.id] : []));
+    return duplicatesIn(ids).map((id) =>
+      issue(
+        projectFile(slugOf(project)),
+        `results[${project.results.findIndex((result) => result.id === id)}].id`,
+        `id "${id}" is used by more than one result`,
+      ),
+    );
+  });
 
 function checkProjectReferences(data: ContentData): Issues {
   const sectors = slugSet(data.sectors);
@@ -243,19 +319,86 @@ function checkProjectReferences(data: ContentData): Issues {
 
 function checkLensReferences(data: ContentData): Issues {
   const projects = slugSet(data.projects);
+  const byProject = projectMap(data);
   const skills = slugSet(data.skills);
   return data.lenses.flatMap((lens) => {
     const file = lensFile(slugOf(lens));
     return [
       ...checkList(file, "projects", lens.projects, projects, "project"),
       ...checkList(file, "skills", lens.skills, skills, "skill"),
+      ...checkRefs(file, "trackRecord", lens.trackRecord, byProject),
     ];
   });
+}
+
+// Spec 0006, AC-1: projects and refs, and a title that fits without seo.title.
+function checkServiceReferences(data: ContentData, profile: RawProfile | undefined): Issues {
+  const projects = slugSet(data.projects);
+  const byProject = projectMap(data);
+  return data.services.flatMap((service) => {
+    const file = serviceFile(slugOf(service));
+    const fallback = profile ? serviceFallbackTitle(service.name, profile.base) : "";
+    return [
+      ...checkList(file, "projects", service.projects, projects, "project"),
+      ...checkRefs(file, "trackRecord", service.trackRecord, byProject),
+      ...when(service.seo?.title === undefined && fallback.length > TITLE_MAX, () =>
+        issue(
+          file,
+          "seo.title",
+          `is required: the title "${fallback}" is longer than ${TITLE_MAX} characters`,
+        ),
+      ),
+    ];
+  });
+}
+
+// Spec 0006, AC-3 and AC-4: consent on record, and nothing that names a private client.
+function checkPermissions(data: ContentData, today: string): Issues {
+  const byProject = projectMap(data);
+  const isOnRequest = (slug: string | undefined) =>
+    slug !== undefined && byProject.get(slug)?.visibility === "onRequest";
+  const future = (file: string, field: string, date: string) =>
+    when(date > today, () => issue(file, field, `${date} is in the future (today is ${today})`));
+  const unknownProject = (file: string, field: string, slug: string | undefined) =>
+    when(slug !== undefined && !byProject.has(slug), () =>
+      issue(file, field, `unknown project "${slug ?? ""}"`),
+    );
+
+  const quoteIssues = data.testimonials.flatMap((quote) => {
+    const file = testimonialFile(slugOf(quote));
+    return [
+      ...future(file, "permission", quote.permission),
+      ...unknownProject(file, "project", quote.project),
+      ...when(isOnRequest(quote.project) && quote.company !== undefined, () =>
+        issue(file, "company", `must be left out: "${quote.project ?? ""}" is on request`),
+      ),
+      ...when(isOnRequest(quote.project) && quote.photo !== undefined, () =>
+        issue(file, "photo", `must be left out: "${quote.project ?? ""}" is on request`),
+      ),
+    ];
+  });
+
+  const clientIssues = data.profiles.flatMap((profile) =>
+    profile.clients.flatMap((client, index) => [
+      ...future(PROFILE, `clients[${index}].permission`, client.permission),
+      ...unknownProject(PROFILE, `clients[${index}].project`, client.project),
+      ...when(isOnRequest(client.project), () =>
+        issue(
+          PROFILE,
+          `clients[${index}].project`,
+          `"${client.project ?? ""}" is on request, so its client must not be named`,
+        ),
+      ),
+    ]),
+  );
+
+  return [...quoteIssues, ...clientIssues];
 }
 
 function checkProfileReferences(data: ContentData, profile: RawProfile): Issues {
   const projects = slugSet(data.projects);
   const lenses = slugSet(data.lenses);
+  const services = slugSet(data.services);
   const groups = new Set(profile.skillGroups);
   const flagships = data.projects.filter(isFlagship).map(slugOf);
   const cards = new Set(data.projects.filter((p) => !isFlagship(p)).map(slugOf));
@@ -294,6 +437,19 @@ function checkProfileReferences(data: ContentData, profile: RawProfile): Issues 
     ...[...lenses]
       .filter((slug) => !profile.lensOrder.includes(slug))
       .map((slug) => issue(PROFILE, "lensOrder", `lens "${slug}" is missing`)),
+    ...checkList(PROFILE, "serviceOrder", profile.serviceOrder, services, "service"),
+    ...[...services]
+      .filter((slug) => !profile.serviceOrder.includes(slug))
+      .map((slug) =>
+        issue(PROFILE, "serviceOrder", `service "${slug}" is missing (drafts included)`),
+      ),
+    ...checkList(
+      PROFILE,
+      "featuredTestimonials",
+      profile.featuredTestimonials,
+      slugSet(data.testimonials),
+      "testimonial",
+    ),
   ];
 }
 
@@ -314,8 +470,14 @@ function checkHighlights(data: ContentData): Issues {
     );
   };
   return [
-    ...data.profiles.flatMap((profile) =>
-      check(PROFILE, profile.headline, profile.headlineHighlight),
+    ...data.profiles.flatMap((profile) => [
+      ...check(PROFILE, profile.headline, profile.headlineHighlight),
+      ...check(PROFILE, profile.services.headline, profile.services.headlineHighlight).map(
+        (found) => ({ ...found, field: "services.headlineHighlight" }),
+      ),
+    ]),
+    ...data.services.flatMap((service) =>
+      check(serviceFile(slugOf(service)), service.headline, service.headlineHighlight),
     ),
     ...data.lenses.flatMap((lens) =>
       check(lensFile(slugOf(lens)), lens.headline, lens.headlineHighlight),
@@ -346,12 +508,53 @@ function checkProduction(data: ContentData): { errors: Issues; warnings: Issues 
       .filter((slug) => drafts.has(slug))
       .map((slug) => issue(file, field, `draft "${slug}" is dropped ${PRODUCTION}`));
 
+  const refProjects = (refs: readonly string[]) => refs.map((ref) => splitRef(ref).project);
+  const published = data.services.filter((service) => service.status === "published");
+  const draftServices = new Set(
+    data.services.filter((service) => service.status === "draft").map(slugOf),
+  );
+  const droppedQuotes = new Set(
+    data.testimonials
+      .filter((quote) => quote.project !== undefined && drafts.has(quote.project))
+      .map(slugOf),
+  );
+
   const warnings = [
-    ...data.lenses.flatMap((lens) => dropped(lensFile(slugOf(lens)), "projects", lens.projects)),
+    ...data.lenses.flatMap((lens) => [
+      ...dropped(lensFile(slugOf(lens)), "projects", lens.projects),
+      ...dropped(lensFile(slugOf(lens)), "trackRecord", refProjects(lens.trackRecord)),
+    ]),
+    ...published.flatMap((service) => {
+      const file = serviceFile(slugOf(service));
+      return [
+        ...dropped(file, "projects", service.projects),
+        ...dropped(file, "trackRecord", refProjects(service.trackRecord)),
+        ...when(!service.projects.some((slug) => included.has(slug)), () =>
+          issue(file, "projects", `service has no projects, so it is dropped ${PRODUCTION}`),
+        ),
+      ];
+    }),
+    ...data.testimonials.flatMap((quote) =>
+      dropped(testimonialFile(slugOf(quote)), "project", quote.project ? [quote.project] : []),
+    ),
     ...(profile
       ? [
           ...dropped(PROFILE, "featured", profile.featured),
           ...dropped(PROFILE, "flagshipOrder", profile.flagshipOrder),
+          ...profile.serviceOrder
+            .filter((slug) => draftServices.has(slug))
+            .map((slug) =>
+              issue(PROFILE, "serviceOrder", `draft "${slug}" is dropped ${PRODUCTION}`),
+            ),
+          ...profile.featuredTestimonials
+            .filter((slug) => droppedQuotes.has(slug))
+            .map((slug) =>
+              issue(
+                PROFILE,
+                "featuredTestimonials",
+                `"${slug}" is dropped ${PRODUCTION}: its project is a draft`,
+              ),
+            ),
         ]
       : []),
   ];
@@ -382,7 +585,14 @@ function checkProduction(data: ContentData): { errors: Issues; warnings: Issues 
  */
 export function checkContent(
   snapshot: ContentSnapshot,
-  { includeDrafts }: { readonly includeDrafts: boolean },
+  {
+    includeDrafts,
+    today,
+  }: {
+    readonly includeDrafts: boolean;
+    /** Today in UTC, `YYYY-MM-DD`: no permission may be dated after it (spec 0006, AC-3). */
+    readonly today: string;
+  },
 ): CheckResult {
   const profile = snapshot.profiles[0];
   const production = includeDrafts ? { errors: [], warnings: [] } : checkProduction(snapshot);
@@ -390,7 +600,10 @@ export function checkContent(
     ...checkFiles(snapshot),
     ...checkDocuments(snapshot),
     ...checkProjectReferences(snapshot),
+    ...checkResultIds(snapshot),
     ...checkLensReferences(snapshot),
+    ...checkServiceReferences(snapshot, profile),
+    ...checkPermissions(snapshot, today),
     ...(profile ? checkProfileReferences(snapshot, profile) : []),
     ...checkHighlights(snapshot),
     ...production.errors,

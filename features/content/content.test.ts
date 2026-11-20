@@ -7,8 +7,10 @@ import {
   allProfiles,
   allProjects,
   allSectors,
+  allServices,
   allSkills,
   allStacks,
+  allTestimonials,
 } from "content-collections";
 import { describe, expect, it } from "vitest";
 import { checkContent } from "./check.ts";
@@ -36,13 +38,18 @@ const data = {
   stack: allStacks,
   skills: allSkills,
   sectors: allSectors,
+  services: allServices,
+  testimonials: allTestimonials,
   profiles: allProfiles,
   abouts: allAbouts,
 };
 
 describe("real content", () => {
   it.each([true, false])("passes checkContent with includeDrafts=%s", (includeDrafts) => {
-    const result = checkContent({ ...data, files }, { includeDrafts });
+    const result = checkContent(
+      { ...data, files },
+      { includeDrafts, today: new Date().toISOString().slice(0, 10) },
+    );
     expect(result.ok ? [] : result.errors).toEqual([]);
   });
 

@@ -5,8 +5,10 @@ import {
   allProfiles,
   allProjects,
   allSectors,
+  allServices,
   allSkills,
   allStacks,
+  allTestimonials,
 } from "content-collections";
 import { parseContentDrafts } from "./env.ts";
 import { createContentReader } from "./read.ts";
@@ -27,6 +29,8 @@ const reader = createContentReader(
     stack: allStacks,
     skills: allSkills,
     sectors: allSectors,
+    services: allServices,
+    testimonials: allTestimonials,
     profiles: allProfiles,
     abouts: allAbouts,
   },
@@ -47,6 +51,10 @@ export const {
   getStackEntries,
   getSectors,
   getSkillGroups,
+  getServices,
+  getService,
+  getTestimonialsFor,
+  getFeaturedTestimonials,
 } = reader;
 
 export { SECTIONS, type SectionKey } from "./rules.ts";
@@ -66,8 +74,13 @@ export type {
   Section,
   Sections,
   Sector,
+  FaqItem,
+  Offering,
   Seo,
+  Service,
   Skill,
   SkillGroup,
   StackEntry,
+  Testimonial,
+  TrackRecordItem,
 } from "./types.ts";

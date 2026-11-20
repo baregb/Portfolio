@@ -12,6 +12,8 @@ import type {
   RawProject,
   RawPublicCard,
   RawPublicFlagship,
+  RawService,
+  RawTestimonial,
   Sections,
 } from "./types.ts";
 
@@ -131,21 +133,60 @@ export const lens = (slug: string, overrides: Partial<RawLens> = {}): RawLens =>
   intro: `Intro ${slug}`,
   projects: [],
   skills: [],
+  trackRecord: [],
+  faq: [],
   _meta: meta(slug, "yaml"),
   ...overrides,
 });
+
+export const service = (slug: string, overrides: Partial<RawService> = {}): RawService => ({
+  status: "published",
+  name: `Service ${slug}`,
+  tagline: `Tagline ${slug}`,
+  headline: `Headline ${slug}`,
+  intro: `Intro ${slug}`,
+  offerings: [
+    { title: "One", description: "The first offering" },
+    { title: "Two", description: "The second offering" },
+    { title: "Three", description: "The third offering" },
+  ],
+  trackRecord: [],
+  projects: ["atlas-shop"],
+  faq: [],
+  _meta: meta(slug, "yaml"),
+  ...overrides,
+});
+
+export const testimonial = (
+  slug: string,
+  overrides: Partial<RawTestimonial> = {},
+): RawTestimonial => ({
+  quote: `An invented quote from ${slug}.`,
+  name: `Person ${slug}`,
+  permission: "2026-01-15",
+  _meta: meta(slug, "yaml"),
+  ...overrides,
+});
+
+/** The fixed "today" the content suites pass to `checkContent`. */
+export const TODAY = "2026-06-01";
 
 export const profile = (overrides: Partial<RawProfile> = {}): RawProfile => ({
   name: "Ada Example",
   roleLine: "Invented role line",
   headline: "Invented headline",
   location: "Nowhere",
+  base: "Somewhere",
   photo: { src: "profile/me.jpg", alt: "An invented portrait" },
-  availability: { status: "open" },
+  availability: { status: "open", projects: "open" },
+  services: { headline: "Invented services headline", intro: "Invented services intro" },
+  clients: [],
   links: [{ kind: "github", url: "https://example.com/ada" }],
   featured: ["atlas-shop", "quiet-ledger"],
   flagshipOrder: ["atlas-shop", "quiet-ledger"],
   lensOrder: ["architect", "developer"],
+  serviceOrder: [],
+  featuredTestimonials: [],
   skillGroups: ["Architecture", "Engineering"],
   _meta: meta("profile", "yaml"),
   ...overrides,
@@ -206,6 +247,8 @@ export const baseSnapshot = (overrides: Partial<ContentSnapshot> = {}): ContentS
       { name: "Retail", _meta: meta("retail", "yaml") },
       { name: "Charity", _meta: meta("charity", "yaml") },
     ],
+    services: [],
+    testimonials: [],
     profiles: [profile()],
     abouts: [{ body: { code: "code:about", markdown: "About me." }, _meta: meta("about", "mdx") }],
     ...overrides,
@@ -219,6 +262,8 @@ export const baseSnapshot = (overrides: Partial<ContentSnapshot> = {}): ContentS
       ...data.stack.map((s) => `stack/${s._meta.path}.yaml`),
       ...data.skills.map((s) => `skills/${s._meta.path}.yaml`),
       ...data.sectors.map((s) => `sectors/${s._meta.path}.yaml`),
+      ...data.services.map((s) => `services/${s._meta.path}.yaml`),
+      ...data.testimonials.map((t) => `testimonials/${t._meta.path}.yaml`),
       "profile.yaml",
       "about.mdx",
       "images/atlas-shop/cover.png",

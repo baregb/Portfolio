@@ -16,8 +16,10 @@ import {
   allProfiles,
   allProjects,
   allSectors,
+  allServices,
   allSkills,
   allStacks,
+  allTestimonials,
 } from "../.content-collections/generated/index.js";
 import { parseContentDrafts } from "../features/content/env.ts";
 import { createContentReader } from "../features/content/read.ts";
@@ -81,6 +83,8 @@ const reader = createContentReader(
     stack: allStacks,
     skills: allSkills,
     sectors: allSectors,
+    services: allServices,
+    testimonials: allTestimonials,
     profiles: allProfiles,
     abouts: allAbouts,
   },

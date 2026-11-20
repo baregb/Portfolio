@@ -16,7 +16,11 @@ import {
 } from "node:fs";
 import { dirname, join } from "node:path";
 import sharp from "sharp";
-import { allProfiles, allProjects } from "../.content-collections/generated/index.js";
+import {
+  allProfiles,
+  allProjects,
+  allTestimonials,
+} from "../.content-collections/generated/index.js";
 import { CV_FILE } from "../features/content/rules.ts";
 import { parseContentDrafts } from "../features/content/env.ts";
 import {
@@ -129,7 +133,10 @@ function buildCv(): AssetManifest["cv"] {
   return { href: cvHref(profile.name), bytes: statSync(input).size };
 }
 
-const sources = collectImages({ projects: allProjects, profiles: allProfiles }, includeDrafts);
+const sources = collectImages(
+  { projects: allProjects, profiles: allProfiles, testimonials: allTestimonials },
+  includeDrafts,
+);
 const images = Object.fromEntries(await Promise.all(sources.map(buildImage)));
 const cv = buildCv();
 const manifest: AssetManifest = { images, cv };

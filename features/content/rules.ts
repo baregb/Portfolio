@@ -6,11 +6,37 @@
 /** A slug is the filename without its extension, in kebab case. */
 export const SLUG_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
-/** `profile` names the profile image folder, so no project may use it. */
-export const RESERVED_PROJECT_SLUGS: readonly string[] = ["profile"];
-
 /** The profile photo lives in `content/images/profile/`. */
 export const PROFILE_IMAGE_FOLDER = "profile";
+
+/** Testimonial photos live in `content/images/testimonials/` (spec 0006, AC-3). */
+export const TESTIMONIAL_IMAGE_FOLDER = "testimonials";
+
+/** Client logos live in `content/images/clients/` (spec 0006, AC-4). */
+export const CLIENT_IMAGE_FOLDER = "clients";
+
+/** These name image folders that belong to no project, so no project may use them. */
+export const RESERVED_PROJECT_SLUGS: readonly string[] = [
+  PROFILE_IMAGE_FOLDER,
+  TESTIMONIAL_IMAGE_FOLDER,
+  CLIENT_IMAGE_FOLDER,
+];
+
+/** A result ref (spec 0006, AC-2): `<project-slug>/<result-id>`. */
+export const RESULT_REF_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*\/[a-z0-9]+(-[a-z0-9]+)*$/;
+
+/** Splits a well formed ref into its project slug and result id. */
+export const splitRef = (ref: string): { readonly project: string; readonly id: string } => {
+  const [project = "", id = ""] = ref.split("/");
+  return { project, id };
+};
+
+/** The longest page title any content may carry (the `seo.title` cap). */
+export const TITLE_MAX = 70;
+
+/** A service page title when it sets no `seo.title` (spec 0006, AC-16). */
+export const serviceFallbackTitle = (name: string, base: string): string =>
+  `${name} in ${base}, working worldwide`;
 
 /** The six flagship body sections, as exact H2 headings, in order. */
 export const SECTIONS = [
@@ -46,6 +72,8 @@ export const COLLECTION_FILES = {
   stack: { directory: "stack", extension: "yaml" },
   skills: { directory: "skills", extension: "yaml" },
   sectors: { directory: "sectors", extension: "yaml" },
+  services: { directory: "services", extension: "yaml" },
+  testimonials: { directory: "testimonials", extension: "yaml" },
 } as const;
 
 export const PROFILE_FILE = "profile.yaml";

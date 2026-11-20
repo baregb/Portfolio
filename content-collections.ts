@@ -7,8 +7,10 @@ import {
   profileSchema,
   projectSchema,
   sectorSchema,
+  serviceSchema,
   skillSchema,
   stackSchema,
+  testimonialSchema,
   withReadableIssues,
 } from "./features/content/schema.ts";
 import { SECTIONS, type SectionKey } from "./features/content/rules.ts";
@@ -85,6 +87,8 @@ const categories = defineCollection(yamlCollection("categories", categorySchema)
 const stack = defineCollection(yamlCollection("stack", stackSchema));
 const skills = defineCollection(yamlCollection("skills", skillSchema));
 const sectors = defineCollection(yamlCollection("sectors", sectorSchema));
+const services = defineCollection(yamlCollection("services", serviceSchema));
+const testimonials = defineCollection(yamlCollection("testimonials", testimonialSchema));
 
 const profile = defineCollection({
   name: "profile",
@@ -95,5 +99,16 @@ const profile = defineCollection({
 });
 
 export default defineConfig({
-  content: [projects, about, lenses, categories, stack, skills, sectors, profile],
+  content: [
+    projects,
+    about,
+    lenses,
+    categories,
+    stack,
+    skills,
+    sectors,
+    services,
+    testimonials,
+    profile,
+  ],
 });

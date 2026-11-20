@@ -8,6 +8,7 @@ import {
   profile,
   publicCard,
   publicFlagship,
+  TODAY,
 } from "./fixtures.ts";
 
 // Cross file rules (AC-2, AC-5, AC-7, AC-8, AC-10, AC-12), invented fixtures.
@@ -15,7 +16,7 @@ import {
 const both = [true, false] as const;
 
 const errorsOf = (snapshot: ContentSnapshot, includeDrafts = true): readonly ContentIssue[] => {
-  const result = checkContent(snapshot, { includeDrafts });
+  const result = checkContent(snapshot, { includeDrafts, today: TODAY });
   return result.ok ? [] : result.errors;
 };
 
@@ -31,7 +32,7 @@ const swapProject = (slug: string, next: ContentSnapshot["projects"][number]) =>
 
 describe("checkContent: the base fixture", () => {
   it.each(both)("passes with includeDrafts=%s", (includeDrafts) => {
-    expect(checkContent(baseSnapshot(), { includeDrafts }).ok).toBe(true);
+    expect(checkContent(baseSnapshot(), { includeDrafts, today: TODAY }).ok).toBe(true);
   });
 });
 
@@ -180,7 +181,7 @@ describe("featured and flagshipOrder (AC-8)", () => {
 
 describe("drafts (AC-7)", () => {
   it("drops a draft named in a lens with a warning in production mode", () => {
-    const result = checkContent(baseSnapshot(), { includeDrafts: false });
+    const result = checkContent(baseSnapshot(), { includeDrafts: false, today: TODAY });
     expect(result.warnings).toEqual([
       {
         file: "content/lenses/developer.yaml",
@@ -191,7 +192,9 @@ describe("drafts (AC-7)", () => {
   });
 
   it("keeps drafts without warnings in draft mode", () => {
-    expect(checkContent(baseSnapshot(), { includeDrafts: true }).warnings).toEqual([]);
+    expect(checkContent(baseSnapshot(), { includeDrafts: true, today: TODAY }).warnings).toEqual(
+      [],
+    );
   });
 
   it("fails in production when a lens holds only drafts", () => {
@@ -258,7 +261,7 @@ describe("files and images (AC-2, AC-10, AC-12)", () => {
   it.each(both)("only warns when the CV is missing (includeDrafts=%s)", (includeDrafts) => {
     const result = checkContent(
       withFiles((files) => files.filter((file) => file !== "cv/cv.pdf")),
-      { includeDrafts },
+      { includeDrafts, today: TODAY },
     );
     expect(result.ok).toBe(true);
     expect(result.warnings).toContainEqual({
@@ -272,7 +275,7 @@ describe("files and images (AC-2, AC-10, AC-12)", () => {
     expect(errorsOf(withFiles((files) => [...files, "images/atlas-shop/old.png"]))).toEqual([
       {
         file: "content/images/atlas-shop/old.png",
-        message: "image is not referenced by any project or the profile",
+        message: "image is not referenced by any project, the profile, or a testimonial",
       },
     ]);
   });

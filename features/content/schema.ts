@@ -1,10 +1,14 @@
 import { z } from "zod";
 import {
+  CLIENT_IMAGE_FOLDER,
   DIAGRAM_EXTENSIONS,
   IMAGE_EXTENSIONS,
   PROFILE_IMAGE_FOLDER,
+  RESULT_REF_PATTERN,
   SLUG_PATTERN,
   STACK_GROUPS,
+  TESTIMONIAL_IMAGE_FOLDER,
+  TITLE_MAX,
 } from "./rules.ts";
 
 // Per file rules for every collection (spec 0002, "Data model sketch"). Every
@@ -91,18 +95,49 @@ const links = strict(
   "on links",
 );
 
-const seo = strict({ title: text(70).optional(), description: text(160).optional() }, "on seo");
+const seo = strict(
+  { title: text(TITLE_MAX).optional(), description: text(160).optional() },
+  "on seo",
+);
 
-const updated = z.preprocess(
+const isoDate = z.preprocess(
   // A bare YAML date may arrive as a Date; keep it as the plain string.
   (value) => (value instanceof Date ? value.toISOString().slice(0, 10) : value),
   z
-    .string()
+    .string({ error: requiredMessage })
     .regex(
       /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
       "must be a date in YYYY-MM-DD form, for example 2026-11-17",
     ),
 );
+
+const updated = isoDate;
+
+/** Where an image `src` must start, for collections that own one folder. */
+const inFolder = (extensions: readonly string[], folder: string) =>
+  imageSrc(extensions).refine((src) => src.startsWith(`${folder}/`), {
+    message: `must start with ${folder}/`,
+  });
+
+// Spec 0006, AC-2: a result may carry an id so a lens or service can point at it.
+const resultId = z
+  .string()
+  .regex(SLUG_PATTERN, "must be a kebab case id, for example seo-score")
+  .max(40, "must be at most 40 characters");
+
+const resultRef = z
+  .string({ error: requiredMessage })
+  .regex(
+    RESULT_REF_PATTERN,
+    "must be <project-slug>/<result-id>, for example my-project/seo-score",
+  );
+
+const trackRecord = z.array(resultRef).max(3, "may hold at most 3 results").default([]);
+
+const faq = z
+  .array(strict({ question: text(120), answer: text(600) }, "on an FAQ item"))
+  .max(6, "may hold at most 6 questions")
+  .default([]);
 
 const period = strict({ start: month, end: month.nullable() }, "on a period").refine(
   (value) => value.end === null || value.end >= value.start,
@@ -111,6 +146,7 @@ const period = strict({ start: month, end: month.nullable() }, "on a period").re
 
 const publicResult = strict(
   {
+    id: resultId.optional(),
     value: text(40),
     label: text(60),
     context: text(160).optional(),
@@ -120,7 +156,7 @@ const publicResult = strict(
 );
 
 const onRequestResult = strict(
-  { value: text(40), label: text(60), context: text(160).optional() },
+  { id: resultId.optional(), value: text(40), label: text(60), context: text(160).optional() },
   "on an on request result (results on on request projects carry no source)",
 );
 
@@ -237,9 +273,53 @@ export const lensSchema = strict(
     intro: text(400),
     projects: slugs.min(1, "a lens needs at least one project"),
     skills: slugs.default([]),
+    trackRecord,
+    faq,
     seo: seo.optional(),
   },
   "on a lens",
+);
+
+// Spec 0006, AC-1: one freelance service.
+export const serviceSchema = strict(
+  {
+    status: z.enum(["draft", "published"]),
+    name: text(40),
+    tagline: text(60),
+    headline: text(120),
+    headlineHighlight: text(60).optional(),
+    intro: text(400),
+    offerings: z
+      .array(strict({ title: text(40), description: text(160) }, "on an offering"))
+      .min(3, "needs at least 3 offerings")
+      .max(4, "may hold at most 4 offerings"),
+    trackRecord,
+    projects: slugs.min(1, "a service needs at least one project"),
+    faq,
+    seo: seo.optional(),
+  },
+  "on a service",
+);
+
+// Spec 0006, AC-3: a quote, published only with permission on record.
+export const testimonialSchema = strict(
+  {
+    quote: text(400),
+    name: text(80),
+    role: text(60).optional(),
+    company: text(80).optional(),
+    project: slug.optional(),
+    photo: strict(
+      {
+        src: inFolder(IMAGE_EXTENSIONS, TESTIMONIAL_IMAGE_FOLDER),
+        // Empty means decorative: the caption already names the person.
+        alt: z.string().trim().max(200, "must be at most 200 characters"),
+      },
+      "on a testimonial photo",
+    ).optional(),
+    permission: isoDate,
+  },
+  "on a testimonial",
 );
 
 export const categorySchema = strict({ name: text(40), description: text(200) }, "on a category");
@@ -281,13 +361,35 @@ export const profileSchema = strict(
       "on the profile photo",
     ),
     headlineHighlight: text(60).optional(),
+    // The city service titles name (spec 0006, AC-4); `location` stays visitor facing.
+    base: text(60),
     availability: strict(
       {
         status: z.enum(["open", "selective", "unavailable"]),
+        // Spec 0006, AC-13: what clients see on the services pages.
+        projects: z.enum(["open", "limited", "closed"]),
         note: text(120).optional(),
       },
       "on availability",
     ),
+    services: strict(
+      { headline: text(120), headlineHighlight: text(60).optional(), intro: text(300) },
+      "on services",
+    ),
+    clients: z
+      .array(
+        strict(
+          {
+            name: text(80),
+            logo: inFolder(["svg"], CLIENT_IMAGE_FOLDER),
+            permission: isoDate,
+            project: slug.optional(),
+          },
+          "on a client",
+        ),
+      )
+      .max(12, "may hold at most 12 clients")
+      .default([]),
     links: z
       .array(
         strict({ kind: z.enum(["github", "linkedin", "website"]), url: httpsUrl }, "on a link"),
@@ -298,6 +400,8 @@ export const profileSchema = strict(
       .max(6, "may hold at most 6 projects"),
     flagshipOrder: slugs,
     lensOrder: slugs,
+    serviceOrder: slugs.default([]),
+    featuredTestimonials: slugs.max(2, "may hold at most 2 testimonials").default([]),
     skillGroups: z.array(text(40)).min(1, "needs at least one group"),
   },
   "on the profile",

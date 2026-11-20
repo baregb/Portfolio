@@ -13,8 +13,10 @@ import {
   allProfiles,
   allProjects,
   allSectors,
+  allServices,
   allSkills,
   allStacks,
+  allTestimonials,
 } from "../.content-collections/generated/index.js";
 import { checkContent, type ContentIssue } from "../features/content/check.ts";
 import { parseContentDrafts } from "../features/content/env.ts";
@@ -46,6 +48,8 @@ const snapshot = {
   stack: allStacks,
   skills: allSkills,
   sectors: allSectors,
+  services: allServices,
+  testimonials: allTestimonials,
   profiles: allProfiles,
   abouts: allAbouts,
   files: existsSync(root) ? listFiles(root) : [],
@@ -57,7 +61,11 @@ const unique = (issues: readonly ContentIssue[]) => [
   ...new Map(issues.map((found) => [key(found), found])).values(),
 ];
 
-const results = [true, false].map((includeDrafts) => checkContent(snapshot, { includeDrafts }));
+// Spec 0006, AC-3: permission dates are checked against today in UTC.
+const today = new Date().toISOString().slice(0, 10);
+const results = [true, false].map((includeDrafts) =>
+  checkContent(snapshot, { includeDrafts, today }),
+);
 const errors = unique(results.flatMap((result) => (result.ok ? [] : result.errors)));
 const warnings = unique(results.flatMap((result) => result.warnings));
 
@@ -86,5 +94,5 @@ writeFileSync(
 );
 
 console.log(
-  `Content check passed: ${allProjects.length} projects, ${allLenses.length} lenses, both draft modes.`,
+  `Content check passed: ${allProjects.length} projects, ${allLenses.length} lenses, ${allServices.length} services, ${allTestimonials.length} testimonials, both draft modes.`,
 );

@@ -5,6 +5,7 @@ import {
   profile,
   publicCard,
   publicFlagship,
+  testimonial,
 } from "../content/fixtures.ts";
 import {
   collectImages,
@@ -75,7 +76,11 @@ describe("collectImages (AC-12)", () => {
       cover: { src: "harbor-tools/cover.png", alt: "Cover" },
     });
     const images = collectImages(
-      { projects: [shared, card, onRequestFlagship("quiet-ledger")], profiles: [profile()] },
+      {
+        projects: [shared, card, onRequestFlagship("quiet-ledger")],
+        profiles: [profile()],
+        testimonials: [],
+      },
       true,
     );
     expect(images).toEqual([
@@ -92,9 +97,34 @@ describe("collectImages (AC-12)", () => {
       status: "draft",
       cover: { src: "harbor-tools/cover.png", alt: "Cover" },
     });
-    const data = { projects: [draft], profiles: baseSnapshot().profiles };
+    const data = { projects: [draft], profiles: baseSnapshot().profiles, testimonials: [] };
     expect(collectImages(data, false)).toEqual(["profile/me.jpg"]);
     expect(collectImages(data, true)).toEqual(["profile/me.jpg", "harbor-tools/cover.png"]);
+  });
+
+  it("adds client logos and testimonial photos, leaving out quotes tied to a draft (spec 0006)", () => {
+    const draft = publicCard("harbor-tools", { status: "draft" });
+    const data = {
+      projects: [draft],
+      profiles: [
+        profile({
+          clients: [{ name: "Atlas", logo: "clients/atlas.svg", permission: "2026-01-01" }],
+        }),
+      ],
+      testimonials: [
+        testimonial("ana", { photo: { src: "testimonials/ana.jpg", alt: "" } }),
+        testimonial("bo", {
+          project: "harbor-tools",
+          photo: { src: "testimonials/bo.jpg", alt: "" },
+        }),
+      ],
+    };
+    expect(collectImages(data, false)).toEqual([
+      "profile/me.jpg",
+      "clients/atlas.svg",
+      "testimonials/ana.jpg",
+    ]);
+    expect(collectImages(data, true)).toContain("testimonials/bo.jpg");
   });
 });
 
