@@ -34,19 +34,23 @@ skills:
   - ai-assisted-development
   - technical-seo
 results:
-  - value: "5"
+  - id: languages
+    value: "5"
     label: languages on the resources library
     context: English, Spanish, French, Portuguese, and Arabic, including right to left.
     source: "loveseal-resources src/i18n/routing.ts: locales en, es, fr, pt, ar."
-  - value: "0"
+  - id: zero-db-changes
+    value: "0"
     label: database changes for the new sermon library
     context: It reads the same table the old admin writes, so the old pages keep working until the switch.
     source: "loveseal-messages docs/messages-library.md: nothing here changes the database, S3 or the admin."
-  - value: "41"
+  - id: api-tests
+    value: "41"
     label: automated tests on the resources API
     context: Every API route has unit tests, run in CI on each push.
     source: "loveseal-resources: commit 2026-07-17 Add Vitest unit tests for all API routes and wire up CI; 41 test cases counted 2026-11-19."
-  - value: "5"
+  - id: redirects
+    value: "5"
     label: legacy link patterns redirected
     context: Old message, search, minister, and page links all forward to the new library with a permanent redirect.
     source: "loveseal-messages docs/messages-library.md, Launch step 7."

@@ -11,4 +11,4 @@ export const getUmamiWebsiteId = (): string | null => result.websiteId;
 
 export { AnalyticsClicks } from "./analytics-clicks";
 export { AnalyticsScript } from "./analytics-script";
-export { TrackCaseStudyRead, TrackLensVisit } from "./track-events";
+export { TrackCaseStudyRead, TrackLensVisit, TrackServiceVisit } from "./track-events";

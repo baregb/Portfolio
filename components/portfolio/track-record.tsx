@@ -8,6 +8,9 @@ import { serialNumber } from "./format";
 const TITLE_ID = "track-record-title";
 export const TRACK_RECORD_ID = "track-record";
 
+// One column per result from `md`, so a short list never leaves an empty cell.
+const COLUMNS = ["", "md:grid-cols-2", "md:grid-cols-3"] as const;
+
 /**
  * Spec 0006, AC-6: up to three numbered results drawn from a page's projects.
  * `green` is a service page's one green block; `plain` sits on a lens, whose
@@ -48,16 +51,17 @@ export function TrackRecord({
         </div>
         <ol
           className={cx(
-            "grid gap-px border md:grid-cols-3",
-            green ? "border-block-line bg-block-line" : "border-line bg-line",
+            "grid border-s border-t",
+            COLUMNS[Math.min(items.length, 3) - 1],
+            green ? "border-block-line" : "border-line",
           )}
         >
           {items.map((item, index) => (
             <li
               key={`${item.project.title} ${item.result.label}`}
               className={cx(
-                "grid min-w-0 content-start gap-3 p-5 md:p-6",
-                green ? "bg-block" : "bg-surface",
+                "grid min-w-0 content-start gap-3 border-e border-b p-5 md:p-6",
+                green ? "border-block-line bg-block" : "border-line bg-surface",
               )}
             >
               <span

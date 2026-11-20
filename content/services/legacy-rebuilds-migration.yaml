@@ -1,0 +1,38 @@
+status: draft
+name: Legacy rebuilds and data migration
+tagline: Off the old system, safely.
+headline: I move you off an old system one piece at a time, without losing data or links.
+headlineHighlight: one piece at a time
+intro: >-
+  A rebuild in one go is how sites break. I replace old systems in slices that each go live on
+  their own, move data with checks that prove nothing was lost, and write down how to switch back
+  before anything switches over.
+offerings:
+  - title: Rebuilds in slices
+    description: New parts go live beside the old site, one piece at a time.
+  - title: Data migration
+    description: Records moved with counts and checks, so you can prove nothing went missing.
+  - title: Links that keep working
+    description: Permanent redirects from every old address pattern to the new pages.
+  - title: A way back
+    description: A written switch over and rollback plan before anything changes.
+trackRecord:
+  - membership-charity-data-migration/attendance-records
+  - loveseal/redirects
+  - loveseal/zero-db-changes
+projects:
+  - loveseal
+  - membership-charity-data-migration
+faq:
+  - question: Do we have to stop using the old system?
+    answer: >-
+      No. The old system keeps running while the new parts go live beside it, and each part
+      switches over only when it is ready.
+  - question: How do you know no data was lost?
+    answer: >-
+      Every migration ends with counts and spot checks against the old data, written down so you
+      can see them.
+  - question: Can you work with a codebase nobody understands any more?
+    answer: >-
+      Yes. I read the existing code first and write every change to sit beside it, rather than
+      rewriting what already works.

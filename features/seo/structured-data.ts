@@ -2,7 +2,7 @@
 // builders take resolved content and the canonical site address and return
 // plain objects; `serializeJsonLd` makes the text safe inside a `<script>`.
 
-import type { Flagship } from "../content/types.ts";
+import type { Flagship, Service } from "../content/types.ts";
 import { cardPath } from "./pages.ts";
 
 type JsonLd = Readonly<Record<string, unknown>>;
@@ -71,6 +71,22 @@ export const caseStudyStructuredData = (
     author: { "@type": "Person", "@id": personId(siteUrl), name: profile.name, url: siteUrl },
   };
 };
+
+/** A service page (spec 0006, AC-16): the service, provided by the person. */
+export const serviceStructuredData = (
+  service: Pick<Service, "slug" | "name" | "seoDescription">,
+  profile: Pick<PersonSource, "name">,
+  siteUrl: string,
+): JsonLd => ({
+  "@context": CONTEXT,
+  "@type": "Service",
+  name: service.name,
+  serviceType: service.name,
+  description: service.seoDescription,
+  areaServed: "Worldwide",
+  url: absolute(siteUrl, `/services/${service.slug}`),
+  provider: { "@type": "Person", "@id": personId(siteUrl), name: profile.name, url: siteUrl },
+});
 
 /**
  * JSON for a `<script type="application/ld+json">`. Escapes `<` so content

@@ -36,6 +36,11 @@ lensOrder:
   - software-developer
   - ai-assisted-builder
   - seo-specialist
+serviceOrder:
+  - web-performance-seo
+  - web-apps
+  - payments-online-stores
+  - legacy-rebuilds-migration
 skillGroups:
   - Architecture
   - Engineering

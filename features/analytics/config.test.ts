@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { ANALYTICS_EVENTS, knownEvent, readUmamiWebsiteId } from "./config";
+import {
+  ANALYTICS_EVENTS,
+  clickEventData,
+  faqEventData,
+  knownEvent,
+  readUmamiWebsiteId,
+} from "./config";
 
 describe("readUmamiWebsiteId", () => {
   it.each([undefined, "", "  "])("turns analytics off when unset (%j)", (value) => {
@@ -37,5 +43,30 @@ describe("knownEvent", () => {
 
   it.each([null, undefined, "", "CV-Download", "page-view"])("ignores %j", (name) => {
     expect(knownEvent(name)).toBeNull();
+  });
+});
+
+describe("event data (spec 0006, AC-17)", () => {
+  const attr = (name: string, value: string) => ({ name, value });
+
+  it("sends a click's data-analytics-* attributes, without the event name", () => {
+    expect(
+      clickEventData([
+        attr("href", "/contact"),
+        attr("data-analytics-event", "project-enquiry"),
+        attr("data-analytics-service", "web-apps"),
+      ]),
+    ).toEqual({ service: "web-apps" });
+  });
+
+  it("sends nothing for a plain event", () => {
+    expect(clickEventData([attr("data-analytics-event", "cv-download")])).toBeUndefined();
+  });
+
+  it("cuts a FAQ question to 100 characters", () => {
+    expect(faqEventData("/services/web-apps", "Q".repeat(120))).toEqual({
+      page: "/services/web-apps",
+      question: "Q".repeat(100),
+    });
   });
 });

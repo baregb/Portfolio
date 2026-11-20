@@ -10,7 +10,12 @@ import { ButtonGroup } from "@/components/ui/button-group";
 import { Container } from "@/components/ui/container";
 import { Icon } from "@/components/ui/icon";
 import { Section } from "@/components/ui/section";
-import { getProfile, type OnRequestCard, type OnRequestFlagship } from "@/features/content";
+import {
+  getProfile,
+  getServices,
+  type OnRequestCard,
+  type OnRequestFlagship,
+} from "@/features/content";
 import { ContactForm } from "@/features/forms/contact-form";
 import { RequestForm } from "@/features/forms/request-form";
 import { getCvAsset } from "@/features/media/manifest";
@@ -59,7 +64,10 @@ export function ContactPage() {
   return (
     <>
       <PageHero label="Contact" title="Get in touch" lead={CONTACT_LEAD}>
-        <Availability availability={profile.availability} />
+        <div className="grid gap-2">
+          <Availability availability={profile.availability} />
+          <Availability availability={profile.availability} audience="projects" />
+        </div>
         <ButtonGroup>
           <CvButton cv={getCvAsset()} />
         </ButtonGroup>
@@ -69,7 +77,10 @@ export function ContactPage() {
           <div className="grid max-w-3xl gap-10">
             <ProfileLinks />
             <FormSlot form="contact">
-              <ContactForm linkedinUrl={linkedinUrl()} />
+              <ContactForm
+                linkedinUrl={linkedinUrl()}
+                services={Object.fromEntries(getServices().map(({ slug, name }) => [slug, name]))}
+              />
             </FormSlot>
           </div>
         </Container>

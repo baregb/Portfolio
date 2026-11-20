@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { cx } from "@/components/ui/cx";
 import { profileLinks } from "@/components/portfolio/links";
-import { getProfile } from "@/features/content";
+import { getProfile, getServices } from "@/features/content";
 import { getCvAsset } from "@/features/media/manifest";
-import { navItems, type NavItem } from "./nav";
+import { navItemsFor, type NavItem } from "./nav";
 import { SiteMenu } from "./site-menu";
 import { ThemeSwitcher } from "./theme-switcher";
 
@@ -17,7 +17,10 @@ type SiteHeaderProps = {
  * The floating frosted pill bar (D): the name and the menu button, at every
  * size. The nav and the theme switcher live in the full screen menu.
  */
-export function SiteHeader({ items = navItems, position = "sticky" }: SiteHeaderProps) {
+export function SiteHeader({
+  items = navItemsFor(getServices().length > 0),
+  position = "sticky",
+}: SiteHeaderProps) {
   const profile = getProfile();
   const { name } = profile;
   const hasNav = items.length > 0;

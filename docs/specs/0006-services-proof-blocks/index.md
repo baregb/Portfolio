@@ -139,8 +139,8 @@ Journey: the new client path is built end to end first, then the recruiter pages
 
 1. [x] Content model: schemas, checks (including `today`, highlights, ids, refs, privacy rules), read layer, image wiring, and Vitest for services, testimonials, result ids and refs, lens fields, profile fields, and draft handling; update `profile.yaml` with the required fields and the fixtures the new required fields break (`features/content/fixtures.ts`, the profile cases in `schema.test.ts`), satisfies **AC-1**, **AC-2**, **AC-3**, **AC-4**, **AC-5**, **AC-19**
 2. [x] Shared blocks: track record, FAQ, testimonials, logo strip, service card, `Availability` and `CtaBand` audience variants, each added to `/styleguide`, satisfies **AC-6**, **AC-7**, **AC-8**, **AC-9**, **AC-13**
-3. Client path: `/services`, `/services/[service]`, the conditional nav item and empty state, menu availability, client CTA band, contact form prefill, and the four draft services plus the result ids they use, satisfies **AC-5b**, **AC-10**, **AC-11**, **AC-12**, **AC-14**, **AC-18**
-4. Discoverability and tracking: pages list, sitemap, social cards, titles, `Service` JSON-LD, the three events and the click data attributes, satisfies **AC-16**, **AC-17**
+3. [x] Client path: `/services`, `/services/[service]`, the conditional nav item and empty state, menu availability, client CTA band, contact form prefill, and the four draft services plus the result ids they use, satisfies **AC-5b**, **AC-10**, **AC-11**, **AC-12**, **AC-14**, **AC-18**
+4. [x] Discoverability and tracking: pages list, sitemap, social cards, titles, `Service` JSON-LD, the three events and the click data attributes, satisfies **AC-16**, **AC-17**
 5. Recruiter path: lens track record, testimonials, and FAQ; case study testimonials; home logos, featured quotes, and services band; about logos; lens `trackRecord` seeds; then `docs/design.md`, `verify.md`, and the notes on specs 0002 and 0004, satisfies **AC-8**, **AC-9**, **AC-12**, **AC-15**, **AC-18**, **AC-19**
 
 ## Consequences

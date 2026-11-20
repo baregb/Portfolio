@@ -96,6 +96,7 @@ const pages = sitePages({
   about: reader.getAbout(),
   lenses: reader.getLenses(),
   flagships: reader.getFlagships(),
+  services: reader.getServices(),
 });
 
 // A removed page must not leave its old card behind.

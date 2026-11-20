@@ -1,0 +1,37 @@
+status: draft
+name: Web performance and SEO
+tagline: Faster pages. Found pages.
+headline: I fix speed and search in the code, where page builders and plugins can't reach.
+headlineHighlight: in the code
+intro: >-
+  Slow first loads, pages missing from the sitemap, no structured data, link previews that show
+  nothing: these are code problems, and I fix them as code. I measure first, fix what the numbers
+  point at, and keep every old link working when a site moves.
+offerings:
+  - title: Speed audits and fixes
+    description: A Core Web Vitals audit on real mobile settings, then the fixes it points at.
+  - title: Technical SEO
+    description: Sitemaps, metadata, canonical addresses, structured data, and social cards.
+  - title: Moves that keep your links
+    description: A rebuild or new platform with permanent redirects, so shared links keep working.
+  - title: Rebuilds built to rank
+    description: When a site can't be saved, a Next.js rebuild with speed and search designed in.
+trackRecord:
+  - beccahs-kitchen/seo-score
+  - loveseal/redirects
+projects:
+  - beccahs-kitchen
+  - loveseal
+faq:
+  - question: Will you guarantee a number one ranking?
+    answer: >-
+      No, and be wary of anyone who does. I fix what search engines can measure (speed, crawlable
+      pages, metadata, structured data) and show you what changed.
+  - question: How soon will I see results?
+    answer: >-
+      Speed fixes show the day they ship. Search changes show once Google crawls the site again,
+      usually within days to weeks; rankings take longer to settle.
+  - question: My site isn't built with Next.js. Can you still help?
+    answer: >-
+      Yes. Most speed and search fixes work on any stack. If the platform itself is holding you
+      back, I'll say so and show what a rebuild would gain.

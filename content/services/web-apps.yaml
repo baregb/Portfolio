@@ -1,0 +1,38 @@
+status: draft
+name: Web apps, end to end
+tagline: One developer, the whole build.
+headline: I build web apps end to end, from the data model to the deploy.
+headlineHighlight: end to end
+intro: >-
+  Storefronts, admin tools, dashboards, and the logic behind them, in TypeScript, Next.js, and
+  PostgreSQL. I write the decisions down before the code, test what matters, and hand over a system
+  the next developer can follow.
+offerings:
+  - title: Customer facing apps
+    description: Fast, accessible pages that work on a phone and on slow connections.
+  - title: Admin and operations tools
+    description: The screens your team uses every day, with roles and audit trails.
+  - title: Data model and APIs
+    description: A schema the database keeps correct, and APIs with clear errors.
+  - title: Tests and handover
+    description: Automated tests on the risky paths, and written decisions for whoever comes next.
+trackRecord:
+  - beccahs-kitchen/pages-routes
+  - beccahs-kitchen/tests-passing
+  - webstore/tests
+projects:
+  - beccahs-kitchen
+  - webstore
+faq:
+  - question: Do you work alone or with a team?
+    answer: >-
+      Either. I can own the whole build, or slot into your team and take a part of it, with small
+      pull requests and written updates.
+  - question: Which stack do you use?
+    answer: >-
+      Usually TypeScript, Next.js, and PostgreSQL (often through Supabase), hosted on Vercel,
+      Netlify, or Cloudflare. If you already run something else, I'll work with it.
+  - question: How do you price a build?
+    answer: >-
+      Tell me what you need and I'll reply with a clear quote, split into milestones so you always
+      know what you are paying for.

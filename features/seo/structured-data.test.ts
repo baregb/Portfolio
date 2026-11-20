@@ -5,6 +5,7 @@ import {
   caseStudyStructuredData,
   homeStructuredData,
   serializeJsonLd,
+  serviceStructuredData,
 } from "./structured-data";
 
 const SITE = "https://example.com";
@@ -63,6 +64,30 @@ describe("structured data", () => {
       mainEntityOfPage: "https://example.com/work/ledger-engine",
       image: "https://example.com/og/work-ledger-engine.png",
       author: {
+        "@type": "Person",
+        "@id": "https://example.com/#person",
+        name: "Ada Lovelace",
+        url: SITE,
+      },
+    });
+  });
+
+  it("a service is provided by the person, linked by id (spec 0006, AC-16)", () => {
+    expect(
+      serviceStructuredData(
+        { slug: "web-apps", name: "Web apps", seoDescription: "Apps, end to end." },
+        profile,
+        SITE,
+      ),
+    ).toEqual({
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: "Web apps",
+      serviceType: "Web apps",
+      description: "Apps, end to end.",
+      areaServed: "Worldwide",
+      url: "https://example.com/services/web-apps",
+      provider: {
         "@type": "Person",
         "@id": "https://example.com/#person",
         name: "Ada Lovelace",

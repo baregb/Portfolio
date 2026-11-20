@@ -42,3 +42,31 @@ const KNOWN_EVENTS: ReadonlySet<string> = new Set(Object.values(ANALYTICS_EVENTS
 export const knownEvent = (name: string | null | undefined): AnalyticsEvent | null =>
   name && KNOWN_EVENTS.has(name) ? (name as AnalyticsEvent) : null;
 export type EventData = Readonly<Record<string, string>>;
+
+const DATA_PREFIX = "data-analytics-";
+/** Attributes that name the event or the FAQ question, never sent as data. */
+const NOT_DATA: ReadonlySet<string> = new Set(["event", "faq"]);
+
+/**
+ * Spec 0006, AC-17: the event data a clicked element carries, from its
+ * `data-analytics-<key>` attributes (`data-analytics-service` → `service`).
+ * `undefined` when there is none, so plain events stay plain.
+ */
+export const clickEventData = (
+  attributes: Iterable<{ readonly name: string; readonly value: string }>,
+): EventData | undefined => {
+  const entries = [...attributes]
+    .filter(({ name }) => name.startsWith(DATA_PREFIX))
+    .map(({ name, value }) => [name.slice(DATA_PREFIX.length), value] as const)
+    .filter(([key]) => key !== "" && !NOT_DATA.has(key));
+  return entries.length > 0 ? Object.fromEntries(entries) : undefined;
+};
+
+/** The longest question text a `faq-open` event carries. */
+export const FAQ_QUESTION_MAX = 100;
+
+/** Spec 0006, AC-17: what `faq-open` sends. */
+export const faqEventData = (page: string, question: string): EventData => ({
+  page,
+  question: question.slice(0, FAQ_QUESTION_MAX),
+});

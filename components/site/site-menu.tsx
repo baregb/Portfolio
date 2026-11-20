@@ -11,7 +11,7 @@ import type { ExternalLink } from "@/components/portfolio/links";
 import { cx } from "@/components/ui/cx";
 import type { Profile } from "@/features/content";
 import type { CvAsset } from "@/features/media/manifest";
-import type { NavItem } from "./nav";
+import { isServicesPath, type NavItem } from "./nav";
 import { NavLinks } from "./nav-links";
 import { ThemeSwitcher } from "./theme-switcher";
 
@@ -120,7 +120,10 @@ export function SiteMenu({
           {/* Availability, profiles, the CV, and the theme: stacked and centred on phones, one row from md. */}
           <div className="mx-auto grid w-full max-w-page gap-4 border-t border-line px-2 pt-5 md:flex md:items-center md:justify-between md:px-5">
             <div className="grid justify-items-center gap-3 md:flex md:items-center md:gap-6">
-              <Availability availability={availability} />
+              <Availability
+                availability={availability}
+                audience={isServicesPath(pathname) ? "projects" : "roles"}
+              />
               <ExternalLinks links={links} label="Profiles" />
             </div>
             <div className="flex flex-wrap items-center justify-center gap-3">

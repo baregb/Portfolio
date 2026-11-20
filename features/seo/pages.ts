@@ -5,11 +5,20 @@
 // extensions so the card script can run this on Node directly.
 
 import { contactDescription } from "../contact/copy.ts";
-import type { About, Flagship, Lens, Profile } from "../content/types.ts";
+import type { About, Flagship, Lens, Profile, Service } from "../content/types.ts";
 import { LIBRARY_LEAD } from "../library/copy.ts";
 import { PRIVACY_DESCRIPTION } from "../privacy/copy.ts";
 
-export type PageKind = "home" | "about" | "work" | "contact" | "privacy" | "lens" | "case-study";
+export type PageKind =
+  | "home"
+  | "about"
+  | "work"
+  | "contact"
+  | "privacy"
+  | "lens"
+  | "case-study"
+  | "services"
+  | "service";
 
 export type SitePage = {
   readonly kind: PageKind;
@@ -24,10 +33,12 @@ export type SitePage = {
 };
 
 export type SeoSource = {
-  readonly profile: Pick<Profile, "name" | "roleLine" | "headline">;
+  readonly profile: Pick<Profile, "name" | "roleLine" | "headline" | "services">;
   readonly about: About;
   readonly lenses: readonly Lens[];
   readonly flagships: readonly Flagship[];
+  /** Published services; with none, `/services` stays out (spec 0006, AC-5b). */
+  readonly services: readonly Service[];
 };
 
 /** Home's absolute title: the name and role, with no template suffix. */
@@ -38,6 +49,7 @@ export const sitePages = ({
   about,
   lenses,
   flagships,
+  services,
 }: SeoSource): readonly SitePage[] => [
   {
     kind: "home",
@@ -94,6 +106,28 @@ export const sitePages = ({
     absoluteTitle: false,
     description: project.seoDescription,
     card: { label: `Case study · ${project.primaryCategory.name}`, heading: project.title },
+  })),
+  // Spec 0006, AC-16: the services index (a fixed card heading, so it never
+  // overflows) and one page per published service.
+  ...(services.length > 0
+    ? [
+        {
+          kind: "services",
+          path: "/services",
+          title: "Services",
+          absoluteTitle: false,
+          description: profile.services.intro,
+          card: { label: "Freelance", heading: "Services" },
+        } satisfies SitePage,
+      ]
+    : []),
+  ...services.map((service): SitePage => ({
+    kind: "service",
+    path: `/services/${service.slug}`,
+    title: service.seoTitle,
+    absoluteTitle: false,
+    description: service.seoDescription,
+    card: { label: "Service", heading: service.name },
   })),
 ];
 

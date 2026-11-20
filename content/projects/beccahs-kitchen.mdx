@@ -37,23 +37,28 @@ skills:
   - ai-assisted-development
   - technical-seo
 results:
-  - value: "1,277"
+  - id: tests-passing
+    value: "1,277"
     label: automated tests passing
     context: At the payment rework milestone in October 2026.
     source: "beccahs-kitchen docs/scope/scope.md, feature 10, stranded card orders row (2026-10-17): all 1277 tests pass."
-  - value: "14 of 14"
+  - id: rls-tables
+    value: "14 of 14"
     label: tables with row level security forced
     context: Every policy checks the caller against a specific admin account.
     source: "beccahs-kitchen CHANGELOG.md, 0.1.0 (2026-09-16), Security: RLS enabled and forced on all 14 tables."
-  - value: "111"
+  - id: migrations
+    value: "111"
     label: database migrations
     context: Every schema change is versioned SQL.
     source: "beccahs-kitchen supabase/migrations: 111 .sql files, counted 2026-11-17."
-  - value: "95"
+  - id: pages-routes
+    value: "95"
     label: pages and API routes
     context: 73 pages and 22 route handlers across the storefront and the admin.
     source: "beccahs-kitchen app/: 73 page.tsx and 22 route.ts files, counted 2026-11-17."
-  - value: "100"
+  - id: seo-score
+    value: "100"
     label: Lighthouse SEO score on mobile
     context: Accessibility and best practices also scored 100 on the live store.
     source: "Lighthouse 12.8.2, mobile with simulated throttling, on https://beccahskitchen.store, run 2026-11-19."

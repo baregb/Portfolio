@@ -42,6 +42,7 @@ const pagesFor = (includeDrafts: boolean) => {
       about: reader.getAbout(),
       lenses: reader.getLenses(),
       flagships: reader.getFlagships(),
+      services: reader.getServices(),
     }),
   };
 };
@@ -50,7 +51,8 @@ describe.each([false, true])("sitePages (drafts %s)", (includeDrafts) => {
   const { reader, pages } = pagesFor(includeDrafts);
   const paths = pages.map(({ path }) => path);
 
-  it("lists every public page: home, about, work, contact, privacy, each lens, each flagship", () => {
+  it("lists every public page: home, about, work, contact, privacy, each lens, each flagship, then services", () => {
+    const services = reader.getServices();
     expect(paths).toEqual([
       "/",
       "/about",
@@ -59,6 +61,8 @@ describe.each([false, true])("sitePages (drafts %s)", (includeDrafts) => {
       "/privacy",
       ...reader.getLenses().map(({ slug }) => `/for/${slug}`),
       ...reader.getFlagships().map(({ slug }) => `/work/${slug}`),
+      ...(services.length > 0 ? ["/services"] : []),
+      ...services.map(({ slug }) => `/services/${slug}`),
     ]);
   });
 
@@ -94,8 +98,40 @@ describe("every static route has a page entry", () => {
       readdirSync(join(appDir, entry)).includes("page.tsx"),
   );
 
+  // `/services` is listed only once a service is published (spec 0006, AC-5b);
+  // in drafts mode the draft services count.
   it.each(staticRoutes)("/%s is listed", (route) => {
-    expect(pagesFor(false).pages.map(({ path }) => path)).toContain(`/${route}`);
+    const { pages } = pagesFor(route === "services");
+    expect(pages.map(({ path }) => path)).toContain(`/${route}`);
+  });
+});
+
+describe("services pages (spec 0006, AC-5b, AC-16)", () => {
+  it("lists /services and one page per service only when services are published", () => {
+    for (const includeDrafts of [false, true]) {
+      const { reader, pages } = pagesFor(includeDrafts);
+      const servicePaths = pages
+        .filter(({ kind }) => kind === "services" || kind === "service")
+        .map(({ path }) => path);
+      const services = reader.getServices();
+      expect(servicePaths).toEqual(
+        services.length === 0
+          ? []
+          : ["/services", ...services.map(({ slug }) => `/services/${slug}`)],
+      );
+    }
+  });
+
+  it("titles a service from profile.base and gives the index a fixed card heading", () => {
+    const { reader, pages } = pagesFor(true);
+    const index = pages.find(({ kind }) => kind === "services");
+    expect(index?.card).toEqual({ label: "Freelance", heading: "Services" });
+    const first = reader.getServices()[0];
+    const page = pages.find(({ path }) => path === `/services/${first?.slug ?? ""}`);
+    expect(page?.title).toBe(
+      `${first?.name ?? ""} in ${reader.getProfile().base}, working worldwide`,
+    );
+    expect(page?.title.length).toBeLessThanOrEqual(70);
   });
 });
 

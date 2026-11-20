@@ -1,0 +1,37 @@
+status: draft
+name: Payments and online stores
+tagline: Checkouts that reconcile.
+headline: I build stores and checkouts where every payment ends up where it should.
+headlineHighlight: every payment
+intro: >-
+  Card and bank transfer checkouts, several currencies, promo codes, receipts, and the admin side
+  that matches payments to orders. I build payment flows with Paystack, Stripe, and Flutterwave, and
+  design for the failures: a timeout, a retry, a payment with no order.
+offerings:
+  - title: Custom storefronts
+    description: Menus or catalogues, carts, promo codes, and order tracking, fast on mobile.
+  - title: Payment integration
+    description: Paystack, Stripe, or Flutterwave, with webhooks checked and retries handled.
+  - title: Several currencies
+    description: Prices and checkout in more than one currency, with the right provider for each.
+  - title: Order operations
+    description: The admin side, matching payments to orders and handling bank transfers.
+trackRecord:
+  - webstore/currencies
+  - beccahs-kitchen/rls-tables
+projects:
+  - beccahs-kitchen
+  - webstore
+faq:
+  - question: Can you work with Shopify or WooCommerce?
+    answer: >-
+      I mostly build custom stores in Next.js, which suits businesses whose ordering doesn't fit a
+      template. If a hosted platform fits you better, I'll tell you.
+  - question: Which payment providers do you use?
+    answer: >-
+      Paystack, Stripe, and Flutterwave so far, including card payments and bank transfers with a
+      receipt upload.
+  - question: What happens when a payment fails halfway?
+    answer: >-
+      That case is designed in: payments are checked on the server, retries never charge twice, and
+      orders with a stuck payment show up for you to act on.

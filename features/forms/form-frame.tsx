@@ -59,6 +59,7 @@ export function FormFrame({
   linkedinUrl,
   headingLevel = "h2",
   demo,
+  prefill,
 }: {
   readonly heading: string;
   readonly submitLabel: string;
@@ -72,6 +73,8 @@ export function FormFrame({
   /** `h3` where the form sits under another `h2` (the styleguide). */
   readonly headingLevel?: "h2" | "h3";
   readonly demo?: FormDemo;
+  /** Values to place in fields that are still empty (spec 0006, AC-14). */
+  readonly prefill?: Readonly<Record<string, string>>;
 }) {
   const Heading = headingLevel;
   const formId = useId();
@@ -84,6 +87,19 @@ export function FormFrame({
   const [values, setValues] = useState<Readonly<Record<string, string>>>(() =>
     Object.fromEntries(fields.map((field) => [field.name, ""])),
   );
+  // A new prefill fills only fields that are still empty, adjusted during
+  // render (React's pattern for state that follows a prop), never in an effect.
+  const [appliedPrefill, setAppliedPrefill] = useState(prefill);
+  if (prefill !== appliedPrefill) {
+    setAppliedPrefill(prefill);
+    if (prefill) {
+      setValues((current) =>
+        Object.fromEntries(
+          Object.entries(current).map(([name, value]) => [name, value || (prefill[name] ?? "")]),
+        ),
+      );
+    }
+  }
   const [honeypot, setHoneypot] = useState("");
   const [errors, setErrors] = useState<Readonly<Record<string, string>>>(() => {
     if (demo !== "errors") return {};

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getAbout, getFlagships, getLenses, getProfile } from "@/features/content";
+import { getAbout, getFlagships, getLenses, getProfile, getServices } from "@/features/content";
 import { fallbackSocialMetadata, pageMetadata } from "./metadata";
 import { sitePages, type SitePage } from "./pages";
 import { DEV_SITE_URL, readSiteUrl } from "./site-url";
@@ -23,6 +23,7 @@ const pages = sitePages({
   about: getAbout(),
   lenses: getLenses(),
   flagships: getFlagships(),
+  services: getServices(),
 });
 
 export const getSiteUrl = () => siteUrl;
@@ -45,6 +46,7 @@ export {
   absoluteUrl,
   caseStudyStructuredData,
   homeStructuredData,
+  serviceStructuredData,
 } from "./structured-data";
 export { ICON_FILES } from "./icon";
 export { JsonLd } from "./json-ld";

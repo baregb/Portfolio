@@ -17,6 +17,17 @@ export function TrackLensVisit({ lens }: { readonly lens: string }) {
   return null;
 }
 
+/** Records a service page view once per page view, with the service slug (spec 0006, AC-17). */
+export function TrackServiceVisit({ service }: { readonly service: string }) {
+  const sent = useRef<string | null>(null);
+  useEffect(() => {
+    if (sent.current === service) return;
+    sent.current = service;
+    track(ANALYTICS_EVENTS.serviceVisit, { service });
+  }, [service]);
+  return null;
+}
+
 /**
  * Wraps what follows a case study's last section. A read is recorded once,
  * when that scrolls into view, so it counts visitors who reached the end of
