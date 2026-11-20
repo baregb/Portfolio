@@ -69,11 +69,16 @@ describe("real content", () => {
     expect(project).not.toHaveProperty("links");
   });
 
-  it("orders the three lenses as the profile lists them", () => {
+  it("orders the lenses as the profile lists them", () => {
     expect(
       createContentReader(data, false)
         .getLenses()
         .map((lens) => lens.slug),
-    ).toEqual(["solutions-architect", "software-developer", "ai-assisted-builder"]);
+    ).toEqual([
+      "solutions-architect",
+      "software-developer",
+      "ai-assisted-builder",
+      "seo-specialist",
+    ]);
   });
 });

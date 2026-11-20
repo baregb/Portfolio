@@ -1,0 +1,13 @@
+name: SEO specialist
+headline: I build sites search engines can read, and keep every old link working when a site moves.
+headlineHighlight: search engines can read
+intro: >-
+  For roles where being found is the job. These projects show technical SEO built into the code:
+  sitemaps, metadata, structured data, link previews, pages made for search, and permanent
+  redirects so years of shared links survive a rebuild. The live Beccah's Kitchen store scores
+  100 for SEO in Lighthouse.
+projects:
+  - beccahs-kitchen
+  - loveseal
+skills:
+  - technical-seo
