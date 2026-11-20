@@ -235,15 +235,15 @@ A business owner finds a service page, sees what is included, numbered proof, qu
 Freelance service pages (`/services` and four services) plus four shared blocks (track record, FAQ, testimonials, client logos) on services, lenses, case studies, home, and about. From the mosesnwigberi.com review on 2026-11-19.
 **Done when:** a published service renders every section with its track record as the green block, "Start a project" lands on a prefilled contact form, each lens leads with its own track record, and quotes and logos show only with permission on file and never for a private client.
 - [x] Design it (spec): `/architect services and proof blocks`
-- [ ] Build it: `/develop services and proof blocks`
+- [x] Build it: `/develop services and proof blocks`
   - [x] Content model: services, testimonials, result ids and refs, lens and profile fields, image wiring, draft and privacy checks (AC-1 to AC-5)
   - [x] Shared blocks: track record, FAQ, testimonials, logo strip, service card, availability and CTA band audiences, styleguide (AC-6 to AC-9, AC-13)
   - [x] Client path: `/services`, service pages, conditional nav, contact prefill, four draft services (AC-5b, AC-10 to AC-12, AC-14, AC-18)
   - [x] SEO and tracking: pages list, sitemap, cards, `Service` JSON-LD, three new events (AC-16, AC-17)
-  - [ ] Recruiter path: lens, case study, home, and about blocks; lens track record seeds; design.md, verify.md, notes on specs 0002 and 0004 (AC-8, AC-9, AC-12, AC-15, AC-18, AC-19)
+  - [x] Recruiter path: lens, case study, home, and about blocks; lens track record seeds; design.md, verify.md, notes on specs 0002 and 0004 (AC-8, AC-9, AC-12, AC-15, AC-18, AC-19)
 - [ ] Verify it: `/check verify services and proof blocks`
 - [ ] Test it: `/test services and proof blocks`
-Spec [0006](../specs/0006-services-proof-blocks/index.md)
+Spec [0006](../specs/0006-services-proof-blocks/index.md) · code in `features/services/`, `app/services/`, `components/portfolio/`, `features/content/`, `content/services/` · the four services ship as drafts: set `status: published` on one to show Services on the live site
 
 ## Deferred
 Out of scope for this build pass, kept so the plan stays honest.
