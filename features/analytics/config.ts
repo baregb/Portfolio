@@ -28,6 +28,10 @@ export const ANALYTICS_EVENTS = {
   cvDownload: "cv-download",
   lensVisit: "lens-visit",
   caseStudyRead: "case-study-read",
+  // Spec 0006, AC-17.
+  serviceVisit: "service-visit",
+  projectEnquiry: "project-enquiry",
+  faqOpen: "faq-open",
 } as const;
 
 export type AnalyticsEvent = (typeof ANALYTICS_EVENTS)[keyof typeof ANALYTICS_EVENTS];

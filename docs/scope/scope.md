@@ -237,7 +237,7 @@ Freelance service pages (`/services` and four services) plus four shared blocks 
 - [x] Design it (spec): `/architect services and proof blocks`
 - [ ] Build it: `/develop services and proof blocks`
   - [x] Content model: services, testimonials, result ids and refs, lens and profile fields, image wiring, draft and privacy checks (AC-1 to AC-5)
-  - [ ] Shared blocks: track record, FAQ, testimonials, logo strip, service card, availability and CTA band audiences, styleguide (AC-6 to AC-9, AC-13)
+  - [x] Shared blocks: track record, FAQ, testimonials, logo strip, service card, availability and CTA band audiences, styleguide (AC-6 to AC-9, AC-13)
   - [ ] Client path: `/services`, service pages, conditional nav, contact prefill, four draft services (AC-5b, AC-10 to AC-12, AC-14, AC-18)
   - [ ] SEO and tracking: pages list, sitemap, cards, `Service` JSON-LD, three new events (AC-16, AC-17)
   - [ ] Recruiter path: lens, case study, home, and about blocks; lens track record seeds; design.md, verify.md, notes on specs 0002 and 0004 (AC-8, AC-9, AC-12, AC-15, AC-18, AC-19)

@@ -29,6 +29,9 @@ describe("knownEvent", () => {
       "cv-download",
       "lens-visit",
       "case-study-read",
+      "service-visit",
+      "project-enquiry",
+      "faq-open",
     ]);
   });
 

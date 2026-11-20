@@ -17,15 +17,16 @@ type CommonProps = {
   readonly children: ReactNode;
 };
 
-type LinkProps = CommonProps & {
-  readonly href: string;
-  readonly external?: boolean;
-  readonly disabled?: boolean;
-  readonly file?: undefined;
-};
-
 /** `data-*` attributes, passed through to the rendered element. */
 type DataAttributes = { readonly [key: `data-${string}`]: string | undefined };
+
+type LinkProps = CommonProps &
+  DataAttributes & {
+    readonly href: string;
+    readonly external?: boolean;
+    readonly disabled?: boolean;
+    readonly file?: undefined;
+  };
 
 /**
  * A file download (spec 0004, AC-10): a plain `<a download>`, never
@@ -104,14 +105,20 @@ export function Button(props: ButtonProps) {
     }
     if (external) {
       return (
-        <a href={href} target="_blank" rel="noopener noreferrer" className={classes}>
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          {...dataAttributesOf(props)}
+          className={classes}
+        >
           {content}
           <span className="sr-only"> (opens in a new tab)</span>
         </a>
       );
     }
     return (
-      <Link href={href} className={classes}>
+      <Link href={href} {...dataAttributesOf(props)} className={classes}>
         {content}
       </Link>
     );

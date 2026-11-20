@@ -2,6 +2,14 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { ArrowRight, Download, SearchX } from "lucide-react";
 import type { ReactNode } from "react";
+import { Availability } from "@/components/portfolio/availability";
+import { CtaBand } from "@/components/portfolio/cta-band";
+import { enquiryHref } from "@/components/portfolio/enquiry";
+import { Faq } from "@/components/portfolio/faq";
+import { LogoStrip, type ClientLogo } from "@/components/portfolio/logo-strip";
+import { ServiceCard } from "@/components/portfolio/service-card";
+import { Testimonials } from "@/components/portfolio/testimonials";
+import { TrackRecord } from "@/components/portfolio/track-record";
 import { SiteHeader } from "@/components/site/site-header";
 import { ThemeSwitcher } from "@/components/site/theme-switcher";
 import { Badge } from "@/components/ui/badge";
@@ -131,6 +139,81 @@ function Swatch({
     </li>
   );
 }
+
+// Spec 0006, AC-19: sample proof blocks. `public/img` is wiped on every
+// build, so the sample logos are inline SVGs (CSP allows data: images).
+const sampleLogo = (name: string, shape: string, width = 120): ClientLogo => ({
+  name,
+  url: `data:image/svg+xml,${encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} 32">${shape}</svg>`,
+  )}`,
+  width,
+  height: 32,
+});
+
+const SAMPLE_LOGOS: readonly ClientLogo[] = [
+  sampleLogo(
+    "Sample Kitchen",
+    '<circle cx="16" cy="16" r="14"/><rect x="38" y="10" width="80" height="12"/>',
+  ),
+  sampleLogo(
+    "Sample Church",
+    '<path d="M16 2l14 28H2z"/><rect x="38" y="6" width="60" height="20"/>',
+    100,
+  ),
+  sampleLogo(
+    "Sample Studio",
+    '<rect x="2" y="2" width="28" height="28"/><rect x="38" y="12" width="90" height="8"/>',
+    130,
+  ),
+];
+
+const SAMPLE_TRACK_RECORD = [
+  {
+    project: { title: "Beccah's Kitchen", href: "/styleguide" },
+    result: {
+      value: "100",
+      label: "Lighthouse SEO score on mobile",
+      context: "Measured on the live store.",
+    },
+  },
+  {
+    project: { title: "Membership charity", href: null },
+    result: { value: "40k", label: "records moved", context: "With no data lost." },
+  },
+  {
+    project: { title: "LoveSeal Church", href: "/styleguide" },
+    result: { value: "5", label: "legacy link patterns redirected" },
+  },
+];
+
+const SAMPLE_QUOTES = [
+  {
+    slug: "sample-one",
+    quote: "An invented quote: the new site loads fast and our orders come in clean.",
+    name: "Sample Person",
+    role: "Founder",
+    company: "Sample Kitchen",
+  },
+  {
+    slug: "sample-two",
+    quote: "An invented quote with no role or company.",
+    name: "Another Person",
+  },
+];
+
+const SAMPLE_FAQ = [
+  {
+    question: "Will you guarantee a number one ranking?",
+    answer:
+      "No, and be wary of anyone who does. I fix what search engines can measure and report what changes.",
+  },
+  {
+    question: "My site isn't built with Next.js. Can you still help?",
+    answer:
+      "Yes. Speed and search fixes work on most stacks, and if the platform is the problem I'll say so.",
+  },
+];
 
 const TOKENS = readTokens();
 const LIGHT_BG = TOKENS.light.bg;
@@ -401,6 +484,59 @@ export function Styleguide() {
               </Card>
             </div>
           </div>
+        </Block>
+
+        <Block
+          id="proof"
+          title="Proof blocks"
+          description="Spec 0006: the client logo strip, the track record (plain on a lens; the same block is a service page's green block), quotes, FAQ, service cards, the project availability line, and the client call to action. Each renders nothing when it has no content."
+        >
+          <div className="grid gap-6 border border-line">
+            <LogoStrip logos={SAMPLE_LOGOS} />
+            <TrackRecord items={SAMPLE_TRACK_RECORD} tone="plain" />
+            <Testimonials quotes={SAMPLE_QUOTES} />
+            <Faq items={SAMPLE_FAQ} />
+          </div>
+          <ol className="grid border-s border-t border-line md:grid-cols-2">
+            {[
+              {
+                slug: "sample-speed",
+                name: "Web performance and SEO",
+                tagline: "Faster pages. Found pages.",
+                headline: "Speed and search fixed in the code.",
+              },
+              {
+                slug: "sample-apps",
+                name: "Web apps, end to end",
+                tagline: "Built whole.",
+                headline: "From the data model to the deploy.",
+              },
+            ].map((service, index) => (
+              <li key={service.slug} className="border-e border-b border-line">
+                <ServiceCard service={service} index={index} href="/styleguide#proof" />
+              </li>
+            ))}
+          </ol>
+          <div className="grid gap-2">
+            <Availability
+              availability={{ status: "selective", projects: "open" }}
+              audience="projects"
+            />
+            <Availability
+              availability={{ status: "selective", projects: "limited" }}
+              audience="projects"
+            />
+            <Availability
+              availability={{ status: "selective", projects: "closed" }}
+              audience="projects"
+            />
+          </div>
+          <CtaBand
+            audience="projects"
+            availability={{ status: "selective", projects: "open" }}
+            href={enquiryHref("sample-speed")}
+            service="sample-speed"
+          />
         </Block>
 
         <Block

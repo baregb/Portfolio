@@ -45,6 +45,27 @@ const AVAILABILITY: Readonly<Record<AvailabilityStatus, string>> = {
 /** AC-16: the fixed label for each availability status. */
 export const availabilityLabel = (status: AvailabilityStatus): string => AVAILABILITY[status];
 
+export type ProjectAvailability = Profile["availability"]["projects"];
+
+const PROJECT_AVAILABILITY: Readonly<Record<ProjectAvailability, string>> = {
+  open: "Taking on new projects",
+  limited: "Booking a few weeks out",
+  closed: "Not taking projects right now",
+};
+
+/** Spec 0006, AC-13: the fixed label clients see for `availability.projects`. */
+export const projectAvailabilityLabel = (status: ProjectAvailability): string =>
+  PROJECT_AVAILABILITY[status];
+
+/** Spec 0006: `01`, `02`, `03` for numbered lists (track record, service cards). */
+export const serialNumber = (index: number): string => String(index + 1).padStart(2, "0");
+
+/** Spec 0006, AC-8: `Founder · Atlas`, `Founder`, `Atlas`, or an empty string. */
+export const testimonialRole = (quote: {
+  readonly role?: string;
+  readonly company?: string;
+}): string => [quote.role, quote.company].filter(Boolean).join(" · ");
+
 /** `1 project`, `3 projects`. */
 export const countLabel = (count: number, noun: string): string =>
   `${count} ${noun}${count === 1 ? "" : "s"}`;

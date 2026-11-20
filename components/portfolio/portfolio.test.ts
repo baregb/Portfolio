@@ -9,7 +9,15 @@ import {
 import type { ContentSnapshot } from "../../features/content/check.ts";
 import { createContentReader } from "../../features/content/read.ts";
 import type { Project } from "../../features/content/types.ts";
-import { availabilityLabel, countLabel, formatPeriod } from "./format.ts";
+import { enquiryHref } from "./enquiry.ts";
+import {
+  availabilityLabel,
+  countLabel,
+  formatPeriod,
+  projectAvailabilityLabel,
+  serialNumber,
+  testimonialRole,
+} from "./format.ts";
 import { toLibraryItem } from "./library-item.ts";
 import {
   displayAddress,
@@ -194,5 +202,30 @@ describe("toLibraryItem (AC-7)", () => {
       "quiet-ledger": "on-request",
       "small-sync": "on-request",
     });
+  });
+});
+
+describe("spec 0006 helpers", () => {
+  it("labels project availability for clients (AC-13)", () => {
+    expect(projectAvailabilityLabel("open")).toBe("Taking on new projects");
+    expect(projectAvailabilityLabel("limited")).toBe("Booking a few weeks out");
+    expect(projectAvailabilityLabel("closed")).toBe("Not taking projects right now");
+  });
+
+  it("builds the enquiry link (AC-14)", () => {
+    expect(enquiryHref()).toBe("/contact?topic=project");
+    expect(enquiryHref("web-performance-seo")).toBe(
+      "/contact?topic=project&service=web-performance-seo",
+    );
+  });
+
+  it("numbers lists from 01 (AC-6, AC-10)", () => {
+    expect([0, 1, 2, 9].map(serialNumber)).toEqual(["01", "02", "03", "10"]);
+  });
+
+  it("joins a quote's role and company (AC-8)", () => {
+    expect(testimonialRole({ role: "Founder", company: "Atlas" })).toBe("Founder · Atlas");
+    expect(testimonialRole({ company: "Atlas" })).toBe("Atlas");
+    expect(testimonialRole({})).toBe("");
   });
 });
