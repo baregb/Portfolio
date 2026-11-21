@@ -219,6 +219,11 @@ describe("spec 0006 helpers", () => {
     );
   });
 
+  it("encodes the service and drops an empty one (AC-14)", () => {
+    expect(enquiryHref("a&b c")).toBe("/contact?topic=project&service=a%26b%20c");
+    expect(enquiryHref("")).toBe("/contact?topic=project");
+  });
+
   it("numbers lists from 01 (AC-6, AC-10)", () => {
     expect([0, 1, 2, 9].map(serialNumber)).toEqual(["01", "02", "03", "10"]);
   });
